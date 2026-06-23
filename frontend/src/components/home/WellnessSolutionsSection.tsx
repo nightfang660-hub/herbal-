@@ -10,7 +10,7 @@ export default function WellnessSolutionsSection() {
   const solutions = [
     {
       id: 1,
-      title: "Looking For\nBetter Digestion?",
+      title: "Digestive\nComfort",
       desc: "Support your gut\nhealth naturally.",
       bgColor: "bg-[#e8efe2]",
       iconColor: "text-[#4a5c3f]",
@@ -18,7 +18,7 @@ export default function WellnessSolutionsSection() {
     },
     {
       id: 2,
-      title: "Looking For\nRelaxation?",
+      title: "Deep\nRelaxation",
       desc: "Calm your mind and\nrelax your body.",
       bgColor: "bg-[#ece5fb]", // light purple
       iconColor: "text-[#6543b5]", // purple
@@ -26,7 +26,7 @@ export default function WellnessSolutionsSection() {
     },
     {
       id: 3,
-      title: "Need Detox\nSupport?",
+      title: "Total Body\nDetox",
       desc: "Cleanse and refresh\nyour body.",
       bgColor: "bg-[#e8efe2]",
       iconColor: "text-[#4a5c3f]",
@@ -34,7 +34,7 @@ export default function WellnessSolutionsSection() {
     },
     {
       id: 4,
-      title: "Need Hormonal\nBalance?",
+      title: "Hormonal\nHarmony",
       desc: "Support your natural\nbalance everyday.",
       bgColor: "bg-[#fce9ec]", // light pink
       iconColor: "text-[#d6556d]", // pink/red
@@ -45,21 +45,21 @@ export default function WellnessSolutionsSection() {
   return (
     <section className="bg-[#fdfbf6] py-12 relative border-b border-[#ece8dc]">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+
         {/* Header */}
         <div className="text-center mb-12 flex flex-col items-center max-w-2xl mx-auto">
           {/* Eyebrow */}
           <div className="flex items-center justify-center gap-3 mb-4">
-             <Leaf className="w-3.5 h-3.5 text-[#cda434] -scale-x-100" fill="currentColor" />
-             <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#a88a38]">Naturally Better, Everyday</span>
-             <Leaf className="w-3.5 h-3.5 text-[#cda434]" fill="currentColor" />
+            <Leaf className="w-3.5 h-3.5 text-[#cda434] -scale-x-100" fill="currentColor" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#a88a38]">Naturally Better, Everyday</span>
+            <Leaf className="w-3.5 h-3.5 text-[#cda434]" fill="currentColor" />
           </div>
-          
+
           {/* Main Title */}
-          <h2 className="text-[40px] md:text-[48px] font-bold text-[#1a3b2b] capitalize mb-3" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize mb-3" style={{ fontFamily: 'Playfair Display, serif' }}>
             Wellness Solutions
           </h2>
-          
+
           {/* Leaf Divider */}
           <div className="flex items-center justify-center w-[240px] mx-auto mb-6">
             <div className="h-[1px] w-full bg-[#dccb96]"></div>
@@ -76,8 +76,8 @@ export default function WellnessSolutionsSection() {
         {/* Columns Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-0 relative">
           {solutions.map((sol) => (
-            <div 
-              key={sol.id} 
+            <div
+              key={sol.id}
               className="flex flex-col items-center text-center px-4 relative group"
             >
               {/* Custom Vertical Divider (with dots) */}
@@ -87,9 +87,9 @@ export default function WellnessSolutionsSection() {
                   <div className="w-[4px] h-[4px] rounded-full bg-[#cda434] translate-y-[1px]"></div>
                 </div>
               )}
-              
+
               {/* Icon Circle */}
-              <div 
+              <div
                 className={`w-[110px] h-[110px] rounded-full flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-105 ${sol.bgColor} ${sol.iconColor}`}
               >
                 {sol.icon}

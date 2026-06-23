@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Leaf, Star, Heart, Search, ShoppingBasket } from 'lucide-react';
+import { ArrowLeft, Leaf, Star, Heart, Search, ShoppingBasket, ArrowRight, FlaskConical, Sprout } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '../../features/cart/cartStore';
 
@@ -17,6 +17,12 @@ const PRODUCTS = [
   { id: 7, name: "Immunity Shield", price: 550.00, originalPrice: 650, discount: 15, img: "/shop/green_tea.png", rating: 4.9, reviews: 420, category: "Wellness Blends", type: "Herbal", weight: "20 Packets", benefit: "Immunity", ingredient: "Ginger" },
   { id: 8, name: "Focus & Clarity", price: 750.00, originalPrice: 850, discount: 11, img: "/shop/ruby_detox.png", rating: 4.6, reviews: 175, category: "Matcha", type: "Caffeinated", weight: "30 Packets", benefit: "Energy", ingredient: "Matcha" },
   { id: 9, name: "Digestive Soothe", price: 380.00, originalPrice: 420, discount: 9, img: "/shop/blue_tea1.png", rating: 4.2, reviews: 93, category: "Tea Bags", type: "Herbal", weight: "10 Packets", benefit: "Digestion", ingredient: "Ginger" },
+  { id: 10, name: "Ginger Glow Wellness", price: 420.00, originalPrice: 480, discount: 12, img: "/shop/red_tea.png", rating: 4.6, reviews: 105, category: "Wellness Blends", type: "Herbal", weight: "15 Packets", benefit: "Digestion", ingredient: "Ginger" },
+  { id: 11, name: "Minty Fresh Start", price: 340.00, originalPrice: 390, discount: 13, img: "/shop/green_tea.png", rating: 4.4, reviews: 67, category: "Tea Bags", type: "Caffeinated", weight: "20 Packets", benefit: "Energy", ingredient: "Mint" },
+  { id: 12, name: "Pure Matcha Premium", price: 920.00, originalPrice: 1050, discount: 12, img: "/shop/blue.png", rating: 4.9, reviews: 412, category: "Matcha", type: "Caffeinated", weight: "30 Packets", benefit: "Energy", ingredient: "Matcha" },
+  { id: 13, name: "Nighttime Harmony", price: 410.00, originalPrice: 450, discount: 9, img: "/shop/blue_tea1.png", rating: 4.7, reviews: 156, category: "Loose Leaf", type: "Decaf", weight: "15 Packets", benefit: "Relaxation", ingredient: "Chamomile" },
+  { id: 14, name: "Tropical Detox", price: 460.00, originalPrice: 520, discount: 11, img: "/shop/ruby_detox.png", rating: 4.3, reviews: 88, category: "Wellness Blends", type: "Herbal", weight: "20 Packets", benefit: "Digestion", ingredient: "Mint" },
+  { id: 15, name: "Golden Immunity", price: 580.00, originalPrice: 660, discount: 12, img: "/shop/red_tea.png", rating: 4.8, reviews: 234, category: "Loose Leaf", type: "Herbal", weight: "15 Packets", benefit: "Immunity", ingredient: "Ginger" },
 ];
 
 const CATEGORIES = ['All', 'Loose Leaf', 'Tea Bags', 'Matcha', 'Wellness Blends'];
@@ -51,53 +57,70 @@ export default function ShopPage() {
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-[#f5f0e6]">
-      {/* Background Image Hero Section */}
-      <div 
-        className="relative w-full h-[60vh] md:h-[80vh] flex flex-col justify-center bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: 'url(/shop/shop_hero.png)' }}
-      >
-        
-        <div className="absolute top-6 md:top-8 left-4 sm:left-6 lg:left-8 z-20">
-          <button 
-            onClick={() => router.back()}
-            className="w-10 h-10 rounded-full border border-white/50 flex items-center justify-center text-white hover:bg-white/20 transition-colors backdrop-blur-sm"
-            aria-label="Go back"
-          >
-            <ArrowLeft className="w-5 h-5" strokeWidth={1.5} />
-          </button>
+      {/* Hero Section */}
+      <section className="relative w-full overflow-hidden bg-[#f5f0e6] min-h-[85vh] flex items-center">
+        {/* Right Side Background Image (Desktop) */}
+        <div 
+          className="absolute inset-y-0 right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-center lg:bg-[90%_center] opacity-30 lg:opacity-100 z-0"
+          style={{ backgroundImage: `url('/assets/shopheros.png')` }}
+        >
+           <div className="hidden lg:block absolute inset-y-0 left-0 w-[400px] bg-gradient-to-r from-[#f5f0e6] via-[#f5f0e6]/60 to-transparent"></div>
         </div>
 
-        <div className="max-w-[1200px] w-full mx-auto px-4 sm:px-6 lg:px-8 mt-12">
+        <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-6 xl:px-8 py-20 relative z-10">
           <motion.div 
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="relative z-10 text-left max-w-xl"
+            className="w-full lg:w-[45%] xl:w-[48%] space-y-8"
           >
-            <h1 className="text-[40px] md:text-[64px] font-semibold text-white tracking-widest uppercase mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
-              Our Shop
+            {/* Subtitle */}
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-[2px] bg-[#c19236]"></div>
+              <span className="text-[#c19236] font-bold text-[13px] tracking-widest uppercase">
+                Shop Our Collection
+              </span>
+              <div className="w-12 h-[2px] bg-[#c19236]"></div>
+            </div>
+
+            {/* Title */}
+            <h1 className="text-[44px] md:text-[52px] lg:text-[56px] xl:text-[64px] font-bold text-[#0F3D2E] leading-[1.1] tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Find Your Perfect <br />
+              <span className="text-[#c19236]">Herbal Blend</span>
             </h1>
-            <p className="text-[16px] md:text-[20px] text-white/95 font-light tracking-wide leading-relaxed" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-              Discover our premium collection of herbal wellness blends.
+            
+            {/* Description */}
+            <p className="text-[16px] md:text-[18px] text-[#4a5d53] font-medium leading-[1.8] max-w-md" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+              Carefully crafted herbal teas made with 100% natural ingredients to support your body, calm your mind and elevate your everyday.
             </p>
+
+            {/* Button */}
+            <div>
+              <button className="flex items-center gap-3 bg-[#0F3D2E] text-white px-8 py-3.5 rounded-full hover:bg-[#1a5441] transition-colors shadow-md">
+                <span className="font-semibold text-[15px] tracking-wide">Shop All Teas</span>
+                <ArrowRight className="w-4 h-4 text-[#e2b755]" />
+              </button>
+            </div>
+
+
           </motion.div>
         </div>
-      </div>
+      </section>
 
 
 
       {/* Main Shop Content Area */}
-      <div className="max-w-[1200px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
+      <div className="max-w-[1200px] w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-16 md:pt-6 md:pb-24">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-8 items-start">
           
-          {/* Left Column: Products Grid (3 columns) */}
-          <div className="w-full lg:w-3/4 order-2 lg:order-1">
+          {/* Right Column: Products Grid (3 columns) */}
+          <div className="w-full lg:w-3/4 order-2 lg:order-2">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10">
               {filteredProducts.map(product => (
                 <motion.div 
                   initial={{ opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.5 }}
                   key={product.id} 
                   onClick={() => router.push(`/shop/${product.id}`)}
@@ -121,7 +144,7 @@ export default function ShopPage() {
                       ))}
                     </div>
 
-                    <h4 className="font-bold text-[#0F3D2E] group-hover:text-[#4caf50] text-[18px] leading-tight mb-2 transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                    <h4 className="font-bold text-[#2c4a35] group-hover:text-[#0F3D2E] text-[18px] leading-tight mb-2 transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                       {product.name}
                     </h4>
                     
@@ -142,7 +165,7 @@ export default function ShopPage() {
                         className="relative group/btn flex items-center justify-end h-10 w-10 group-hover:w-[135px] cursor-pointer transition-all duration-300"
                       >
                         {/* Expanding text pill */}
-                        <div className="absolute right-4 h-[26px] flex items-center rounded-l-full bg-[#4caf50] text-white overflow-hidden transition-all duration-300 w-0 group-hover:w-[115px] group-hover/btn:!bg-[#ffc107] group-hover/btn:!text-[#0F3D2E] z-0">
+                        <div className="absolute right-4 h-[26px] flex items-center rounded-l-full bg-[#0F3D2E] text-white overflow-hidden transition-all duration-300 w-0 group-hover:w-[115px] group-hover/btn:!bg-[#ffc107] group-hover/btn:!text-[#0F3D2E] z-0">
                           <span className="whitespace-nowrap font-bold text-[13px] pl-3">
                             Add To Cart
                           </span>
@@ -165,8 +188,8 @@ export default function ShopPage() {
             </div>
           </div>
 
-          {/* Right Column: Sidebar Filters */}
-          <div className="w-full lg:w-1/4 order-1 lg:order-2 flex flex-col gap-10 sticky top-28">
+          {/* Left Column: Sidebar Filters */}
+          <div className="w-full lg:w-1/4 order-1 lg:order-1 flex flex-col gap-10 sticky top-28">
             
             {/* Search */}
             <div>
@@ -174,16 +197,16 @@ export default function ShopPage() {
                 <Leaf className="w-5 h-5 text-[#2c4a35] fill-[#2c4a35]" />
                 <h3 className="font-semibold text-[#0F3D2E] text-[16px]" style={{ fontFamily: 'Playfair Display, serif' }}>Search by Products</h3>
               </div>
-              <div className="relative flex items-center bg-white border border-[#e8e5de] rounded-full pl-5 pr-1.5 py-1.5 w-full shadow-sm focus-within:border-[#e2b755] focus-within:ring-1 focus-within:ring-[#e2b755] transition-all">
+              <div className="relative flex items-center bg-white border border-[#e8e5de] rounded-full pl-4 pr-1.5 py-1 w-[85%] shadow-sm focus-within:border-[#e2b755] focus-within:ring-1 focus-within:ring-[#e2b755] transition-all">
                 <input 
                   type="text" 
-                  placeholder="Search..." 
+                  placeholder="Search products...." 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="bg-transparent text-[16px] text-[#0F3D2E] placeholder:text-[#8b9992] focus:outline-none w-full pr-4 py-2.5" 
                 />
-                <button className="bg-[#e2b755] text-white p-3 rounded-full hover:bg-[#d4a844] transition-colors flex items-center justify-center cursor-pointer shrink-0">
-                  <Search className="h-5 w-5 text-slate-800" />
+                <button className="bg-[#e2b755] text-white p-2.5 rounded-full hover:bg-[#d4a844] transition-colors flex items-center justify-center cursor-pointer shrink-0">
+                  <Search className="h-4 w-4 text-slate-800" />
                 </button>
               </div>
             </div>
@@ -302,7 +325,7 @@ export default function ShopPage() {
                 <Leaf className="w-5 h-5 text-[#2c4a35] fill-[#2c4a35]" />
                 <h3 className="font-semibold text-[#0F3D2E] text-[16px]" style={{ fontFamily: 'Playfair Display, serif' }}>Filter by Price</h3>
               </div>
-              <div className="px-1 flex flex-col">
+              <div className="px-1 flex flex-col w-[85%]">
                 <input 
                   type="range" 
                   min="200" 

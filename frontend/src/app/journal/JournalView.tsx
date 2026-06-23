@@ -1,210 +1,457 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, Clock, Droplets, Moon, Coffee, Heart, Leaf } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Moon, Leaf, Shield, Droplets, User, Zap, Heart, Star, Mail, ChevronLeft, ChevronRight, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { JournalPost } from './types';
+import TestimonialsSection from '@/components/home/TestimonialsSection';
+import FAQSection from '@/components/home/FAQSection';
+
+const benefitsData = [
+  {
+    tag: 'BETTER SLEEP',
+    title: 'Calm Your Mind,\nSleep Better Naturally',
+    desc: 'A soothing blend that relaxes the body and mind, promoting deeper and more restful sleep.',
+    image: '/home/digestive_img.jpg',
+    keyBenefits: [
+      'Calms the nervous system',
+      'Promotes deeper sleep',
+      'Supports bedtime relaxation'
+    ],
+    recommendedBlend: {
+      id: 5,
+      name: 'Ruby Calm Tea',
+      desc: 'A dreamy blend for restful nights.',
+      img: '/shop/blue_tea1.png'
+    },
+    keyIngredients: [
+      { name: 'Chamomile', desc: 'Soothes & relaxes', img: '/ingredients/chamomile_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/3094/3094898.png' },
+      { name: 'Lavender', desc: 'Calms & comforts', img: '/ingredients/lavender_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/2875/2875080.png' },
+      { name: 'Tulsi', desc: 'Reduces stress', img: '/ingredients/tulsi_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/6192/6192806.png' }
+    ]
+  },
+  {
+    tag: 'STRESS RELIEF',
+    title: 'Find Your Balance,\nRelieve Daily Stress',
+    desc: 'Adaptogenic herbs help your body adapt to stress and promote mental clarity and relaxation.',
+    image: '/journal/ruby_calm_tea.png',
+    keyBenefits: [
+      'Reduces anxiety and tension',
+      'Uplifts your daily mood',
+      'Enhances mental focus'
+    ],
+    recommendedBlend: {
+      id: 4,
+      name: 'Tulsi Detox Tea',
+      desc: 'A balancing blend for daily calm.',
+      img: '/shop/blue_tea1.png'
+    },
+    keyIngredients: [
+      { name: 'Ashwagandha', desc: 'Stress adaptogen', img: '/ingredients/ashwagandha_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/1892/1892556.png' },
+      { name: 'Holy Basil', desc: 'Mental clarity', img: '/ingredients/tulsi_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/6192/6192806.png' },
+      { name: 'Lemon Balm', desc: 'Calming effect', img: '/ingredients/lemonbalm_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/862/862086.png' }
+    ]
+  },
+  {
+    tag: 'DIGESTION SUPPORT',
+    title: 'Soothe Your Gut,\nImprove Digestion',
+    desc: 'Ingredients like Ginger, Fennel and Peppermint support digestion and reduce bloating naturally.',
+    image: '/journal/flwr.png',
+    keyBenefits: [
+      'Reduces bloating naturally',
+      'Soothes the stomach lining',
+      'Supports healthy gut flora'
+    ],
+    recommendedBlend: {
+      id: 9,
+      name: 'Ginger Digest Tea',
+      desc: 'A soothing blend for happy bellies.',
+      img: '/shop/blue_tea1.png'
+    },
+    keyIngredients: [
+      { name: 'Ginger', desc: 'Aids digestion', img: '/ingredients/ginger_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/2853/2853177.png' },
+      { name: 'Fennel', desc: 'Reduces gas', img: '/ingredients/fennel_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/2900/2900609.png' },
+      { name: 'Peppermint', desc: 'Cools & soothes', img: '/ingredients/peppermint_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/2060/2060877.png' }
+    ]
+  }
+];
+
+const journalFAQs = [
+  { question: "How often do you publish new journal entries?", answer: "We aim to publish new articles, recipes, and wellness tips weekly. Subscribe to our newsletter to never miss an update!" },
+  { question: "Can I submit my own herbal tea recipes?", answer: "We love hearing from our community! If you have a unique herbal blend recipe or a wellness story to share, please reach out to us via our contact page." },
+  { question: "Are the wellness tips medically verified?", answer: "Our journal provides holistic wellness tips and traditional herbal knowledge. However, the information is for educational purposes and should not replace professional medical advice." },
+  { question: "How do I find articles on specific ingredients?", answer: "You can use our 'Categories' navigation or the search feature at the top of the Journal page to easily filter and find articles about specific herbs, benefits, or wellness goals." }
+];
 
 interface JournalViewProps {
   posts: JournalPost[];
 }
 
 export default function JournalView({ posts }: JournalViewProps) {
-  const [activeCategory, setActiveCategory] = useState('All Articles');
-  
-  const categories = ['All Articles', 'Research', 'Nutrition', 'Lifestyle', 'Ingredients', 'Wellness', 'Recipes'];
+  const [currentBenefitIdx, setCurrentBenefitIdx] = useState(0);
 
-  const filteredPosts = activeCategory === 'All Articles' 
-    ? posts 
-    : posts.filter(post => post.category.toLowerCase() === activeCategory.toLowerCase());
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBenefitIdx((prev) => (prev + 1) % benefitsData.length);
+    }, 6000); // 6 seconds auto scroll
+    return () => clearInterval(interval);
+  }, []);
+
+  const handlePrevBenefit = () => {
+    setCurrentBenefitIdx((prev) => (prev === 0 ? benefitsData.length - 1 : prev - 1));
+  };
+
+  const handleNextBenefit = () => {
+    setCurrentBenefitIdx((prev) => (prev + 1) % benefitsData.length);
+  };
+
+  const currentBenefit = benefitsData[currentBenefitIdx];
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-[#f5f0e6]">
-      {/* Hero Section */}
-      <section className="relative w-full overflow-hidden bg-[#fdfbf7] flex flex-col md:flex-row items-center h-auto md:h-[550px]">
-        {/* Left Content */}
-        <div className="w-full md:w-[45%] flex justify-end px-6 py-12 md:p-12 lg:pr-16 z-20">
-          <div className="max-w-[400px] w-full pt-10 md:pt-0">
-            <h1 className="text-[42px] md:text-[56px] lg:text-[72px] font-bold text-[#143325] mb-4 md:mb-6 leading-[1.05] tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
-              Wellness<br />Journal
-            </h1>
-            <p className="text-[14px] md:text-[16px] text-[#4a5a51] mb-8 leading-[1.6]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-              Insights, rituals, and natural wellness guides crafted to support your daily health journey.
-            </p>
-            <button className="bg-[#1b3b2b] hover:bg-[#122a1f] text-white px-8 py-3.5 rounded-[4px] font-bold text-[14px] transition-colors shadow-sm inline-flex items-center">
-              Explore Articles
-            </button>
-          </div>
+    <div className="flex flex-col w-full min-h-screen bg-[#fdfbf7] font-sans">
+      
+      {/* 1. Hero Section */}
+      <section className="relative w-full overflow-hidden bg-[#f5f0e6] min-h-[35vh] lg:min-h-[40vh] flex items-center">
+        {/* Background Image covering the section */}
+        <div 
+          className="absolute inset-y-0 right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-center lg:bg-[90%_center] opacity-30 lg:opacity-100 z-0"
+          style={{ backgroundImage: `url('/assets/contactherosection.png')` }}
+        >
+          {/* Gradient overlay to ensure text readability on the left */}
+          <div className="hidden lg:block absolute inset-y-0 left-0 w-[400px] bg-gradient-to-r from-[#f5f0e6] via-[#f5f0e6]/60 to-transparent"></div>
         </div>
 
-        {/* Right Image */}
-        <div className="w-full md:w-[55%] h-[350px] md:h-full relative">
-          <img 
-            src="/journal/hero.png" 
-            alt="Wellness Journal Hero" 
-            className="w-full h-full object-cover object-left md:object-center mix-blend-multiply"
-          />
-        </div>
-      </section>
-
-      {/* Featured Article Section */}
-      <section className="w-full pt-16 md:pt-24 px-4 sm:px-6 lg:px-8 max-w-[1000px] mx-auto">
-        <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-          {/* Left Image */}
-          <div className="w-full md:w-1/2">
-            <img 
-              src="/journal/flwr.png" 
-              alt="Benefits of Hibiscus Tea" 
-              className="w-full h-auto aspect-square object-cover rounded-[16px] shadow-sm"
-            />
-          </div>
-
-          {/* Right Content */}
-          <div className="w-full md:w-1/2 flex flex-col items-start">
-            <div className="flex items-center mb-4">
-              <span className="bg-[#cd5c4b] text-white px-3.5 py-1 rounded-[20px] text-[11px] font-bold tracking-wide" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                Wellness
+        <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-6 xl:px-8 py-12 relative z-10 flex flex-col lg:flex-row h-full">
+          {/* Left Content */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="w-full lg:w-[45%] xl:w-[48%] space-y-8 z-10"
+          >
+            {/* Subtitle */}
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-[2px] bg-[#c19236]"></div>
+              <span className="text-[#c19236] font-bold text-[13px] tracking-widest uppercase">
+                Shop Our Collection
               </span>
-              <span className="text-[#6b7b72] text-[11px] font-bold ml-4 tracking-wider uppercase" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                7 Min Read
-              </span>
+              <div className="w-12 h-[2px] bg-[#c19236]"></div>
             </div>
 
-            <h2 className="text-[36px] md:text-[44px] lg:text-[48px] font-bold text-[#143325] mb-4 leading-[1.15] tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
-              Benefits of<br />Hibiscus Tea
-            </h2>
-
-            <p className="text-[14px] md:text-[16px] text-[#4a5a51] mb-8 leading-[1.6] max-w-[380px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-              Benefits, rituals, and natural wellness guides crafted to support your daily health journey.
+            {/* Title */}
+            <h1 className="text-[44px] md:text-[52px] lg:text-[56px] xl:text-[64px] font-bold text-[#0F3D2E] leading-[1.1] tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Find Your Perfect <br />
+              <span className="text-[#c19236]">Herbal Blend</span>
+            </h1>
+            
+            {/* Description */}
+            <p className="text-[16px] md:text-[18px] text-[#4a5d53] font-medium leading-[1.8] max-w-md" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+              Carefully crafted herbal teas made with 100% natural ingredients to support your body, calm your mind and elevate your everyday.
             </p>
 
-            <button className="bg-[#1b3b2b] hover:bg-[#122a1f] text-white px-8 py-3 rounded-[4px] font-bold text-[14px] transition-colors shadow-sm inline-flex items-center">
-              Read Article
+            {/* Button */}
+            <div>
+              <button className="flex items-center gap-3 bg-[#0F3D2E] text-white px-8 py-3.5 rounded-full hover:bg-[#1a5441] transition-colors shadow-md">
+                <span className="font-semibold text-[15px] tracking-wide">Explore Benefits</span>
+                <ArrowRight className="w-4 h-4 text-[#e2b755]" />
+              </button>
+            </div>
+          </motion.div>
+
+        </div>
+      </section>
+
+      {/* 2. Wellness Goals */}
+      <section className="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
+        <div className="mb-6 lg:mb-8">
+          <div className="flex items-center gap-2 mb-2">
+            <h2 className="text-[24px] lg:text-[28px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>Wellness Goals</h2>
+            <Leaf className="w-4 h-4 text-[#c19236]" fill="currentColor" />
+          </div>
+          <p className="text-[14px] text-[#6b7b72]">Explore the benefits that matter most to you.</p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+          {[
+            { icon: Moon, title: "Sleep Better", desc: "Promotes deep and restful sleep" },
+            { icon: Leaf, title: "Stress Relief", desc: "Calms mind and reduces stress" },
+            { icon: Shield, title: "Immunity Boost", desc: "Strengthens natural defenses" },
+            { icon: Droplets, title: "Daily Detox", desc: "Cleanses body and improves energy" },
+            { icon: User, title: "Women's Wellness", desc: "Supports hormonal balance" },
+            { icon: Zap, title: "Digestion Support", desc: "Improves digestion and gut health" },
+            { icon: Zap, title: "Energy & Focus", desc: "Boosts energy and concentration" },
+            { icon: Heart, title: "Heart Health", desc: "Supports a healthy heart naturally" },
+          ].map((goal, i) => (
+            <div key={i} className="bg-white border border-[#ece8dc] rounded-[1.25rem] py-5 px-3 flex flex-col items-center text-center hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1 hover:border-[#c19236]/40 transition-all duration-300 cursor-pointer group">
+              <div className="w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center mb-3 text-[#5e8b42] shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-[#ece8dc] group-hover:scale-110 group-hover:border-[#c19236]/50 transition-all duration-300">
+                <goal.icon className="w-[22px] h-[22px] stroke-[1.5]" />
+              </div>
+              <h4 className="font-bold text-[#0F3D2E] text-[13px] mb-1.5 leading-tight">{goal.title}</h4>
+              <p className="text-[11px] text-[#6b7b72] leading-[1.4]">{goal.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 3. What Benefits Do Our Teas Offer? */}
+      <section className="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-gradient-to-br from-[#eaf0e2] to-[#f3f6ee] border border-[#e0e8d5] rounded-3xl p-6 lg:p-8 flex flex-col lg:flex-row items-center gap-6 relative overflow-hidden shadow-sm">
+          
+          {/* Left Text Content */}
+          <div className="w-full lg:w-[35%] relative z-10">
+            <h4 className="text-[10px] font-bold tracking-[0.15em] text-[#b38529] uppercase mb-3 flex items-center gap-2">
+              THE POWER OF HERBAL BLENDS <Leaf className="w-3 h-3" />
+            </h4>
+            <h2 className="text-[32px] lg:text-[40px] font-bold text-[#0F3D2E] leading-[1.1] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+              What Benefits Do<br className="hidden lg:block"/>Our Teas Offer?
+            </h2>
+            <p className="text-[14px] lg:text-[15px] text-[#4a5d53] mb-6 leading-relaxed max-w-[350px]">
+              Our carefully crafted herbal blends are designed to support your holistic wellness journey.
+            </p>
+            <button className="flex items-center gap-2 bg-[#0F3D2E] text-white px-7 py-3 rounded-md hover:bg-[#1a5441] transition-colors font-semibold text-[13px]">
+              Explore All Benefits <ArrowRight className="w-4 h-4" />
             </button>
           </div>
-        </div>
-      </section>
 
-      {/* SECTION 03 - ARTICLE CATEGORIES */}
-      <section className="bg-transparent pt-16 md:pt-24 pb-16 md:pb-24">
-        <div className="max-w-[1050px] mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-[13px] font-bold text-[#0F3D2E] mb-6 tracking-widest uppercase" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-            SECTION 03 - ARTICLE CATEGORIES
-          </h3>
-          
-          {/* Categories Row */}
-          <div className="flex flex-wrap items-center gap-3 mb-10">
-            {categories.map((cat, i) => (
-              <button 
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-5 py-2.5 rounded-full border text-[13px] font-bold transition-colors ${
-                  activeCategory === cat 
-                    ? 'bg-[#e8f2e1] border-[#c5e1b5] text-[#1a3b2b]' 
-                    : 'bg-white border-[#e8e5de] text-[#6b7b72] hover:border-[#1a3b2b] hover:text-[#1a3b2b]'
-                }`}
-                style={{ fontFamily: 'Nunito Sans, sans-serif' }}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+          {/* Right Visual Content */}
+          <div className="w-full lg:w-[65%] relative flex justify-center items-center h-[400px] lg:h-[480px] mt-6 lg:mt-0">
+             
+             {/* Central Tea Cup Image */}
+             <img src="/assets/Adobe%20Express%20-%20file.png" alt="Herbal Tea Cup" className="w-[260px] lg:w-[400px] object-contain z-10 relative mt-16 lg:mt-24 drop-shadow-2xl" />
+             
+             {/* The Arc and Nodes Container */}
+             <div className="absolute w-[320px] h-[160px] lg:w-[500px] lg:h-[250px] top-[15%] lg:top-[12%] z-20">
+                {/* The dashed border arc */}
+                <div className="absolute inset-0 border-t-[1.5px] border-l-[1.5px] border-r-[1.5px] border-dashed border-[#c19236] opacity-50 rounded-t-full pointer-events-none"></div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {filteredPosts.map((post, idx) => (
-              <motion.article 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-                key={post.id}
-                className="group flex flex-col bg-white rounded-[12px] overflow-hidden shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_24px_-8px_rgba(44,74,53,0.1)] border border-[#f0eee9] transition-all duration-300 h-full"
-              >
-                {/* Image Container */}
-                <div className="relative h-[200px] w-full overflow-hidden shrink-0">
-                  <img 
-                    src={post.image} 
-                    alt={post.title} 
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-                  />
-                </div>
+                {/* The 4 Golden Dots perfectly positioned on the dashed arc line */}
+                <div className="absolute top-[70%] left-[2.35%] -translate-x-1/2 -translate-y-1/2 w-[6px] h-[6px] rounded-full bg-[#c19236]"></div>
+                <div className="absolute top-[11.3%] left-[26.95%] -translate-x-1/2 -translate-y-1/2 w-[6px] h-[6px] rounded-full bg-[#c19236]"></div>
+                <div className="absolute top-[11.3%] left-[73.05%] -translate-x-1/2 -translate-y-1/2 w-[6px] h-[6px] rounded-full bg-[#c19236]"></div>
+                <div className="absolute top-[70%] left-[97.65%] -translate-x-1/2 -translate-y-1/2 w-[6px] h-[6px] rounded-full bg-[#c19236]"></div>
 
-                {/* Content */}
-                <div className="p-5 md:p-6 flex flex-col flex-grow bg-white relative">
-                  
-                  {/* Tag Overlay */}
-                  <div className="absolute -top-[14px] left-5 bg-white px-3 py-[4px] shadow-[0_2px_8px_rgba(0,0,0,0.08)] z-10 rounded-[2px]">
-                    <span className="text-[10px] font-bold text-[#d6a524] uppercase tracking-wider" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                      {post.category}
-                    </span>
-                  </div>
-
-                  <h3 
-                    className="text-[17px] md:text-[19px] font-bold text-[#0F3D2E] leading-[1.3] mt-2 mb-2 group-hover:text-[#2c4a35] transition-colors line-clamp-2 min-h-[48px]"
-                    style={{ fontFamily: 'Playfair Display, serif' }}
-                  >
-                    {post.title}
-                  </h3>
-
-                  <p className="text-[13px] text-[#6b7b72] mb-5 leading-[1.6] line-clamp-2 min-h-[42px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                    {post.excerpt}
-                  </p>
-                  
-                  {/* Author & Meta */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <img src={`https://i.pravatar.cc/150?img=${idx + 12}`} alt={post.author} className="w-8 h-8 rounded-full object-cover shadow-sm" />
-                    <div className="flex flex-col">
-                      <span className="text-[12px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{post.author}</span>
-                      <span className="text-[11px] text-[#8a958f]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                        {new Date(post.publishedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} &nbsp;&bull;&nbsp; {post.readTime}
-                      </span>
+                {/* Nodes with their icons perfectly centered on the arc line */}
+                
+                {/* 1. Better Sleep (90 deg - top center) */}
+                <div className="absolute w-0 h-0 -mt-4" style={{ left: '50%', top: '0%' }}>
+                  <div className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center">
+                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 -translate-x-1/2">
+                       <Moon className="w-6 h-6" />
+                    </div>
+                    <div className="flex flex-col text-left ml-2">
+                       <span className="text-[13px] font-bold text-[#0F3D2E]">Better Sleep</span>
+                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight">Calms the mind and promotes deep rest</span>
                     </div>
                   </div>
-
-                  {/* Read Article Link */}
-                  <Link href={`/journal/${post.id}`} className="mt-auto text-[13px] font-bold text-[#2c4a35] flex items-center gap-1.5 hover:text-[#5e8b42] transition-colors">
-                    Read Article <ArrowRight className="w-4 h-4" />
-                  </Link>
-
                 </div>
-              </motion.article>
-            ))}
-          </div>
 
-        </div>
-      </section>
-
-      {/* SECTION 05 - WELLNESS TIPS SECTION */}
-      <section className="bg-transparent pb-20 md:pb-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-[13px] font-bold text-[#0F3D2E] mb-6 tracking-widest uppercase" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-            SECTION 05 - WELLNESS TIPS SECTION
-          </h3>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-            {[
-              { title: 'Stay Hydrated', icon: Droplets },
-              { title: 'Improve Sleep Quality', icon: Moon },
-              { title: 'Daily Herbal Ritual', icon: Coffee },
-              { title: 'Mindful Living', icon: Heart },
-              { title: 'Natural Stress Relief', icon: Leaf },
-            ].map((tip, i) => {
-              const Icon = tip.icon;
-              return (
-                <div key={i} className="bg-white rounded-[16px] p-6 flex flex-col items-center justify-center text-center shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-[#f0eee9] hover:shadow-[0_8px_24px_-8px_rgba(44,74,53,0.1)] transition-all duration-300">
-                  <div className="w-12 h-12 flex items-center justify-center mb-4 text-[#1b3b2b]">
-                    <Icon className="w-8 h-8" strokeWidth={1.5} />
+                {/* 2. Stress Relief (145 deg - left mid) */}
+                <div className="absolute w-0 h-0" style={{ left: '9%', top: '42.7%' }}>
+                  <div className="absolute top-1/2 -translate-y-1/2 right-0 flex items-center">
+                    <div className="flex flex-col text-right mr-2">
+                       <span className="text-[13px] font-bold text-[#0F3D2E]">Stress Relief</span>
+                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight">Helps reduce anxiety and uplift mood</span>
+                    </div>
+                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 translate-x-1/2">
+                       <Leaf className="w-6 h-6" />
+                    </div>
                   </div>
-                  <h4 className="text-[14px] font-bold text-[#143325] leading-[1.3]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                    {tip.title}
-                  </h4>
                 </div>
-              );
-            })}
+
+                {/* 3. Immunity Boost (180 deg - bottom left) */}
+                <div className="absolute w-0 h-0" style={{ left: '0%', top: '100%' }}>
+                  <div className="absolute top-1/2 -translate-y-1/2 right-0 flex items-center">
+                    <div className="flex flex-col text-right mr-2">
+                       <span className="text-[13px] font-bold text-[#0F3D2E]">Immunity Boost</span>
+                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight">Rich in antioxidants and natural nutrients</span>
+                    </div>
+                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 translate-x-1/2">
+                       <Shield className="w-6 h-6" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. Digestion Support (35 deg - right mid) */}
+                <div className="absolute w-0 h-0" style={{ left: '91%', top: '42.7%' }}>
+                  <div className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center">
+                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 -translate-x-1/2">
+                       <Zap className="w-6 h-6" />
+                    </div>
+                    <div className="flex flex-col text-left ml-2">
+                       <span className="text-[13px] font-bold text-[#0F3D2E]">Digestion Support</span>
+                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight">Aids digestion and reduces bloating</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 5. Daily Detox (0 deg - bottom right) */}
+                <div className="absolute w-0 h-0" style={{ left: '100%', top: '100%' }}>
+                  <div className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center">
+                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 -translate-x-1/2">
+                       <Droplets className="w-6 h-6" />
+                    </div>
+                    <div className="flex flex-col text-left ml-2">
+                       <span className="text-[13px] font-bold text-[#0F3D2E]">Daily Detox</span>
+                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight">Supports natural detoxification</span>
+                    </div>
+                  </div>
+                </div>
+
+             </div>
+
+             {/* 6. Women's Wellness (Bottom Center - moved down below cup) */}
+             <div className="absolute bottom-[2%] lg:bottom-[-2%] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20">
+               <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0">
+                 <User className="w-6 h-6" />
+               </div>
+               <div className="flex flex-col text-center">
+                 <span className="text-[13px] font-bold text-[#0F3D2E]">Women's Wellness</span>
+                 <span className="text-[11px] text-[#6b7b72] hidden md:block w-36 leading-tight mt-1">Supports hormonal balance and vitality</span>
+               </div>
+             </div>
+
           </div>
         </div>
       </section>
+
+
+      {/* 5. Benefits Explained */}
+      <section className="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 pt-10 pb-4 relative">
+        <div className="flex flex-col md:flex-row items-center justify-between mb-6 lg:mb-8">
+          <div className="text-center md:text-left mb-4 md:mb-0">
+            <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+              <h2 className="text-[28px] lg:text-[32px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>Benefits Explained</h2>
+              <Leaf className="w-5 h-5 text-[#c19236]" fill="currentColor" />
+            </div>
+            <p className="text-[15px] text-[#6b7b72]">Dive deeper into the benefits and ingredients that make our blends so effective.</p>
+          </div>
+          <a href="#" className="flex items-center text-[14px] font-bold text-[#0F3D2E] hover:text-[#5e8b42] transition-colors">
+            View All Benefits <ArrowRight className="w-4 h-4 ml-2" />
+          </a>
+        </div>
+
+        {/* Carousel Container */}
+        <div className="relative w-full max-w-[1100px] mx-auto flex items-center justify-center mt-4">
+          
+          {/* Left Arrow */}
+          <button 
+            onClick={handlePrevBenefit}
+            className="absolute left-[-15px] md:left-[-24px] z-20 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_2px_15px_rgba(0,0,0,0.08)] border border-[#ece8dc] text-[#c19236] hover:bg-[#fcfbf9] transition-colors"
+          >
+            <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
+          </button>
+
+          {/* Main Card */}
+          <div className="w-full bg-white rounded-[24px] overflow-hidden border border-[#ece8dc] shadow-[0_4px_24px_rgba(0,0,0,0.04)] flex flex-col lg:flex-row">
+            
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={currentBenefitIdx}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.4 }}
+                className="w-full flex flex-col lg:flex-row"
+              >
+                {/* Left Image */}
+                <div className="w-full lg:w-[45%] xl:w-[50%] relative h-[300px] lg:h-auto min-h-[300px]">
+                  <img src={currentBenefit.image} alt={currentBenefit.tag} className="absolute inset-0 w-full h-full object-cover" />
+                </div>
+
+                {/* Right Content */}
+                <div className="w-full lg:w-[55%] xl:w-[50%] p-6 md:p-8 flex flex-col justify-center bg-white">
+                  <span className="text-[#c19236] font-bold text-[12px] tracking-[0.2em] uppercase mb-2">
+                    {currentBenefit.tag}
+                  </span>
+                  <h3 className="text-[28px] md:text-[34px] font-bold text-[#0F3D2E] leading-[1.2] mb-2 whitespace-pre-line" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    {currentBenefit.title}
+                  </h3>
+                  <p className="text-[15px] text-[#6b7b72] leading-[1.6] mb-5 max-w-[450px]">
+                    {currentBenefit.desc}
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row gap-6 w-full">
+                    
+                    {/* Left Column: Key Benefits & Recommended Blends */}
+                    <div className="flex-1 flex flex-col gap-6">
+                      {/* Key Benefits */}
+                      <div>
+                        <h4 className="text-[14px] font-bold text-[#0F3D2E] mb-3">Key Benefits</h4>
+                        <ul className="space-y-2">
+                          {currentBenefit.keyBenefits.map((benefit, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <div className="mt-[2px]"><CheckCircle2 className="w-[16px] h-[16px] text-[#c19236]" /></div>
+                              <span className="text-[14px] text-[#4a5d53] leading-snug">{benefit}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Recommended Blends */}
+                      <div>
+                        <h4 className="text-[14px] font-bold text-[#0F3D2E] mb-2">Recommended Blends</h4>
+                        <div className="flex items-center gap-3 group cursor-pointer">
+                          <div className="w-12 h-12 rounded-[12px] bg-[#f5f0e6] border border-[#ece8dc] shrink-0 overflow-hidden flex justify-center items-center group-hover:border-[#c19236] transition-colors">
+                            <img src={currentBenefit.recommendedBlend.img} alt={currentBenefit.recommendedBlend.name} className="w-[130%] h-[130%] object-contain scale-[1.1] translate-y-1" />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[14px] font-bold text-[#0F3D2E] group-hover:text-[#2c4a35] transition-colors">{currentBenefit.recommendedBlend.name}</span>
+                            <span className="text-[12px] text-[#6b7b72] mb-0.5">{currentBenefit.recommendedBlend.desc}</span>
+                            <Link href={`/shop/${currentBenefit.recommendedBlend.id}`} className="text-[#c19236] text-[12px] font-bold flex items-center gap-1 group-hover:text-[#a07629]">
+                              View Product <ArrowRight className="w-3 h-3" />
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right Column: Key Ingredients */}
+                    <div className="flex-1">
+                      <h4 className="text-[14px] font-bold text-[#0F3D2E] mb-3">Key Ingredients</h4>
+                      <div className="space-y-3">
+                        {currentBenefit.keyIngredients.map((ingredient, idx) => (
+                          <div key={idx} className="flex items-center gap-3 group cursor-pointer">
+                            <div className="w-10 h-10 rounded-full bg-[#fcfbf9] border border-[#ece8dc] flex items-center justify-center shrink-0 group-hover:border-[#c19236] transition-colors">
+                              <img src={ingredient.img} alt={ingredient.name} className="w-5 h-5 object-contain" onError={(e) => { e.currentTarget.src = ingredient.fallback; e.currentTarget.onerror = null; }} />
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-[14px] font-bold text-[#0F3D2E]">{ingredient.name}</span>
+                              <span className="text-[12px] text-[#6b7b72]">{ingredient.desc}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+          </div>
+
+          {/* Right Arrow */}
+          <button 
+            onClick={handleNextBenefit}
+            className="absolute right-[-15px] md:right-[-24px] z-20 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_2px_15px_rgba(0,0,0,0.08)] border border-[#ece8dc] text-[#c19236] hover:bg-[#fcfbf9] transition-colors"
+          >
+            <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
+          </button>
+
+        </div>
+      </section>
+
+      {/* 6. What Our Customers Say (Testimonials Component) */}
+      <TestimonialsSection />
+
+      {/* 7. FAQ Section */}
+      <FAQSection 
+        title="Frequently Asked Questions." 
+        subtitle="Learn more about our wellness content, recipes, and community stories. Can't find what you're looking for? Feel free to contact us."
+        faqs={journalFAQs} 
+      />
+
     </div>
   );
 }

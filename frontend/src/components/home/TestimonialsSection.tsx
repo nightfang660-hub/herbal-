@@ -134,7 +134,7 @@ export default function TestimonialsSection() {
         
         {/* Header */}
         <div className="mb-8 flex flex-col items-center text-center">
-          <h2 className="text-[40px] md:text-[52px] font-bold text-[#1a3b2b] capitalize mb-5 tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize mb-5 tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
             What Our Customers Say
           </h2>
           <div className="flex items-center justify-center w-[250px]">

@@ -30,7 +30,7 @@ export default function CraftedWithNatureSection() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true, margin: "-50px" }}
+          viewport={{ once: true }}
         >
           {/* Eyebrow — "🍃 ROOTED IN NATURE 🍃" in muted gold */}
           <div className="flex items-center justify-center gap-2 mb-5">
@@ -82,7 +82,7 @@ export default function CraftedWithNatureSection() {
         <motion.div 
              initial="hidden"
              whileInView="show"
-             viewport={{ once: true, margin: "-50px" }}
+             viewport={{ once: true }}
              variants={{
                hidden: {},
                show: { transition: { staggerChildren: 0.1 } }

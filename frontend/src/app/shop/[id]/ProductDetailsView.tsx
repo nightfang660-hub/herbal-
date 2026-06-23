@@ -654,7 +654,7 @@ export default function ProductDetailsPage() {
               <motion.div 
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 key={similar.id} 
                 onClick={() => router.push(`/shop/${similar.id}`)}

@@ -12,41 +12,42 @@ export default function AboutPage() {
     <main className="min-h-screen bg-[#fcfbf9]">
       
       {/* Hero Section */}
-      <section className="bg-[#fcfbf9] pt-12 pb-20 relative overflow-hidden">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-12">
-          
-          {/* Left Text */}
+      <section className="relative w-full overflow-hidden bg-[#f5f0e6] min-h-[85vh] flex items-center">
+        {/* Right Side Background Image (Desktop) */}
+        <div 
+          className="absolute inset-y-0 right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-center lg:bg-[90%_center] opacity-30 lg:opacity-100 z-0"
+          style={{ backgroundImage: `url('/assets/edited-photo .png')` }}
+        >
+           <div className="hidden lg:block absolute inset-y-0 left-0 w-[400px] bg-gradient-to-r from-[#f5f0e6] via-[#f5f0e6]/60 to-transparent"></div>
+        </div>
+
+        <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-6 xl:px-8 py-20 relative z-10">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="w-full lg:w-[45%] space-y-6"
+            className="w-full lg:w-[45%] xl:w-[48%] space-y-8"
           >
-            <span className="text-[14px] font-bold uppercase tracking-[0.2em] text-[#cda434] block">Our Story</span>
-            <h1 className="text-[40px] md:text-[52px] lg:text-[46px] xl:text-[54px] font-bold text-[#1c2e24] leading-[1.15] tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
-              <span className="block sm:whitespace-nowrap">Purity In Every Leaf</span>
-              <span className="text-[#cda434] block sm:whitespace-nowrap">Wellness In Every Sip</span>
-            </h1>
-            <div className="w-[80px] h-[2px] bg-[#dccb96] my-6 relative">
-              <Leaf className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 text-[#cda434] bg-[#fcfbf9] px-0.5" fill="currentColor" />
+            {/* Subtitle */}
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-[2px] bg-[#c19236]"></div>
+              <span className="text-[#c19236] font-bold text-[13px] tracking-widest uppercase">
+                Our Story
+              </span>
+              <div className="w-12 h-[2px] bg-[#c19236]"></div>
             </div>
-            <p className="text-[16px] md:text-[17px] text-[#556358] max-w-md leading-[1.8]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+
+            {/* Title */}
+            <h1 className="text-[38px] md:text-[46px] lg:text-[48px] xl:text-[56px] font-bold text-[#0F3D2E] leading-[1.1] tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Purity In Every Leaf <br className="hidden sm:block" />
+              <span className="text-[#c19236] inline-block mt-2 sm:mt-0">Wellness In Every Sip</span>
+            </h1>
+            
+            {/* Description */}
+            <p className="text-[16px] md:text-[18px] text-[#4a5d53] font-medium max-w-md leading-[1.8]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
               Discover the journey behind R-HerbalTea, where ancient botanical wisdom meets modern holistic health to bring you blends that restore balance and vitality.
             </p>
-          </motion.div>
 
-          {/* Right Image */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, type: "spring", bounce: 0.3 }}
-            className="w-full lg:w-[55%] relative flex justify-center"
-          >
-            <img 
-              src="/assets/edited-photo .png" 
-              alt="Herbal Tea Blends" 
-              className="w-full h-auto object-contain scale-110" 
-            />
           </motion.div>
         </div>
       </section>
@@ -61,7 +62,7 @@ export default function AboutPage() {
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               className="w-full lg:w-1/2 relative flex justify-center"
             >
@@ -76,7 +77,7 @@ export default function AboutPage() {
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="w-full lg:w-1/2 space-y-6"
             >
@@ -111,7 +112,7 @@ export default function AboutPage() {
           <motion.div 
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, margin: "-50px" }}
+            viewport={{ once: true }}
             variants={{
               hidden: {},
               show: { transition: { staggerChildren: 0.15 } }
@@ -162,7 +163,7 @@ export default function AboutPage() {
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
+            viewport={{ once: true }}
             transition={{ duration: 0.8 }}
             className="w-full lg:w-1/2 flex flex-col"
           >
@@ -189,7 +190,7 @@ export default function AboutPage() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, x: 30 }}
             whileInView={{ opacity: 1, scale: 1, x: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
+            viewport={{ once: true }}
             transition={{ duration: 0.8, type: "spring", bounce: 0.3 }}
             className="w-full lg:w-1/2 relative flex justify-center"
           >
@@ -229,7 +230,7 @@ export default function AboutPage() {
                   initial={{ opacity: 0, x: -20, scale: 0.9 }}
                   whileInView={{ opacity: 1, x: 0, scale: 1 }}
                   transition={{ duration: 0.5, delay: 1.2 }}
-                  viewport={{ once: true, margin: "-50px" }}
+                  viewport={{ once: true }}
                   className="relative bg-white rounded-[16px] p-6 border border-[#ece8dc] shadow-[0_2px_15px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center text-center group hover:-translate-y-1 hover:shadow-lg transition-all duration-300 w-full max-w-[260px] aspect-[4/3] mr-auto"
                 >
                   <div className="w-14 h-14 rounded-full bg-[#fcfbf9] flex items-center justify-center mb-4 text-[#4a6b3d]">
@@ -247,7 +248,7 @@ export default function AboutPage() {
                   initial={{ opacity: 0, x: -20, scale: 0.9 }}
                   whileInView={{ opacity: 1, x: 0, scale: 1 }}
                   transition={{ duration: 0.5, delay: 1.4 }}
-                  viewport={{ once: true, margin: "-50px" }}
+                  viewport={{ once: true }}
                   className="relative bg-white rounded-[16px] p-6 border border-[#ece8dc] shadow-[0_2px_15px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center text-center group hover:-translate-y-1 hover:shadow-lg transition-all duration-300 w-full max-w-[260px] aspect-[4/3] mr-auto"
                 >
                   <div className="w-14 h-14 rounded-full bg-[#fcfbf9] flex items-center justify-center mb-4 text-[#4a6b3d]">
@@ -268,7 +269,7 @@ export default function AboutPage() {
                   initial={{ opacity: 0, scale: 0.5 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.7, type: "spring", bounce: 0.3 }}
-                  viewport={{ once: true, margin: "-50px" }}
+                  viewport={{ once: true }}
                   className="relative w-full max-w-[480px]"
                 >
                   <img src="/assets/edited-photo .png" alt="Herbal Ingredients" className="w-full h-auto hover:scale-105 transition-transform duration-700 scale-[1.15]" />
@@ -281,7 +282,7 @@ export default function AboutPage() {
                   initial={{ opacity: 0, x: 20, scale: 0.9 }}
                   whileInView={{ opacity: 1, x: 0, scale: 1 }}
                   transition={{ duration: 0.5, delay: 1.2 }}
-                  viewport={{ once: true, margin: "-50px" }}
+                  viewport={{ once: true }}
                   className="relative bg-white rounded-[16px] p-6 border border-[#ece8dc] shadow-[0_2px_15px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center text-center group hover:-translate-y-1 hover:shadow-lg transition-all duration-300 w-full max-w-[260px] aspect-[4/3] ml-auto"
                 >
                   {/* Connection Dot */}
@@ -299,7 +300,7 @@ export default function AboutPage() {
                   initial={{ opacity: 0, x: 20, scale: 0.9 }}
                   whileInView={{ opacity: 1, x: 0, scale: 1 }}
                   transition={{ duration: 0.5, delay: 1.4 }}
-                  viewport={{ once: true, margin: "-50px" }}
+                  viewport={{ once: true }}
                   className="relative bg-white rounded-[16px] p-6 border border-[#ece8dc] shadow-[0_2px_15px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center text-center group hover:-translate-y-1 hover:shadow-lg transition-all duration-300 w-full max-w-[260px] aspect-[4/3] ml-auto"
                 >
                   {/* Connection Dot */}
@@ -323,7 +324,7 @@ export default function AboutPage() {
                      initial={{ r: 0 }}
                      whileInView={{ r: 75 }}
                      transition={{ duration: 1.2, delay: 0.4, ease: "easeInOut" }}
-                     viewport={{ once: true, margin: "-50px" }}
+                     viewport={{ once: true }}
                    />
                  </mask>
                </defs>

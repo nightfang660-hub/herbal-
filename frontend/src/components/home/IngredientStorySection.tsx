@@ -35,7 +35,7 @@ export default function IngredientStorySection() {
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: index * 0.15 }}
-        viewport={{ once: true, margin: "-50px" }}
+        viewport={{ once: true }}
         className="bg-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] p-8 flex flex-col items-center text-center relative z-10 w-full max-w-[320px] mx-auto border border-[#f0ebe1]/60 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgb(0,0,0,0.10)] transition-all duration-300 h-full"
       >
         
@@ -90,17 +90,17 @@ export default function IngredientStorySection() {
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true }}
               className="mb-14 flex flex-col items-start"
             >
-              <div className="inline-flex flex-col items-center">
-                <h2 className="text-[40px] md:text-[56px] font-bold text-[#1a3b2b] capitalize mb-5 tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+              <div className="inline-flex flex-col items-start">
+                <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize mb-3 tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
                   The Ingredient Story
                 </h2>
-                <div className="flex items-center justify-center w-[250px]">
-                  <div className="h-[2px] w-full bg-[#cda434]"></div>
-                  <Leaf className="w-5 h-5 text-[#cda434] mx-2 shrink-0 -rotate-[60deg]" fill="currentColor" />
-                  <div className="h-[2px] w-full bg-[#cda434]"></div>
+                <div className="flex items-center justify-center w-[250px] mb-6">
+                  <div className="h-[1.5px] w-full bg-[#dccb96]"></div>
+                  <Leaf className="w-[14px] h-[14px] text-[#a88a38] mx-1.5 shrink-0 -rotate-[60deg]" fill="currentColor" />
+                  <div className="h-[1.5px] w-full bg-[#dccb96]"></div>
                 </div>
               </div>
             </motion.div>
@@ -116,7 +116,7 @@ export default function IngredientStorySection() {
             initial={{ opacity: 0, scale: 0.9, x: 30 }}
             whileInView={{ opacity: 1, scale: 1, x: 0 }}
             transition={{ duration: 0.8, type: "spring", bounce: 0.3 }}
-            viewport={{ once: true, margin: "-50px" }}
+            viewport={{ once: true }}
             className="w-full lg:w-1/2 flex justify-center items-center relative py-10 lg:py-0"
           >
             <img 

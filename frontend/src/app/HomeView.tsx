@@ -343,7 +343,7 @@ function FAQSection() {
         <div className="text-center mb-10 lg:mb-12 max-w-2xl mx-auto">
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8cb73d] mb-4 block">Got Questions?</span>
           <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
-            Frequently Asked<br/>Questions
+            Frequently Asked Questions
           </h2>
           <p className="text-[14px] text-[#6b7b72] leading-[1.8]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
             Everything you need to know about our herbal blends, sourcing, and brewing process. Can't find your answer? Reach out to our herbalist team.
@@ -493,7 +493,7 @@ function WellnessSolutionsSection() {
   const solutions = [
     {
       id: 1,
-      title: "Looking For\nBetter Digestion?",
+      title: "Digestive\nComfort",
       desc: "Support your gut\nhealth naturally.",
       bgColor: "bg-[#e8efe2]",
       iconColor: "text-[#4a5c3f]",
@@ -501,7 +501,7 @@ function WellnessSolutionsSection() {
     },
     {
       id: 2,
-      title: "Looking For\nRelaxation?",
+      title: "Deep\nRelaxation",
       desc: "Calm your mind and\nrelax your body.",
       bgColor: "bg-[#ece5fb]", // light purple
       iconColor: "text-[#6543b5]", // purple
@@ -509,7 +509,7 @@ function WellnessSolutionsSection() {
     },
     {
       id: 3,
-      title: "Need Detox\nSupport?",
+      title: "Total Body\nDetox",
       desc: "Cleanse and refresh\nyour body.",
       bgColor: "bg-[#e8efe2]",
       iconColor: "text-[#4a5c3f]",
@@ -517,7 +517,7 @@ function WellnessSolutionsSection() {
     },
     {
       id: 4,
-      title: "Need Hormonal\nBalance?",
+      title: "Hormonal\nHarmony",
       desc: "Support your natural\nbalance everyday.",
       bgColor: "bg-[#fce9ec]", // light pink
       iconColor: "text-[#d6556d]", // pink/red
@@ -531,9 +531,14 @@ function WellnessSolutionsSection() {
         
         {/* Header */}
         <div className="text-center mb-16 space-y-4 max-w-2xl mx-auto">
-          <h2 className="text-[32px] md:text-[40px] font-bold text-[#2c4a35] capitalize" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize" style={{ fontFamily: 'Playfair Display, serif' }}>
             Wellness Solutions
           </h2>
+          <div className="flex items-center justify-center w-[250px] mx-auto mb-6">
+            <div className="h-[2px] w-full bg-[#cda434]"></div>
+            <Leaf className="w-5 h-5 text-[#cda434] mx-2 shrink-0 -rotate-[60deg]" fill="currentColor" />
+            <div className="h-[2px] w-full bg-[#cda434]"></div>
+          </div>
           <p className="text-[15px] md:text-[16px] text-[#6b7b72] leading-relaxed" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
             Discover specialized herbal formulations crafted for your unique health needs. Find the perfect natural remedy to support your daily wellness journey.
           </p>
@@ -625,7 +630,7 @@ function IngredientStorySection() {
           
           {/* Left Content */}
           <div className="w-full lg:w-1/2 flex flex-col">
-            <h2 className="text-[38px] md:text-[52px] font-extrabold text-[#111827] leading-[1.15] mb-16 tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize mb-16 tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
               The Ingredient Story
             </h2>
 
@@ -1114,14 +1119,13 @@ export default function Home() {
             </div>
 
             {/* Right Content */}
-            <div className="w-full lg:w-1/2 space-y-7">
-              <div className="flex items-center gap-3">
-                <span className="text-[13px] font-bold uppercase tracking-[0.25em] text-[#4a6b3d]">About Us</span>
+            <div className="w-full lg:w-1/2 space-y-4">
+              <div className="space-y-2">
+                <span className="text-[13px] font-bold uppercase tracking-[0.25em] text-[#4a6b3d] block">About Us</span>
+                <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize" style={{ fontFamily: 'Playfair Display, serif' }}>
+                  Rooted in Nature.<br />Inspired by Wellness.
+                </h2>
               </div>
-              
-              <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize" style={{ fontFamily: 'Playfair Display, serif' }}>
-                Rooted in Nature.<br />Inspired by Wellness.
-              </h2>
               
               <p className="text-[15px] md:text-[17px] text-[#4a5c51] leading-[1.8]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                 At Herbal Wellness Tea, we believe that true wellness begins with nature. Our herbal teas are carefully crafted using handpicked, 100% natural ingredients to support your body, calm your mind, and uplift your everyday life.
@@ -1131,7 +1135,7 @@ export default function Home() {
                 From calming blends to immunity boosters, every cup is made with love, purity and a promise of better well-being.
               </p>
               
-              <div className="pt-2">
+              <div>
                 <Link href="#about" className="inline-flex items-center gap-2 bg-[#4a6b3d] hover:bg-[#3b5930] text-white px-8 py-4 rounded-xl font-semibold text-[15px] transition-all shadow-[0_8px_20px_-6px_rgba(74,107,61,0.4)] hover:-translate-y-1">
                   Learn More About Us <ArrowRight className="w-4 h-4" />
                 </Link>

@@ -14,7 +14,7 @@ const FEATURED_PRODUCTS = [
     description: "A soothing blend to help you relax and find your inner calm.",
     price: 399,
     originalPrice: 499,
-    image: "/home/about_us.png",
+    image: "/assets/herosection.png",
     bestseller: true
   },
   {
@@ -89,7 +89,7 @@ function FeaturedProductCard({ product, index }: { product: any, index?: number 
         </div>
 
         {/* Title */}
-        <h3 className="text-[19px] font-bold leading-tight mb-2 text-[#1f2937] group-hover:text-[#4caf50] transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+        <h3 className="text-[19px] font-bold leading-tight mb-2 text-[#1f2937] group-hover:text-[#0F3D2E] transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
           {product.name}
         </h3>
         
@@ -106,7 +106,7 @@ function FeaturedProductCard({ product, index }: { product: any, index?: number 
           
           <button 
              onClick={(e) => { e.stopPropagation(); handleAddToCart(); }} 
-             className="flex items-center justify-end rounded-full h-[40px] bg-[#FFC107] group-hover:bg-[#4caf50] transition-all duration-300 ease-in-out cursor-pointer p-[4px] group-hover:pl-4 group-hover:pr-1 active:scale-95 shadow-sm group-hover:shadow-md"
+             className="flex items-center justify-end rounded-full h-[40px] bg-[#FFC107] group-hover:bg-[#0F3D2E] transition-all duration-300 ease-in-out cursor-pointer p-[4px] group-hover:pl-4 group-hover:pr-1 active:scale-95 shadow-sm group-hover:shadow-md"
           >
              <span className="text-white font-bold text-[13px] tracking-wide whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out max-w-0 opacity-0 group-hover:max-w-[100px] group-hover:opacity-100 group-hover:mr-3">
                Add To Cart
@@ -130,7 +130,7 @@ export default function FeaturedProductsSection() {
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true, margin: "-50px" }}
+          viewport={{ once: true }}
           className="flex flex-col md:flex-row items-center justify-center relative mb-14 gap-6"
         >
           <div className="text-center max-w-3xl mx-auto flex flex-col items-center gap-3">
@@ -149,7 +149,7 @@ export default function FeaturedProductsSection() {
         <motion.div 
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-50px" }}
+          viewport={{ once: true }}
           variants={{
             hidden: {},
             show: { transition: { staggerChildren: 0.15 } }

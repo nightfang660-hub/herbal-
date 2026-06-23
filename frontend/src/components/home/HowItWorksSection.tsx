@@ -53,7 +53,7 @@ export default function HowItWorksSection() {
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true, margin: "-50px" }}
+          viewport={{ once: true }}
           className="text-center mb-8 space-y-4"
         >
           <div className="flex items-center justify-center gap-4">
@@ -70,7 +70,7 @@ export default function HowItWorksSection() {
         <motion.div 
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-50px" }}
+          viewport={{ once: true }}
           variants={{
             hidden: {},
             show: { transition: { staggerChildren: 0.15 } }

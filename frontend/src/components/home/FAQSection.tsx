@@ -3,7 +3,12 @@ import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const FAQS = [
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+const DEFAULT_FAQS = [
   { question: "Are your herbal teas 100% natural and organic?", answer: "Yes, we are committed to providing only the highest quality herbal teas. All our blends use 100% natural, ethically sourced botanical ingredients with absolutely no artificial additives, colors, or flavors." },
   { question: "How should I store my loose leaf tea to keep it fresh?", answer: "To preserve the potency and flavor of your herbal tea, store it in a cool, dark, and dry place. Keep it in an airtight container away from direct sunlight, moisture, and strong odors." },
   { question: "How many cups of herbal tea can I drink daily?", answer: "While herbal teas are generally safe and gentle, we recommend 2 to 3 cups a day for optimal wellness benefits. However, if you are pregnant, nursing, or taking medication, please consult your healthcare provider first." },
@@ -12,7 +17,17 @@ const FAQS = [
   { question: "How long should I steep the herbal blends?", answer: "For the best flavor and maximum health benefits, we recommend steeping most of our herbal blends in boiling water (212°F) for 5 to 7 minutes. Some robust roots and berries can even be steeped longer!" }
 ];
 
-export default function FAQSection() {
+interface FAQSectionProps {
+  title?: string;
+  subtitle?: string;
+  faqs?: FAQItem[];
+}
+
+export default function FAQSection({ 
+  title = "Frequently Asked Questions", 
+  subtitle = "Everything you need to know about our herbal blends, sourcing, and brewing process. Can't find your answer? Reach out to our herbalist team.", 
+  faqs = DEFAULT_FAQS 
+}: FAQSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFAQ = (index: number) => {
@@ -25,16 +40,16 @@ export default function FAQSection() {
         
         <div className="text-center mb-10 lg:mb-12 max-w-2xl mx-auto">
           <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
-            Frequently Asked<br/>Questions
+            {title}
           </h2>
           <p className="text-[14px] text-[#6b7b72] leading-[1.8]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-            Everything you need to know about our herbal blends, sourcing, and brewing process. Can't find your answer? Reach out to our herbalist team.
+            {subtitle}
           </p>
         </div>
 
         {/* Accordion List */}
         <div className="max-w-[800px] mx-auto space-y-3">
-          {FAQS.map((faq, index) => (
+          {faqs.map((faq, index) => (
             <div 
               key={index} 
               className="bg-[#fdfcf9] rounded-[20px] border border-[#e8e5de] hover:border-[#8cb73d]/30 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_-6px_rgba(44,74,53,0.08)] transition-all duration-300 overflow-hidden"

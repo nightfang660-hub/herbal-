@@ -1,306 +1,437 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowRight, ArrowLeft, Leaf, Smile, Apple, Microscope, Coffee, Sun, Sprout, Calendar, Clock } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
-
-const CATEGORIES = [
-  "Herbal Tea",
-  "Wellness",
-  "Ingredients",
-  "Lifestyle",
-  "Nutrition",
-  "Healthy Living"
-];
+import { Leaf, Search, LayoutGrid, Coffee, Heart, Sprout, Utensils, Sun, Smile, ArrowRight, RefreshCw, Mail } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const TOPICS = [
-  { name: 'All', icon: Leaf },
-  { name: 'Wellness', icon: Smile },
-  { name: 'Nutrition', icon: Apple },
-  { name: 'Research', icon: Microscope },
-  { name: 'Recipes', icon: Coffee },
+  { name: 'All Articles', icon: LayoutGrid },
+  { name: 'Herbal Tea', icon: Coffee },
+  { name: 'Ayurveda', icon: Leaf },
+  { name: 'Wellness', icon: Heart },
+  { name: 'Ingredients', icon: Sprout },
+  { name: 'Recipes', icon: Utensils },
   { name: 'Lifestyle', icon: Sun },
-  { name: 'Ingredients', icon: Sprout }
+  { name: 'Self Care', icon: Smile }
+];
+
+const POPULAR_TOPICS = [
+  { name: 'Immunity Boost', count: '14' },
+  { name: 'Detox & Cleanse', count: '12' },
+  { name: 'Better Sleep', count: '10' },
+  { name: 'Stress Relief', count: '09' },
+  { name: "Women's Wellness", count: '06' },
+];
+
+const FEATURED_ARTICLES = [
+  {
+    tag: "WELLNESS",
+    title: "The Healing Power\nof Hibiscus Tea",
+    desc: "Discover how this vibrant flower supports heart health, skin glow, and natural vitality.",
+    author: "Ananya R.",
+    date: "May 20, 2024",
+    readTime: "5 min read",
+    authorImg: "https://i.pravatar.cc/150?img=32",
+    img: "/home/hibiscus.png",
+    link: "/blog/1"
+  },
+  {
+    tag: "AYURVEDA",
+    title: "Understanding\nAshwagandha",
+    desc: "A deep dive into the ancient adaptogen that helps balance stress and anxiety naturally.",
+    author: "Ritu Sharma",
+    date: "May 18, 2024",
+    readTime: "6 min read",
+    authorImg: "https://i.pravatar.cc/150?img=5",
+    img: "/home/img6.jpg",
+    link: "/blog/7"
+  },
+  {
+    tag: "HERBAL TEA",
+    title: "The Ultimate Guide\nto Green Tea",
+    desc: "Explore the different types of green tea, their unique benefits, and how to brew the perfect cup.",
+    author: "Kavya Iyer",
+    date: "May 15, 2024",
+    readTime: "4 min read",
+    authorImg: "https://i.pravatar.cc/150?img=9",
+    img: "/home/img1.jpg",
+    link: "/blog/2"
+  },
+  {
+    tag: "INGREDIENTS",
+    title: "The Magic of\nTurmeric",
+    desc: "Why this golden spice is a must-have in your daily routine for inflammation and immunity.",
+    author: "Priya Desai",
+    date: "May 12, 2024",
+    readTime: "7 min read",
+    authorImg: "https://i.pravatar.cc/150?img=43",
+    img: "/home/img2.jpg",
+    link: "/blog/10"
+  },
+  {
+    tag: "LIFESTYLE",
+    title: "Creating a\nMinimalist Space",
+    desc: "How a decluttered environment leads to a decluttered mind and greater daily focus.",
+    author: "Ananya R.",
+    date: "May 08, 2024",
+    readTime: "5 min read",
+    authorImg: "https://i.pravatar.cc/150?img=32",
+    img: "/home/img4.jpg",
+    link: "/blog/12"
+  },
+  {
+    tag: "SELF CARE",
+    title: "Sunday Bath Rituals\nwith Herbs",
+    desc: "Elevate your weekend soak with essential botanicals for complete relaxation.",
+    author: "Ritu Sharma",
+    date: "May 05, 2024",
+    readTime: "4 min read",
+    authorImg: "https://i.pravatar.cc/150?img=5",
+    img: "/home/img5.jpg",
+    link: "/blog/13"
+  }
 ];
 
 const ARTICLES = [
   {
     id: 1,
-    tag: "RESEARCH",
-    title: "What Science Says About Hibiscus Tea",
-    desc: "Studies suggest hibiscus may support healthy blood pressure and heart wellness.",
-    author: "Ananya Sharma",
+    tag: "WELLNESS",
+    title: "7 Ayurvedic Herbs For Better Digestion",
+    desc: "Simple herbs that support gut health and improve metabolism naturally.",
+    author: "Ananya R.",
     authorImg: "https://i.pravatar.cc/150?img=32",
-    date: "May 18, 2025",
-    readTime: "6 min read",
+    date: "May 20, 2024",
     img: "/blog/blog1.png"
   },
   {
     id: 2,
-    tag: "NUTRITION",
-    title: "Antioxidants In Everyday Wellness",
-    desc: "Understanding antioxidants and how they protect your cells naturally.",
-    author: "Kavya Menon",
+    tag: "HERBAL TEA",
+    title: "Tulsi Benefits For Daily Wellness",
+    desc: "Discover the amazing health benefits of tulsi for immunity and stress relief.",
+    author: "Ritu Sharma",
     authorImg: "https://i.pravatar.cc/150?img=5",
-    date: "May 14, 2025",
-    readTime: "5 min read",
+    date: "May 18, 2024",
     img: "/blog/blog2.png"
   },
   {
     id: 3,
     tag: "LIFESTYLE",
-    title: "Creating A Tea Ritual For Better Sleep",
-    desc: "Simple bedtime tea rituals to calm your mind and improve sleep quality.",
-    author: "Ananya Sharma",
+    title: "Chamomile Tea For Better Sleep",
+    desc: "How chamomile helps calm your mind and improve sleep quality.",
+    author: "Ananya R.",
     authorImg: "https://i.pravatar.cc/150?img=32",
-    date: "May 12, 2025",
-    readTime: "6 min read",
+    date: "May 16, 2024",
     img: "/blog/blog_3.png"
   },
   {
     id: 4,
     tag: "INGREDIENTS",
-    title: "Moringa Benefits Explained",
-    desc: "The supergreen with incredible nutritional and healing properties.",
-    author: "Kavya Menon",
+    title: "Moringa: The Miracle Leaf Of Ayurveda",
+    desc: "Nutrition, benefits, and uses of moringa in daily life.",
+    author: "Ritu Sharma",
     authorImg: "https://i.pravatar.cc/150?img=5",
-    date: "May 10, 2025",
-    readTime: "6 min read",
+    date: "May 12, 2024",
     img: "/blog/blog_4.png"
   },
   {
     id: 5,
-    tag: "WELLNESS",
-    title: "Stress Relief Through Herbal Blends",
-    desc: "Herbal ingredients that help your body relax and manage daily stress.",
-    author: "Ananya Sharma",
+    tag: "RECIPES",
+    title: "Create A Relaxing Tea Ritual",
+    desc: "Simple tea rituals to reduce stress and bring mindfulness to your day.",
+    author: "Ananya R.",
     authorImg: "https://i.pravatar.cc/150?img=32",
-    date: "May 8, 2025",
-    readTime: "6 min read",
+    date: "May 10, 2024",
     img: "/blog/blog_5.png"
   },
   {
     id: 6,
-    tag: "RECIPES",
-    title: "Golden Herbal Latte Recipe",
-    desc: "A soothing turmeric latte recipe to nourish your body and mind.",
-    author: "Kavya Menon",
-    authorImg: "https://i.pravatar.cc/150?img=5",
-    date: "May 6, 2025",
-    readTime: "4 min read",
+    tag: "HERBAL TEA",
+    title: "Brewing the Perfect Cup of Oolong",
+    desc: "A step-by-step guide to preparing oolong tea to perfection.",
+    author: "Kavya Iyer",
+    authorImg: "https://i.pravatar.cc/150?img=9",
+    date: "May 08, 2024",
     img: "/blog/blog_6.png"
+  },
+  {
+    id: 7,
+    tag: "AYURVEDA",
+    title: "Ashwagandha For Stress Relief",
+    desc: "How this powerful adaptogen helps balance stress and anxiety.",
+    author: "Ritu Sharma",
+    authorImg: "https://i.pravatar.cc/150?img=5",
+    date: "May 09, 2024",
+    img: "/home/img6.jpg" 
+  },
+  {
+    id: 8,
+    tag: "SELF CARE",
+    title: "Herbal Ingredients To Boost Immunity",
+    desc: "Explore the top herbs and botanicals that strengthen your immune system.",
+    author: "Ananya R.",
+    authorImg: "https://i.pravatar.cc/150?img=32",
+    date: "May 06, 2024",
+    img: "/home/hibiscus.png" 
+  },
+  {
+    id: 9,
+    tag: "WELLNESS",
+    title: "Morning Rituals for Lasting Energy",
+    desc: "Start your day right with these natural wellness practices.",
+    author: "Priya Desai",
+    authorImg: "https://i.pravatar.cc/150?img=43",
+    date: "May 04, 2024",
+    img: "/home/img1.jpg"
+  },
+  {
+    id: 10,
+    tag: "INGREDIENTS",
+    title: "The Magic of Turmeric",
+    desc: "Why this golden spice is a must-have in your daily routine.",
+    author: "Kavya Iyer",
+    authorImg: "https://i.pravatar.cc/150?img=9",
+    date: "May 02, 2024",
+    img: "/home/img2.jpg"
+  },
+  {
+    id: 11,
+    tag: "RECIPES",
+    title: "Golden Milk Lattes at Home",
+    desc: "Learn how to make the perfectly spiced, warming golden milk.",
+    author: "Ananya R.",
+    authorImg: "https://i.pravatar.cc/150?img=32",
+    date: "Apr 28, 2024",
+    img: "/home/img3.jpg"
+  },
+  {
+    id: 12,
+    tag: "LIFESTYLE",
+    title: "Creating a Minimalist Space",
+    desc: "How a decluttered environment leads to a decluttered mind.",
+    author: "Ritu Sharma",
+    authorImg: "https://i.pravatar.cc/150?img=5",
+    date: "Apr 25, 2024",
+    img: "/home/img4.jpg"
+  },
+  {
+    id: 13,
+    tag: "SELF CARE",
+    title: "Sunday Bath Rituals with Herbs",
+    desc: "Elevate your weekend soak with essential botanicals.",
+    author: "Priya Desai",
+    authorImg: "https://i.pravatar.cc/150?img=43",
+    date: "Apr 21, 2024",
+    img: "/home/img5.jpg"
+  },
+  {
+    id: 14,
+    tag: "AYURVEDA",
+    title: "Triphala: The Master Detoxifier",
+    desc: "Understanding the ancient three-fruit blend for complete health.",
+    author: "Kavya Iyer",
+    authorImg: "https://i.pravatar.cc/150?img=9",
+    date: "Apr 18, 2024",
+    img: "/home/img6.jpg"
+  },
+  {
+    id: 15,
+    tag: "HERBAL TEA",
+    title: "Matcha vs. Green Tea",
+    desc: "Unpacking the differences and benefits of these two powerhouses.",
+    author: "Ananya R.",
+    authorImg: "https://i.pravatar.cc/150?img=32",
+    date: "Apr 15, 2024",
+    img: "/blog/blog1.png"
+  },
+  {
+    id: 16,
+    tag: "WELLNESS",
+    title: "The Importance of Hydration",
+    desc: "Why water and herbal infusions are the cornerstone of vitality.",
+    author: "Ritu Sharma",
+    authorImg: "https://i.pravatar.cc/150?img=5",
+    date: "Apr 12, 2024",
+    img: "/blog/blog2.png"
   }
 ];
 
 export default function BlogPage() {
-  const router = useRouter();
-  const [activeTopic, setActiveTopic] = useState('All');
+  const [activeTopic, setActiveTopic] = useState('All Articles');
+  const [currentFeaturedIdx, setCurrentFeaturedIdx] = useState(0);
 
-  const filteredArticles = activeTopic === 'All' 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentFeaturedIdx((prev) => (prev + 1) % FEATURED_ARTICLES.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const featured = FEATURED_ARTICLES[currentFeaturedIdx];
+
+  const filteredArticles = activeTopic === 'All Articles' 
     ? ARTICLES 
-    : ARTICLES.filter(article => article.tag.toLowerCase() === activeTopic.toLowerCase());
+    : ARTICLES.filter(article => article.tag.toLowerCase().includes(activeTopic.toLowerCase()) || activeTopic.toLowerCase().includes(article.tag.toLowerCase()));
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-[#f5f0e6]">
+    <div className="flex flex-col w-full min-h-screen bg-[#fcfbf9] pb-10">
       
-      {/* Featured Article Banner / Hero */}
-      <section className="w-full">
-        <Link href="/blog/4" className="relative block w-full min-h-[400px] md:h-[450px] lg:h-[500px] overflow-hidden group">
-          {/* Background Image */}
-          <div className="absolute inset-0 bg-[#111]">
-            <img 
-              src="/blog/blog hero.png" 
-              alt="The Power Of Herbal Tea" 
-              className="w-full h-full object-cover object-right"
-            />
-          </div>
+      {/* 1. Hero Section */}
+      <section className="relative w-full overflow-hidden bg-[#f5f0e6] py-16 lg:py-24">
+        <div 
+          className="absolute inset-y-0 right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-center opacity-40 lg:opacity-100 z-0"
+          style={{ backgroundImage: `url('/assets/Journalherosection.png')` }}
+        >
+           <div className="hidden lg:block absolute inset-y-0 left-0 w-[400px] bg-gradient-to-r from-[#f5f0e6] via-[#f5f0e6]/60 to-transparent"></div>
+        </div>
 
-          {/* Text Content overlaying the left side */}
-          <div className="relative h-full w-full max-w-7xl mx-auto flex flex-col justify-center px-6 py-10 md:px-10 lg:px-16 z-10">
-            <div className="max-w-xl">
-              <h2 className="text-[34px] md:text-[38px] lg:text-[46px] font-bold text-white mb-6 md:mb-8 leading-[1.15]" style={{ fontFamily: 'Playfair Display, serif' }}>
-                The Power Of<br />Herbal Tea In<br />Modern Wellness
-              </h2>
-              
-              {/* Author and Meta Info */}
-              <div className="flex flex-col gap-4">
-                {/* Author */}
-                <div className="flex items-center gap-3">
-                  <img src="https://i.pravatar.cc/150?img=32" alt="Ananya Sharma" className="w-10 h-10 md:w-11 md:h-11 rounded-full border border-white/20 object-cover" />
-                  <div className="flex flex-col">
-                    <span className="text-white text-[13px] md:text-[14px] font-bold" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>By Ananya Sharma</span>
-                    <span className="text-[#d1dcd5] text-[12px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>Herbal Wellness Expert</span>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-5 text-white/80 mt-1">
-                  {/* Date */}
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" strokeWidth={2} />
-                    <span className="text-[13px] font-medium tracking-wide" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>May 20, 2025</span>
-                  </div>
-                  
-                  {/* Read Time */}
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" strokeWidth={2} />
-                    <span className="text-[13px] font-medium tracking-wide" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>6 min read</span>
-                  </div>
-                </div>
-              </div>
+        <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-6 xl:px-8 relative z-10 flex">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="w-full lg:w-[45%] xl:w-[48%] space-y-6"
+          >
+            <h4 className="text-[10px] font-bold tracking-[0.15em] text-[#b38529] uppercase flex items-center gap-2">
+              HERBAL JOURNAL <Leaf className="w-3 h-3" />
+            </h4>
+
+            <h1 className="text-[38px] md:text-[48px] lg:text-[56px] font-bold text-[#0F3D2E] leading-[1.1]" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Insights for a<br />
+              Healthier You
+            </h1>
+            
+            <p className="text-[15px] md:text-[16px] text-[#4a5d53] leading-[1.6] max-w-[450px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+              Explore expert tips, herbal guides, wellness rituals, and Ayurvedic wisdom to support your natural wellness journey.
+            </p>
+
+            <div className="relative max-w-[450px] mt-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] rounded-full overflow-hidden bg-white flex border border-[#ece8dc] focus-within:border-[#c19236]/50 focus-within:shadow-[0_4px_24px_-4px_rgba(193,146,54,0.15)] transition-all duration-300">
+              <input type="text" placeholder="Search articles, topics, ingredients..." className="flex-1 px-6 py-4 outline-none text-[#4a5d53] text-[14px] bg-transparent" style={{ fontFamily: 'Nunito Sans, sans-serif' }} />
+              <button className="bg-[#0F3D2E] text-white px-8 py-4 hover:bg-[#1a5441] transition-colors flex items-center justify-center font-bold text-[14px] gap-2">
+                <Search className="w-4 h-4" />
+              </button>
             </div>
-          </div>
-        </Link>
+          </motion.div>
+        </div>
       </section>
 
-      {/* Browse By Topic Section */}
-      <section className="bg-transparent pb-6 md:pb-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 id="browse-by-topic" className="text-[26px] md:text-[32px] font-bold text-[#2c4a35] mb-8 scroll-mt-24" style={{ fontFamily: 'Playfair Display, serif' }}>
-            Browse By Topic
-          </h2>
-
-          <div className="flex flex-wrap justify-center gap-3 md:gap-4">
-            {TOPICS.map((topic, idx) => {
-              const Icon = topic.icon;
-              const isActive = topic.name === activeTopic;
-              return (
-                <button
-                  key={idx}
-                  onClick={() => setActiveTopic(topic.name)}
-                  className={`flex items-center gap-2 px-6 py-2.5 rounded-full border transition-all duration-300 ${
-                    isActive
-                      ? 'bg-[#1c2e24] border-[#1c2e24] text-white shadow-md'
-                      : 'bg-white border-[#e8e5de] text-[#0F3D2E] hover:border-[#8cb73d]/50 hover:shadow-sm'
-                  }`}
-                >
-                  <Icon className={`w-[18px] h-[18px] ${isActive ? 'text-[#d6a524]' : 'text-[#5e8b42]'}`} strokeWidth={2.5} />
-                  <span className={`text-[14px] md:text-[15px] font-bold`} style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                    {topic.name}
-                  </span>
-                </button>
-              );
-            })}
+      {/* 2. Navigation Pills */}
+      <section className="bg-[#fcfbf9] py-6 sticky top-0 z-30">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8">
+          <div className="bg-white rounded-full border border-[#ece8dc] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] py-3 px-6 overflow-x-auto no-scrollbar">
+            <div className="flex items-center gap-3 w-max lg:mx-auto">
+              {TOPICS.map((topic, idx) => {
+                const Icon = topic.icon;
+                const isActive = topic.name === activeTopic;
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveTopic(topic.name)}
+                    className={`flex items-center gap-2 px-6 py-2.5 rounded-full border transition-all duration-300 ${
+                      isActive
+                        ? 'bg-[#0F3D2E] border-[#0F3D2E] text-white shadow-md'
+                        : 'bg-white border-transparent text-[#4a5d53] hover:bg-[#fcfbf9] hover:border-[#ece8dc] hover:shadow-sm'
+                    }`}
+                  >
+                    <Icon className={`w-[18px] h-[18px] ${isActive ? 'text-white' : 'text-[#8a958f]'}`} strokeWidth={2} />
+                    <span className="text-[13px] font-bold" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{topic.name}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Blog Articles Section */}
-      <section className="bg-transparent pt-6 pb-20 md:pt-10 md:pb-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {filteredArticles.map((article, idx) => (
-              <motion.article 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-                key={article.id}
-                className="group flex flex-col bg-white rounded-[12px] overflow-hidden shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_24px_-8px_rgba(44,74,53,0.1)] border border-[#f0eee9] transition-all duration-300 h-full"
-              >
-                {/* Image Container */}
-                <div className="relative h-[200px] w-full overflow-hidden shrink-0">
-                  <img 
-                    src={article.img} 
-                    alt={article.title} 
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-                  />
-                </div>
-
-                {/* Content */}
-                <div className="p-5 md:p-6 flex flex-col flex-grow bg-white relative">
-                  
-                  {/* Tag Overlay */}
-                  <div className="absolute -top-[14px] left-5 bg-white px-3 py-[4px] shadow-[0_2px_8px_rgba(0,0,0,0.08)] z-10 rounded-[2px]">
-                    <span className="text-[10px] font-bold text-[#d6a524] uppercase tracking-wider" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                      {article.tag}
-                    </span>
-                  </div>
-
-                  <h3 
-                    className="text-[17px] md:text-[19px] font-bold text-[#0F3D2E] leading-[1.3] mt-2 mb-2 group-hover:text-[#2c4a35] transition-colors line-clamp-2 min-h-[48px]"
-                    style={{ fontFamily: 'Playfair Display, serif' }}
-                  >
-                    {article.title}
-                  </h3>
-
-                  <p className="text-[13px] text-[#6b7b72] mb-5 leading-[1.6] line-clamp-2 min-h-[42px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                    {article.desc}
-                  </p>
-                  
-                  {/* Author & Meta */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <img src={article.authorImg} alt={article.author} className="w-8 h-8 rounded-full object-cover shadow-sm" />
-                    <div className="flex flex-col">
-                      <span className="text-[12px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{article.author}</span>
-                      <span className="text-[11px] text-[#8a958f]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                        {article.date} &nbsp;&bull;&nbsp; {article.readTime}
-                      </span>
+      {/* 3. Featured Article & Popular Topics */}
+      <section className="py-12 bg-[#fcfbf9]">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8">
+          <div className="flex flex-col lg:flex-row gap-8">
+            
+            {/* Featured Article */}
+            {/* Featured Article */}
+            <div className="flex-1 bg-white rounded-[16px] border border-[#ece8dc] overflow-hidden shadow-sm hover:shadow-md transition-shadow relative">
+              
+              {/* Ghost Element for Layout Height */}
+              <div className="flex flex-col md:flex-row opacity-0 pointer-events-none invisible">
+                <div className="w-full md:w-[45%] h-[240px] md:h-auto shrink-0"></div>
+                <div className="w-full md:w-[55%] p-5 lg:p-6 flex flex-col justify-center">
+                  <span className="text-[10px] font-bold uppercase mb-1.5" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{FEATURED_ARTICLES[0].tag}</span>
+                  <h3 className="text-[22px] lg:text-[24px] font-bold mb-2.5 leading-[1.2] whitespace-pre-line" style={{ fontFamily: 'Playfair Display, serif' }}>{FEATURED_ARTICLES[0].title}</h3>
+                  <p className="text-[13px] mb-4 leading-[1.6]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{FEATURED_ARTICLES[0].desc}</p>
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-8 h-8 rounded-full" />
+                    <div className="text-[11px] lg:text-[12px] flex items-center gap-2" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                      <span className="font-bold">{FEATURED_ARTICLES[0].author}</span> &bull; <span>{FEATURED_ARTICLES[0].date}</span>
                     </div>
                   </div>
-
-                  {/* Read Article Link */}
-                  <Link href={`/blog/${article.id}`} className="text-[13px] font-bold text-[#2c4a35] flex items-center gap-1.5 hover:text-[#5e8b42] transition-colors mt-2">
-                    Read Article <ArrowRight className="w-4 h-4" />
-                  </Link>
-
-                </div>
-              </motion.article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Promotional Section */}
-      <section className="w-full pb-16 md:pb-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-            
-            {/* Left Image Area */}
-            <div className="w-full md:w-1/2 flex justify-center">
-              <img 
-                src="/blog/blog_left_img.png" 
-                alt="Ruby Calm Tea" 
-                className="max-w-full h-auto object-contain"
-              />
-            </div>
-
-            {/* Right Content Area */}
-            <div className="w-full md:w-1/2 flex flex-col items-start">
-              <h2 className="text-[32px] md:text-[40px] font-bold text-[#0F3D2E] mb-4 leading-[1.1]" style={{ fontFamily: 'Playfair Display, serif' }}>
-                Sip The Wellness<br />You Read About
-              </h2>
-
-              <p className="text-[15px] md:text-[16px] text-[#6b7b72] mb-8 leading-relaxed max-w-[450px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                Bring ancient herbal wisdom into your daily ritual with our best-selling blends. Each cup is thoughtfully crafted to nourish your body and elevate your well-being.
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-8 mb-10">
-                <div className="flex items-center gap-3">
-                  <Smile className="w-5 h-5 text-[#5e8b42]" strokeWidth={2} />
-                  <span className="text-[14px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>Relaxation Support</span>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                  <Coffee className="w-5 h-5 text-[#5e8b42]" strokeWidth={2} />
-                  <span className="text-[14px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>Naturally Caffeine Free</span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <Sprout className="w-5 h-5 text-[#5e8b42]" strokeWidth={2} />
-                  <span className="text-[14px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>Adaptogen Rich</span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <Apple className="w-5 h-5 text-[#5e8b42]" strokeWidth={2} />
-                  <span className="text-[14px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>Premium Ingredients</span>
+                  <div>
+                    <div className="inline-flex items-center gap-2 px-5 py-2 rounded-[8px] text-[12px] font-bold">Read Full Article</div>
+                  </div>
                 </div>
               </div>
 
-              <Link href="/shop" className="bg-[#2c4a35] hover:bg-[#1c2e24] text-white px-8 py-3.5 rounded flex items-center gap-2 font-bold text-[14px] transition-colors shadow-sm">
-                Shop Ruby Calm Tea
-                <ArrowRight className="w-4 h-4" />
+              <AnimatePresence>
+                <motion.div 
+                  key={currentFeaturedIdx}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                  className="absolute inset-0 flex flex-col md:flex-row group"
+                >
+                  <div className="w-full md:w-[45%] h-[240px] md:h-auto relative overflow-hidden bg-[#f5f0e6] shrink-0">
+                    <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-[6px] z-10 border border-[#ece8dc]/50 shadow-sm">
+                       <span className="text-[10px] font-bold text-[#0F3D2E] tracking-wider" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>FEATURED ARTICLE</span>
+                    </div>
+                    <img src={featured.img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  </div>
+                  <div className="w-full md:w-[55%] p-5 lg:p-6 flex flex-col justify-center">
+                    <span className="text-[#c19236] text-[10px] font-bold tracking-[0.15em] uppercase mb-1.5" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{featured.tag}</span>
+                    <h3 className="text-[22px] lg:text-[24px] font-bold text-[#0F3D2E] mb-2.5 leading-[1.2] group-hover:text-[#2c4a35] transition-colors whitespace-pre-line" style={{ fontFamily: 'Playfair Display, serif' }}>{featured.title}</h3>
+                    <p className="text-[13px] text-[#4a5d53] mb-4 leading-[1.6]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{featured.desc}</p>
+                    <div className="flex items-center gap-3 mb-5">
+                      <img src={featured.authorImg} className="w-8 h-8 rounded-full border border-[#ece8dc]" />
+                      <div className="text-[11px] lg:text-[12px] text-[#6b7b72] flex items-center gap-2" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                        <span className="font-bold text-[#0F3D2E]">{featured.author}</span> &bull; <span>{featured.date}</span> &bull; <span>{featured.readTime}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <Link href={featured.link} className="inline-flex items-center gap-2 bg-[#0F3D2E] text-white px-5 py-2 rounded-[8px] hover:bg-[#1a5441] transition-colors text-[12px] font-bold">
+                        Read Full Article <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Navigation Dots */}
+              <div className="absolute bottom-4 right-6 flex items-center gap-2 z-20">
+                {FEATURED_ARTICLES.map((_, idx) => (
+                  <button 
+                    key={idx}
+                    onClick={() => setCurrentFeaturedIdx(idx)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${idx === currentFeaturedIdx ? 'bg-[#0F3D2E] w-4' : 'bg-[#0F3D2E]/20 hover:bg-[#0F3D2E]/50'}`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Popular Topics Sidebar */}
+            <div className="w-full lg:w-[300px] shrink-0 bg-[#fdfcf9] border border-[#ece8dc] rounded-[16px] p-5 lg:p-6 flex flex-col shadow-sm">
+              <h3 className="text-[18px] font-bold text-[#0F3D2E] mb-4 flex items-center gap-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Popular Topics <Leaf className="w-4 h-4 text-[#c19236]" fill="currentColor" />
+              </h3>
+              <div className="flex flex-col gap-3 flex-1">
+                {POPULAR_TOPICS.map((pt, i) => (
+                  <div key={i} className="flex items-center justify-between group cursor-pointer border-b border-[#ece8dc]/80 pb-2 last:border-0 hover:border-[#c19236]/30 transition-colors">
+                    <span className="text-[13px] text-[#4a5d53] group-hover:text-[#c19236] font-bold transition-colors" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{pt.name}</span>
+                    <span className="text-[11px] text-[#8a958f] font-medium" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>({pt.count})</span>
+                  </div>
+                ))}
+              </div>
+              <Link href="/topics" className="mt-4 text-[12px] font-bold text-[#0F3D2E] flex items-center gap-1.5 hover:text-[#c19236] transition-colors" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                View All Topics <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
@@ -308,44 +439,55 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* Newsletter Section */}
-      <section className="w-full bg-[#2a4530] py-12 md:py-14">
-        <div className="max-w-7xl mx-auto px-8 sm:px-12 md:px-16 lg:px-24">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-16">
-            
-            {/* Left Content */}
-            <div className="w-full md:w-1/2 flex flex-col items-start text-white">
-              <h3 className="text-[24px] md:text-[28px] font-bold mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
-                Stay Inspired Naturally
-              </h3>
-              <p className="text-[14px] text-[#d1dcd5] leading-relaxed max-w-[400px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                Receive herbal insights, exclusive wellness stories and new tea releases.
-              </p>
-            </div>
+      {/* 4. Latest Articles Grid */}
+      <section className="py-10 bg-[#fcfbf9]">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8">
+          <div className="mb-8">
+            <h2 className="text-[24px] md:text-[28px] font-bold text-[#0F3D2E] flex items-center gap-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Latest Articles <Leaf className="w-5 h-5 text-[#c19236]" fill="currentColor" />
+            </h2>
+          </div>
 
-            {/* Right Form Area */}
-            <div className="w-full md:w-1/2 flex flex-col w-full">
-              <form className="w-full max-w-[480px] md:ml-auto" onSubmit={(e) => e.preventDefault()}>
-                <div className="flex w-full rounded-[4px] overflow-hidden">
-                  <input 
-                    type="email" 
-                    placeholder="Enter your email" 
-                    className="flex-grow px-4 py-3 md:py-3.5 text-[#0F3D2E] bg-white outline-none text-[14px] font-medium placeholder-[#8a958f]"
-                    style={{ fontFamily: 'Nunito Sans, sans-serif' }}
-                  />
-                  <button type="submit" className="bg-[#dcae3d] hover:bg-[#c99f36] text-white px-6 md:px-8 py-3 md:py-3.5 font-bold text-[14px] transition-colors whitespace-nowrap" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                    Subscribe
-                  </button>
-                </div>
-                <p className="text-[11px] text-[#aebbb5] mt-2.5 text-left" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                  No spam, ever. Unsubscribe anytime.
-                </p>
-              </form>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredArticles.length > 0 ? filteredArticles.map((article, idx) => (
+              <Link href={`/blog/${article.id}`} key={idx}>
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+                  className="bg-white rounded-[12px] border border-[#ece8dc] overflow-hidden flex flex-col group cursor-pointer hover:shadow-lg transition-all duration-300 h-full"
+                >
+                  <div className="h-[200px] relative overflow-hidden bg-[#f5f0e6]">
+                    <img src={article.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  </div>
+                  <div className="p-5 flex flex-col flex-1">
+                    <span className="text-[#c19236] text-[10px] font-bold uppercase tracking-widest mb-2" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{article.tag}</span>
+                    <h4 className="text-[17px] font-bold text-[#0F3D2E] mb-2 leading-[1.3] group-hover:text-[#2c4a35] transition-colors min-h-[44px]" style={{ fontFamily: 'Playfair Display, serif' }}>{article.title}</h4>
+                    <p className="text-[13px] text-[#6b7b72] mb-5 leading-[1.5] line-clamp-2" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{article.desc}</p>
+                    <div className="mt-auto flex items-center gap-2 pt-4 border-t border-[#fcfbf9]">
+                      <img src={article.authorImg} className="w-6 h-6 rounded-full border border-[#ece8dc]" />
+                      <span className="text-[11px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{article.author}</span>
+                      <span className="text-[10px] text-[#8a958f] ml-auto font-medium" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{article.date}</span>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+            )) : (
+              <div className="col-span-full py-12 text-center text-[#6b7b72]">
+                No articles found for this topic.
+              </div>
+            )}
+          </div>
 
+          <div className="mt-12 flex justify-center">
+            <button className="group flex items-center gap-2 border-[1.5px] border-[#0F3D2E]/40 text-[#0F3D2E] bg-transparent hover:bg-[#0F3D2E] hover:border-[#0F3D2E] hover:text-white px-8 py-3.5 rounded-full transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 text-[14px] font-bold" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+              Load More Articles <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
+            </button>
           </div>
         </div>
       </section>
+
 
     </div>
   );
