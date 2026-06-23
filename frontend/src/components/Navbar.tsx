@@ -72,7 +72,7 @@ export default function Navbar() {
           {/* Center Nav Links */}
           <nav
             className="hidden lg:flex items-center gap-6 text-[15px] font-semibold text-[#2c4a35]"
-            style={{ fontFamily: 'Playfair Display, serif' }}
+            style={{ fontFamily: 'Nunito Sans, sans-serif' }}
           >
             {NAV_LINKS.map(({ label, href }) => {
               const isActive = pathname === href || (href !== '/' && pathname.startsWith(href));
@@ -235,7 +235,7 @@ export default function Navbar() {
                       href={href} 
                       onClick={() => setIsMobileMenuOpen(false)} 
                       className={`text-[18px] font-semibold transition-colors flex items-center ${isActive ? 'text-[#D4AF37]' : 'text-[#0F3D2E] hover:text-[#D4AF37]'}`}
-                      style={{ fontFamily: 'Playfair Display, serif' }}
+                      style={{ fontFamily: 'Nunito Sans, sans-serif' }}
                     >
                       {label}
                       {isActive && <span className="ml-2 w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />}
