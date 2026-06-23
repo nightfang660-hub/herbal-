@@ -36,6 +36,8 @@ export default function Footer() {
             <h4 className="text-xs font-semibold uppercase tracking-widest text-[#c49d56] mb-5">Quick Links</h4>
             <ul className="space-y-3 text-[13px] text-white/80">
               <li><a href="/" className="hover:text-[#d7b56d] transition-colors">Home</a></li>
+              <li><a href="/shop" className="hover:text-[#d7b56d] transition-colors">Shop</a></li>
+              <li><a href="/journal" className="hover:text-[#d7b56d] transition-colors">Journal</a></li>
               <li><a href="/blog" className="hover:text-[#d7b56d] transition-colors">Blog</a></li>
               <li><a href="/about" className="hover:text-[#d7b56d] transition-colors">About Us</a></li>
               <li><a href="/contact" className="hover:text-[#d7b56d] transition-colors">Contact Support</a></li>
@@ -46,30 +48,31 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-widest text-[#c49d56] mb-5">Information</h4>
             <ul className="space-y-3 text-[13px] text-white/80">
-              <li><a href="#" className="hover:text-[#d7b56d] transition-colors">Our Sourcing</a></li>
+              <li><a href="/ingredients" className="hover:text-[#d7b56d] transition-colors">Ingredients</a></li>
+              <li><a href="/cart" className="hover:text-[#d7b56d] transition-colors">Cart</a></li>
+              <li><a href="/wishlist" className="hover:text-[#d7b56d] transition-colors">Wishlist</a></li>
               <li><a href="#" className="hover:text-[#d7b56d] transition-colors">Shipping & Returns</a></li>
               <li><a href="#" className="hover:text-[#d7b56d] transition-colors">FAQS</a></li>
-              <li><a href="#" className="hover:text-[#d7b56d] transition-colors">Contact</a></li>
             </ul>
           </div>
 
-          {/* Newsletter */}
+          {/* Contact Us */}
           <div className="space-y-4">
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-[#c49d56]">Subscribe</h4>
-            <p className="text-[13px] text-white/80">Join our newsletter to receive tea blends updates, recipes, and private sales.</p>
-            <form onSubmit={(e) => e.preventDefault()} className="flex pt-2">
-              <input
-                type="email"
-                placeholder="Email address"
-                className="w-full rounded-l-md border-0 bg-white/10 px-4 py-2.5 text-[13px] text-white placeholder-white/50 focus:ring-1 focus:ring-[#c49d56] outline-none"
-              />
-              <button
-                type="submit"
-                className="rounded-r-md bg-[#c49d56] px-5 py-2.5 text-[13px] font-semibold text-white hover:bg-[#b08b49] transition-colors cursor-pointer"
-              >
-                Join
-              </button>
-            </form>
+            <h4 className="text-xs font-semibold uppercase tracking-widest text-[#c49d56]">Contact Us</h4>
+            <ul className="space-y-3 text-[13px] text-white/80">
+              <li className="flex items-start gap-3">
+                <svg className="w-4 h-4 mt-0.5 text-[#c49d56]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                <span>123 Herbal Way, Wellness City, HW 10001</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <svg className="w-4 h-4 text-[#c49d56]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                <a href="mailto:support@herbaltea.com" className="hover:text-[#d7b56d] transition-colors">support@herbaltea.com</a>
+              </li>
+              <li className="flex items-center gap-3">
+                <svg className="w-4 h-4 text-[#c49d56]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                <a href="tel:+1234567890" className="hover:text-[#d7b56d] transition-colors">+1 (234) 567-890</a>
+              </li>
+            </ul>
           </div>
         </div>
 

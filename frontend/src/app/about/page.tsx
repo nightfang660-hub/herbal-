@@ -120,10 +120,10 @@ export default function AboutPage() {
             className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full mt-10"
           >
             {[
-              { title: 'The Seed Was Planted', desc: 'It all started with a simple belief in the power of herbs. We began our journey to bring natural wellness to all.', icon: <Leaf className="w-7 h-7" />, img: '/home/img1.jpg' },
-              { title: 'First Wellness Blend', desc: 'After months of research, sourcing and careful testing, we crafted our first signature wellness blend.', icon: <Microscope className="w-7 h-7" />, img: '/home/digestive_img.jpg' },
-              { title: 'Growing Community', desc: 'Thousands joined our journey and made our teas a part of their everyday wellness routine.', icon: <Users className="w-7 h-7" />, img: '/home/img3.jpg' },
-              { title: 'Premium Collection', desc: 'Today, we offer a premium range of herbal teas crafted with love, purity and purpose.', icon: <Coffee className="w-7 h-7" />, img: '/assets/edited-photo .png' }
+              { title: 'The Seed Was Planted', desc: 'It all started with a simple belief in the power of herbs. We began our journey to bring natural wellness to all.', icon: <Leaf className="w-7 h-7" />, img: '/home/seed_planted.png' },
+              { title: 'First Wellness Blend', desc: 'After months of research, sourcing and careful testing, we crafted our first signature wellness blend.', icon: <Microscope className="w-7 h-7" />, img: '/home/first_blend.png' },
+              { title: 'Growing Community', desc: 'Thousands joined our journey and made our teas a part of their everyday wellness routine.', icon: <Users className="w-7 h-7" />, img: '/home/growing_community.png' },
+              { title: 'Premium Collection', desc: 'Today, we offer a premium range of herbal teas crafted with love, purity and purpose.', icon: <Coffee className="w-7 h-7" />, img: '/assets/Pasted image.png' }
             ].map((item, idx) => (
               <motion.div 
                 key={idx} 
@@ -196,7 +196,7 @@ export default function AboutPage() {
           >
             <div className="relative rounded-[24px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.06)] max-w-[550px] w-full aspect-[4/3] border border-[#ece8dc]/50">
               <img 
-                src="/home/img1.jpg" 
+                src="/home/our_vision.png" 
                 alt="Our Vision - Natural Wellness" 
                 className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-1000" 
               />

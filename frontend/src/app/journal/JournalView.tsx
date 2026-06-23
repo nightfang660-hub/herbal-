@@ -134,26 +134,26 @@ export default function JournalView({ posts }: JournalViewProps) {
             <div className="flex items-center gap-4">
               <div className="w-12 h-[2px] bg-[#c19236]"></div>
               <span className="text-[#c19236] font-bold text-[13px] tracking-widest uppercase">
-                Shop Our Collection
+                Wellness Journal
               </span>
               <div className="w-12 h-[2px] bg-[#c19236]"></div>
             </div>
 
             {/* Title */}
             <h1 className="text-[44px] md:text-[52px] lg:text-[56px] xl:text-[64px] font-bold text-[#0F3D2E] leading-[1.1] tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
-              Find Your Perfect <br />
-              <span className="text-[#c19236]">Herbal Blend</span>
+              Your Guide To <br />
+              <span className="text-[#c19236]">Holistic Health</span>
             </h1>
             
             {/* Description */}
             <p className="text-[16px] md:text-[18px] text-[#4a5d53] font-medium leading-[1.8] max-w-md" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-              Carefully crafted herbal teas made with 100% natural ingredients to support your body, calm your mind and elevate your everyday.
+              Discover expert insights, traditional herbal wisdom, and mindful practices to nurture your body, calm your mind, and elevate your everyday life.
             </p>
 
             {/* Button */}
             <div>
               <button className="flex items-center gap-3 bg-[#0F3D2E] text-white px-8 py-3.5 rounded-full hover:bg-[#1a5441] transition-colors shadow-md">
-                <span className="font-semibold text-[15px] tracking-wide">Explore Benefits</span>
+                <span className="font-semibold text-[15px] tracking-wide">Explore Articles</span>
                 <ArrowRight className="w-4 h-4 text-[#e2b755]" />
               </button>
             </div>
@@ -343,16 +343,16 @@ export default function JournalView({ posts }: JournalViewProps) {
           </button>
 
           {/* Main Card */}
-          <div className="w-full bg-white rounded-[24px] overflow-hidden border border-[#ece8dc] shadow-[0_4px_24px_rgba(0,0,0,0.04)] flex flex-col lg:flex-row">
+          <div className="w-full bg-white rounded-[24px] overflow-hidden border border-[#ece8dc] shadow-[0_4px_24px_rgba(0,0,0,0.04)] grid">
             
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               <motion.div 
                 key={currentBenefitIdx}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.4 }}
-                className="w-full flex flex-col lg:flex-row"
+                className="w-full flex flex-col lg:flex-row [grid-area:1/1]"
               >
                 {/* Left Image */}
                 <div className="w-full lg:w-[45%] xl:w-[50%] relative h-[300px] lg:h-auto min-h-[300px]">

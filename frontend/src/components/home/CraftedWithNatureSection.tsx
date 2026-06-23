@@ -97,6 +97,10 @@ export default function CraftedWithNatureSection() {
                 hidden: { opacity: 0, y: 40 },
                 show: { opacity: 1, y: 0, transition: { type: "spring", bounce: 0.3 } }
               }}
+              whileHover={{ 
+                y: -10, 
+                boxShadow: '0 15px 35px rgba(0,0,0,0.15), 0 5px 15px rgba(0,0,0,0.1)' 
+              }}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -108,6 +112,7 @@ export default function CraftedWithNatureSection() {
                 alignItems: 'center',
                 padding: '44px 20px 48px', // Balanced padding
                 marginBottom: '20px', // Lift cards slightly higher on the green band
+                cursor: 'pointer', // Add pointer cursor to indicate interactivity
               }}
             >
               {/* Pale mint outlined icon circle */}

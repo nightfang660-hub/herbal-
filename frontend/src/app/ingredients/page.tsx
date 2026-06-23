@@ -97,10 +97,10 @@ export default function IngredientsPage() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
           >
             {[
-              { title: 'Flowers', desc: 'Hibiscus, Rose,\nChamomile & more', img: '/home/img1.jpg', icon: <Sparkles className="w-5 h-5" /> },
-              { title: 'Herbs', desc: 'Tulsi, Mint,\nAshwagandha & more', img: '/home/img2.jpg', icon: <Leaf className="w-5 h-5" /> },
-              { title: 'Roots', desc: 'Mulethi, Ginger,\nAshwagandha & more', img: '/home/img3.jpg', icon: <Activity className="w-5 h-5" /> },
-              { title: 'Citrus', desc: 'Lemon Peel,\nOrange Peel & more', img: '/home/img4.jpg', icon: <Droplet className="w-5 h-5" /> }
+              { title: 'Flowers', desc: 'Hibiscus, Rose,\nChamomile & more', img: '/home/flowers-v2.png', icon: <Sparkles className="w-5 h-5" /> },
+              { title: 'Herbs', desc: 'Tulsi, Mint,\nAshwagandha & more', img: '/home/herbs-v2.png', icon: <Leaf className="w-5 h-5" /> },
+              { title: 'Roots', desc: 'Mulethi, Ginger,\nAshwagandha & more', img: '/home/roots-v2.png', icon: <Activity className="w-5 h-5" /> },
+              { title: 'Citrus', desc: 'Lemon Peel,\nOrange Peel & more', img: '/home/citrus-v2.png', icon: <Droplet className="w-5 h-5" /> }
             ].map((col, idx) => (
               <motion.div 
                 key={idx} 
@@ -145,83 +145,105 @@ export default function IngredientsPage() {
           </div>
 
           <div className="space-y-8 md:space-y-10 relative">
-            {/* Item 1: Hibiscus */}
-            <div className="sticky top-[10vh] z-10 bg-white rounded-[32px] overflow-hidden shadow-[0_15px_40px_rgb(0,0,0,0.08)] border border-[#ece8dc] flex flex-col md:flex-row transition-all duration-500">
-              <div className="w-full md:w-1/2 h-[300px] md:h-auto relative">
-                <img src="/home/hibiscus.png" alt="Hibiscus" className="absolute inset-0 w-full h-full object-cover" />
-              </div>
-              <div className="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center bg-[#fdfbf6]">
-                <span className="text-[#cda434] text-[13px] font-bold uppercase tracking-[0.2em] mb-4">HIBISCUS FLOWER</span>
-                <h3 className="text-[32px] md:text-[40px] font-bold text-[#1c2e24] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>The Jewel Of Wellness</h3>
-                <p className="text-[#556358] text-[16px] leading-[1.8] mb-6" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                  Rich in antioxidants and naturally cooling, hibiscus helps support heart health, maintain healthy skin and boost overall vitality.
-                </p>
-                <div className="flex items-center justify-between gap-4 max-w-sm">
-                  {[
-                    { icon: <Droplet className="w-5 h-5"/>, text: "Antioxidant Rich" },
-                    { icon: <Heart className="w-5 h-5"/>, text: "Supports Vitality" },
-                    { icon: <Sparkles className="w-5 h-5"/>, text: "Women's Wellness" }
-                  ].map((f, i) => (
-                    <div key={i} className="flex flex-col items-center text-center gap-3">
-                      <div className="w-12 h-12 rounded-full bg-white border border-[#ece8dc] flex items-center justify-center text-[#4a6b3d] shadow-sm">{f.icon}</div>
-                      <span className="text-[12px] font-bold text-[#1c2e24] leading-tight">{f.text}</span>
-                    </div>
-                  ))}
+            {[
+              {
+                id: "beetroot",
+                name: "BEETROOT",
+                title: "The Ruby Root",
+                desc: "Known for its vibrant color and earthy flavor, Beetroot is packed with essential nutrients, supports healthy blood flow, and enhances natural stamina.",
+                img: "/home/beetroot-v2.png",
+                features: [
+                  { icon: <Heart className="w-5 h-5"/>, text: "Heart Health" },
+                  { icon: <Zap className="w-5 h-5"/>, text: "Boosts Stamina" },
+                  { icon: <Activity className="w-5 h-5"/>, text: "Rich in Iron" }
+                ],
+                imageLeft: true
+              },
+              {
+                id: "aquatic-fern",
+                name: "AQUATIC FERN",
+                title: "Nature's Purifier",
+                desc: "A unique botanical treasure that helps cleanse the body, support healthy digestion, and provide a refreshing, cooling effect.",
+                img: "/home/aquatic_fern-v2.png",
+                features: [
+                  { icon: <Droplet className="w-5 h-5"/>, text: "Cooling Effect" },
+                  { icon: <ShieldCheck className="w-5 h-5"/>, text: "Detoxifying" },
+                  { icon: <Leaf className="w-5 h-5"/>, text: "Digestion Support" }
+                ],
+                imageLeft: false
+              },
+              {
+                id: "hibiscus",
+                name: "HIBISCUS FLOWER",
+                title: "The Jewel Of Wellness",
+                desc: "Rich in antioxidants and naturally cooling, hibiscus helps support heart health, maintain healthy skin and boost overall vitality.",
+                img: "/home/hibiscus.png",
+                features: [
+                  { icon: <Droplet className="w-5 h-5"/>, text: "Antioxidant Rich" },
+                  { icon: <Heart className="w-5 h-5"/>, text: "Supports Vitality" },
+                  { icon: <Sparkles className="w-5 h-5"/>, text: "Women's Wellness" }
+                ],
+                imageLeft: true
+              },
+              {
+                id: "mulethi",
+                name: "MULETHI (LICORICE ROOT)",
+                title: "The Sweet Soother",
+                desc: "Revered in Ayurveda, Mulethi is known to soothe the throat, support respiratory health, and promote a healthy glow.",
+                img: "/home/mulethi-v2.png",
+                features: [
+                  { icon: <Activity className="w-5 h-5"/>, text: "Soothes Throat" },
+                  { icon: <Shield className="w-5 h-5"/>, text: "Respiratory Health" },
+                  { icon: <Sparkles className="w-5 h-5"/>, text: "Healthy Skin" }
+                ],
+                imageLeft: false
+              },
+              {
+                id: "moringa",
+                name: "MORINGA",
+                title: "The Miracle Tree",
+                desc: "A nutrient powerhouse loaded with vitamins and minerals. Moringa helps boost energy, support immunity, and nourish the body deeply.",
+                img: "/home/moringa-v2.png",
+                features: [
+                  { icon: <Zap className="w-5 h-5"/>, text: "Energy Booster" },
+                  { icon: <ShieldCheck className="w-5 h-5"/>, text: "Immunity Support" },
+                  { icon: <Leaf className="w-5 h-5"/>, text: "Nutrient Dense" }
+                ],
+                imageLeft: true
+              }
+            ].map((ingredient, idx) => (
+              <div 
+                key={ingredient.id}
+                className={`sticky bg-white rounded-[32px] overflow-hidden shadow-[0_15px_40px_rgb(0,0,0,0.08)] border border-[#ece8dc] flex ${ingredient.imageLeft ? 'flex-col md:flex-row' : 'flex-col-reverse md:flex-row'} transition-all duration-500`}
+                style={{ top: `${10 + (idx * 3)}vh`, zIndex: (idx + 1) * 10 }}
+              >
+                {ingredient.imageLeft && (
+                  <div className="w-full md:w-1/2 h-[300px] md:h-auto relative">
+                    <img src={ingredient.img} alt={ingredient.name} className="absolute inset-0 w-full h-full object-cover" />
+                  </div>
+                )}
+                <div className="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center bg-[#fdfbf6]">
+                  <span className="text-[#cda434] text-[13px] font-bold uppercase tracking-[0.2em] mb-4">{ingredient.name}</span>
+                  <h3 className="text-[32px] md:text-[40px] font-bold text-[#1c2e24] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>{ingredient.title}</h3>
+                  <p className="text-[#556358] text-[16px] leading-[1.8] mb-6" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                    {ingredient.desc}
+                  </p>
+                  <div className="flex items-center justify-between gap-4 max-w-sm">
+                    {ingredient.features.map((f, i) => (
+                      <div key={i} className="flex flex-col items-center text-center gap-3">
+                        <div className="w-12 h-12 rounded-full bg-white border border-[#ece8dc] flex items-center justify-center text-[#4a6b3d] shadow-sm">{f.icon}</div>
+                        <span className="text-[12px] font-bold text-[#1c2e24] leading-tight">{f.text}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+                {!ingredient.imageLeft && (
+                  <div className="w-full md:w-1/2 h-[300px] md:h-auto relative">
+                    <img src={ingredient.img} alt={ingredient.name} className="absolute inset-0 w-full h-full object-cover" />
+                  </div>
+                )}
               </div>
-            </div>
-
-            {/* Item 2: Tulsi */}
-            <div className="sticky top-[13vh] z-20 bg-white rounded-[32px] overflow-hidden shadow-[0_15px_40px_rgb(0,0,0,0.08)] border border-[#ece8dc] flex flex-col-reverse md:flex-row transition-all duration-500">
-              <div className="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center bg-[#fdfbf6]">
-                <span className="text-[#cda434] text-[13px] font-bold uppercase tracking-[0.2em] mb-4">TULSI (HOLY BASIL)</span>
-                <h3 className="text-[32px] md:text-[40px] font-bold text-[#1c2e24] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>The Sacred Healer</h3>
-                <p className="text-[#556358] text-[16px] leading-[1.8] mb-6" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                  Revered in Ayurveda for centuries, Tulsi helps the body adapt to stress while supporting immunity and overall wellbeing.
-                </p>
-                <div className="flex items-center justify-between gap-4 max-w-sm">
-                  {[
-                    { icon: <Shield className="w-5 h-5"/>, text: "Stress Support" },
-                    { icon: <ShieldCheck className="w-5 h-5"/>, text: "Immunity Booster" },
-                    { icon: <Leaf className="w-5 h-5"/>, text: "Natural Detoxifier" }
-                  ].map((f, i) => (
-                    <div key={i} className="flex flex-col items-center text-center gap-3">
-                      <div className="w-12 h-12 rounded-full bg-white border border-[#ece8dc] flex items-center justify-center text-[#4a6b3d] shadow-sm">{f.icon}</div>
-                      <span className="text-[12px] font-bold text-[#1c2e24] leading-tight">{f.text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="w-full md:w-1/2 h-[300px] md:h-auto relative">
-                <img src="/home/img5.jpg" alt="Tulsi" className="absolute inset-0 w-full h-full object-cover" />
-              </div>
-            </div>
-
-            {/* Item 3: Ashwagandha */}
-            <div className="sticky top-[16vh] z-30 bg-white rounded-[32px] overflow-hidden shadow-[0_15px_40px_rgb(0,0,0,0.08)] border border-[#ece8dc] flex flex-col md:flex-row transition-all duration-500">
-              <div className="w-full md:w-1/2 h-[300px] md:h-auto relative">
-                <img src="/home/img6.jpg" alt="Ashwagandha" className="absolute inset-0 w-full h-full object-cover" />
-              </div>
-              <div className="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center bg-[#fdfbf6]">
-                <span className="text-[#cda434] text-[13px] font-bold uppercase tracking-[0.2em] mb-4">ASHWAGANDHA</span>
-                <h3 className="text-[32px] md:text-[40px] font-bold text-[#1c2e24] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>Strength From Within</h3>
-                <p className="text-[#556358] text-[16px] leading-[1.8] mb-6" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                  A powerful adaptogen known to help reduce stress, improve energy levels and support overall strength and balance.
-                </p>
-                <div className="flex items-center justify-between gap-4 max-w-sm">
-                  {[
-                    { icon: <Activity className="w-5 h-5"/>, text: "Stress Relief" },
-                    { icon: <Zap className="w-5 h-5"/>, text: "Boosts Energy" },
-                    { icon: <Heart className="w-5 h-5"/>, text: "Enhances Stamina" }
-                  ].map((f, i) => (
-                    <div key={i} className="flex flex-col items-center text-center gap-3">
-                      <div className="w-12 h-12 rounded-full bg-white border border-[#ece8dc] flex items-center justify-center text-[#4a6b3d] shadow-sm">{f.icon}</div>
-                      <span className="text-[12px] font-bold text-[#1c2e24] leading-tight">{f.text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
 
         </div>
