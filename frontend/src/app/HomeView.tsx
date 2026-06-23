@@ -218,7 +218,7 @@ const WELLNESS_CARDS = [
 const FEATURED_PRODUCTS = [
   {
     id: "fp-1",
-    name: "Calm Herbal Tea",
+    name: "Ruby Calm Tea",
     badge: "Relaxation Blend",
     description: "A soothing blend to help you relax and find your inner calm.",
     price: 399,

@@ -15,7 +15,7 @@ export default function HeroSection() {
         {/* Video autoplays in loop directly */}
         <video
           ref={videoRef}
-          src="/assets/hero_video.mp4"
+          src="/assets/remove_first_frame_image_and_r.mp4"
           autoPlay
           loop
           muted
