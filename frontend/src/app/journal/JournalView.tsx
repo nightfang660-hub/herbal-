@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Moon, Leaf, Shield, Droplets, User, Zap, Heart, Star, Mail, ChevronLeft, ChevronRight, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Moon, Leaf, Shield, Droplets, User, Zap, Heart, Star, Mail, ChevronLeft, ChevronRight, ArrowLeft, CheckCircle2, Flower2, Flower, Sprout, Wind, Flame, Wheat } from 'lucide-react';
 import { JournalPost } from './types';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import FAQSection from '@/components/home/FAQSection';
@@ -26,9 +26,9 @@ const benefitsData = [
       img: '/shop/blue_tea1.png'
     },
     keyIngredients: [
-      { name: 'Chamomile', desc: 'Soothes & relaxes', img: '/ingredients/chamomile_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/3094/3094898.png' },
-      { name: 'Lavender', desc: 'Calms & comforts', img: '/ingredients/lavender_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/2875/2875080.png' },
-      { name: 'Tulsi', desc: 'Reduces stress', img: '/ingredients/tulsi_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/6192/6192806.png' }
+      { name: 'Chamomile', desc: 'Soothes & relaxes', Icon: Flower2, color: 'text-yellow-500' },
+      { name: 'Lavender', desc: 'Calms & comforts', Icon: Flower, color: 'text-purple-500' },
+      { name: 'Tulsi', desc: 'Reduces stress', Icon: Leaf, color: 'text-green-600' }
     ]
   },
   {
@@ -48,9 +48,9 @@ const benefitsData = [
       img: '/shop/blue_tea1.png'
     },
     keyIngredients: [
-      { name: 'Ashwagandha', desc: 'Stress adaptogen', img: '/ingredients/ashwagandha_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/1892/1892556.png' },
-      { name: 'Holy Basil', desc: 'Mental clarity', img: '/ingredients/tulsi_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/6192/6192806.png' },
-      { name: 'Lemon Balm', desc: 'Calming effect', img: '/ingredients/lemonbalm_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/862/862086.png' }
+      { name: 'Ashwagandha', desc: 'Stress adaptogen', Icon: Sprout, color: 'text-amber-700' },
+      { name: 'Holy Basil', desc: 'Mental clarity', Icon: Leaf, color: 'text-emerald-600' },
+      { name: 'Lemon Balm', desc: 'Calming effect', Icon: Droplets, color: 'text-yellow-500' }
     ]
   },
   {
@@ -70,9 +70,9 @@ const benefitsData = [
       img: '/shop/blue_tea1.png'
     },
     keyIngredients: [
-      { name: 'Ginger', desc: 'Aids digestion', img: '/ingredients/ginger_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/2853/2853177.png' },
-      { name: 'Fennel', desc: 'Reduces gas', img: '/ingredients/fennel_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/2900/2900609.png' },
-      { name: 'Peppermint', desc: 'Cools & soothes', img: '/ingredients/peppermint_icon.png', fallback: 'https://cdn-icons-png.flaticon.com/512/2060/2060877.png' }
+      { name: 'Ginger', desc: 'Aids digestion', Icon: Flame, color: 'text-orange-500' },
+      { name: 'Fennel', desc: 'Reduces gas', Icon: Wheat, color: 'text-yellow-600' },
+      { name: 'Peppermint', desc: 'Cools & soothes', Icon: Wind, color: 'text-teal-500' }
     ]
   }
 ];
@@ -111,56 +111,61 @@ export default function JournalView({ posts }: JournalViewProps) {
   return (
     <div className="flex flex-col w-full min-h-screen bg-[#fdfbf7] font-sans">
       
-      {/* 1. Hero Section */}
-      <section className="relative w-full overflow-hidden bg-[#f5f0e6] min-h-[35vh] lg:min-h-[40vh] flex items-center">
-        {/* Background Image covering the section */}
-        <div 
-          className="absolute inset-y-0 right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-center lg:bg-[90%_center] opacity-30 lg:opacity-100 z-0"
-          style={{ backgroundImage: `url('/assets/contactherosection.png')` }}
-        >
-          {/* Gradient overlay to ensure text readability on the left */}
-          <div className="hidden lg:block absolute inset-y-0 left-0 w-[400px] bg-gradient-to-r from-[#f5f0e6] via-[#f5f0e6]/60 to-transparent"></div>
-        </div>
-
-        <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-6 xl:px-8 py-12 relative z-10 flex flex-col lg:flex-row h-full">
-          {/* Left Content */}
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="w-full lg:w-[45%] xl:w-[48%] space-y-8 z-10"
+      {/* Hero Section Wrapper for Mobile Padding */}
+      <div className="w-full overflow-hidden">
+        <section className="relative w-full overflow-hidden bg-[#f5f0e6] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
+          {/* Background Image covering the section */}
+          <div 
+            className="absolute inset-0 lg:left-auto lg:right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-[position:60%_center] lg:bg-[90%_center] z-0"
+            style={{ backgroundImage: `url('/assets/contactherosection.png')` }}
           >
-            {/* Subtitle */}
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-[2px] bg-[#c19236]"></div>
-              <span className="text-[#c19236] font-bold text-[13px] tracking-widest uppercase">
-                Wellness Journal
-              </span>
-              <div className="w-12 h-[2px] bg-[#c19236]"></div>
-            </div>
+            {/* Dark gradient on mobile so the white text at the bottom is highly legible */}
+            <div className="lg:hidden absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" style={{ zIndex: 1 }}></div>
+            {/* Gradient overlay to ensure text readability on the left */}
+            <div className="hidden lg:block absolute inset-y-0 left-0 w-[150px] bg-gradient-to-r from-[#f5f0e6] via-[#f5f0e6]/60 to-transparent"></div>
+          </div>
 
-            {/* Title */}
-            <h1 className="text-[44px] md:text-[52px] lg:text-[56px] xl:text-[64px] font-bold text-[#0F3D2E] leading-[1.1] tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
-              Your Guide To <br />
-              <span className="text-[#c19236]">Holistic Health</span>
-            </h1>
-            
-            {/* Description */}
-            <p className="text-[16px] md:text-[18px] text-[#4a5d53] font-medium leading-[1.8] max-w-md" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-              Discover expert insights, traditional herbal wisdom, and mindful practices to nurture your body, calm your mind, and elevate your everyday life.
-            </p>
+          <div className="flex-1 max-w-[1400px] w-full flex flex-col justify-end pb-10 pt-20 lg:justify-center lg:py-20 mx-auto px-6 sm:px-8 xl:px-12 relative z-10">
+            {/* Left Content */}
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="w-full lg:w-[45%] xl:w-[48%] space-y-4 lg:space-y-8 z-10"
+            >
+              {/* Subtitle */}
+              <div className="hidden lg:flex items-center gap-4">
+                <div className="hidden lg:block w-12 h-[2px] bg-[#c19236]"></div>
+                <span className="text-[#c19236] font-bold text-[11px] lg:text-[13px] tracking-widest uppercase">
+                  <span className="hidden lg:inline">Wellness Journal</span>
+                </span>
+                <div className="hidden lg:block w-12 h-[2px] bg-[#c19236]"></div>
+              </div>
 
-            {/* Button */}
-            <div>
-              <button className="flex items-center gap-3 bg-[#0F3D2E] text-white px-8 py-3.5 rounded-full hover:bg-[#1a5441] transition-colors shadow-md">
-                <span className="font-semibold text-[15px] tracking-wide">Explore Articles</span>
-                <ArrowRight className="w-4 h-4 text-[#e2b755]" />
-              </button>
-            </div>
-          </motion.div>
+              {/* Title */}
+              <h1 className="text-[32px] md:text-[52px] lg:text-[56px] xl:text-[64px] font-bold text-white lg:text-[#0F3D2E] leading-[1.1] tracking-tight drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Your Guide To <br />
+                <span className="text-[#c19236]">Holistic Health</span>
+              </h1>
+              
+              {/* Description */}
+              <p className="text-[14px] md:text-[18px] text-white/95 lg:text-[#4a5d53] font-medium leading-[1.6] lg:leading-[1.8] max-w-[280px] lg:max-w-md drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                <span className="lg:hidden">Discover expert insights and mindful practices to nurture your body and elevate your everyday life.</span>
+                <span className="hidden lg:inline">Discover expert insights, traditional herbal wisdom, and mindful practices to nurture your body, calm your mind, and elevate your everyday life.</span>
+              </p>
 
-        </div>
-      </section>
+              {/* Button */}
+              <div className="pt-2 lg:pt-0">
+                <button className="flex items-center gap-3 bg-[#0F3D2E] text-white px-6 lg:px-8 py-2.5 lg:py-3.5 rounded-lg lg:rounded-full hover:bg-[#1a5441] transition-colors shadow-md text-[13px] lg:text-[15px] font-bold lg:font-semibold">
+                  <span className="lg:hidden tracking-wide">Read Articles</span>
+                  <span className="hidden lg:inline tracking-wide">Explore Articles</span>
+                  <ArrowRight className="w-4 h-4 text-white lg:text-[#e2b755]" />
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </div>
 
       {/* 2. Wellness Goals */}
       <section className="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
@@ -218,10 +223,10 @@ export default function JournalView({ posts }: JournalViewProps) {
           <div className="w-full lg:w-[65%] relative flex justify-center items-center h-[400px] lg:h-[480px] mt-6 lg:mt-0">
              
              {/* Central Tea Cup Image */}
-             <img src="/assets/Adobe%20Express%20-%20file.png" alt="Herbal Tea Cup" className="w-[260px] lg:w-[400px] object-contain z-10 relative mt-16 lg:mt-24 drop-shadow-2xl" />
+             <img src="/assets/Adobe%20Express%20-%20file.png" alt="Herbal Tea Cup" className="w-[200px] sm:w-[260px] lg:w-[400px] object-contain z-10 relative mt-16 lg:mt-24 drop-shadow-2xl" />
              
              {/* The Arc and Nodes Container */}
-             <div className="absolute w-[320px] h-[160px] lg:w-[500px] lg:h-[250px] top-[15%] lg:top-[12%] z-20">
+             <div className="absolute w-[220px] h-[110px] sm:w-[320px] sm:h-[160px] lg:w-[500px] lg:h-[250px] top-[25%] sm:top-[22%] lg:top-[18%] z-20">
                 {/* The dashed border arc */}
                 <div className="absolute inset-0 border-t-[1.5px] border-l-[1.5px] border-r-[1.5px] border-dashed border-[#c19236] opacity-50 rounded-t-full pointer-events-none"></div>
 
@@ -234,27 +239,27 @@ export default function JournalView({ posts }: JournalViewProps) {
                 {/* Nodes with their icons perfectly centered on the arc line */}
                 
                 {/* 1. Better Sleep (90 deg - top center) */}
-                <div className="absolute w-0 h-0 -mt-4" style={{ left: '50%', top: '0%' }}>
-                  <div className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center">
-                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 -translate-x-1/2">
-                       <Moon className="w-6 h-6" />
-                    </div>
-                    <div className="flex flex-col text-left ml-2">
-                       <span className="text-[13px] font-bold text-[#0F3D2E]">Better Sleep</span>
-                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight">Calms the mind and promotes deep rest</span>
-                    </div>
+                <div className="absolute w-0 h-0" style={{ left: '50%', top: '0%' }}>
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+                     <div className="flex flex-col text-center absolute bottom-full mb-3 sm:mb-4 w-max">
+                       <span className="text-[12px] sm:text-[13px] font-bold text-[#0F3D2E] whitespace-nowrap">Better Sleep</span>
+                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight mt-1">Calms the mind and promotes deep rest</span>
+                     </div>
+                     <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] relative z-10">
+                       <Moon className="w-5 h-5 sm:w-6 sm:h-6" />
+                     </div>
                   </div>
                 </div>
 
                 {/* 2. Stress Relief (145 deg - left mid) */}
                 <div className="absolute w-0 h-0" style={{ left: '9%', top: '42.7%' }}>
                   <div className="absolute top-1/2 -translate-y-1/2 right-0 flex items-center">
-                    <div className="flex flex-col text-right mr-2">
-                       <span className="text-[13px] font-bold text-[#0F3D2E]">Stress Relief</span>
-                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight">Helps reduce anxiety and uplift mood</span>
+                    <div className="flex flex-col text-center sm:text-right absolute top-full sm:static sm:top-auto left-1/2 -translate-x-1/2 sm:-translate-x-0 mt-2 sm:mt-0 sm:mr-2">
+                       <span className="text-[12px] sm:text-[13px] font-bold text-[#0F3D2E] whitespace-nowrap">Stress Relief</span>
+                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight mt-1">Helps reduce anxiety and uplift mood</span>
                     </div>
-                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 translate-x-1/2">
-                       <Leaf className="w-6 h-6" />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 translate-x-1/2 relative z-10">
+                       <Leaf className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
                   </div>
                 </div>
@@ -262,12 +267,12 @@ export default function JournalView({ posts }: JournalViewProps) {
                 {/* 3. Immunity Boost (180 deg - bottom left) */}
                 <div className="absolute w-0 h-0" style={{ left: '0%', top: '100%' }}>
                   <div className="absolute top-1/2 -translate-y-1/2 right-0 flex items-center">
-                    <div className="flex flex-col text-right mr-2">
-                       <span className="text-[13px] font-bold text-[#0F3D2E]">Immunity Boost</span>
-                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight">Rich in antioxidants and natural nutrients</span>
+                    <div className="flex flex-col text-center sm:text-right absolute top-full sm:static sm:top-auto left-1/2 -translate-x-1/2 sm:-translate-x-0 mt-2 sm:mt-0 sm:mr-2">
+                       <span className="text-[12px] sm:text-[13px] font-bold text-[#0F3D2E] whitespace-nowrap">Immunity Boost</span>
+                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight mt-1">Rich in antioxidants and natural nutrients</span>
                     </div>
-                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 translate-x-1/2">
-                       <Shield className="w-6 h-6" />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 translate-x-1/2 relative z-10">
+                       <Shield className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
                   </div>
                 </div>
@@ -275,40 +280,29 @@ export default function JournalView({ posts }: JournalViewProps) {
                 {/* 4. Digestion Support (35 deg - right mid) */}
                 <div className="absolute w-0 h-0" style={{ left: '91%', top: '42.7%' }}>
                   <div className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center">
-                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 -translate-x-1/2">
-                       <Zap className="w-6 h-6" />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 -translate-x-1/2 relative z-10">
+                       <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
-                    <div className="flex flex-col text-left ml-2">
-                       <span className="text-[13px] font-bold text-[#0F3D2E]">Digestion Support</span>
-                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight">Aids digestion and reduces bloating</span>
+                    <div className="flex flex-col text-center sm:text-left absolute top-full sm:static sm:top-auto left-1/2 -translate-x-1/2 sm:translate-x-0 mt-2 sm:mt-0 sm:ml-2">
+                       <span className="text-[12px] sm:text-[13px] font-bold text-[#0F3D2E] whitespace-nowrap">Digestion Support</span>
+                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight mt-1">Aids digestion and reduces bloating</span>
                     </div>
                   </div>
                 </div>
 
-                {/* 5. Daily Detox (0 deg - bottom right) */}
+                {/* 5. Women's Wellness (0 deg - bottom right) */}
                 <div className="absolute w-0 h-0" style={{ left: '100%', top: '100%' }}>
                   <div className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center">
-                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 -translate-x-1/2">
-                       <Droplets className="w-6 h-6" />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 -translate-x-1/2 relative z-10">
+                       <User className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
-                    <div className="flex flex-col text-left ml-2">
-                       <span className="text-[13px] font-bold text-[#0F3D2E]">Daily Detox</span>
-                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight">Supports natural detoxification</span>
+                    <div className="flex flex-col text-center sm:text-left absolute top-full sm:static sm:top-auto left-1/2 -translate-x-1/2 sm:translate-x-0 mt-2 sm:mt-0 sm:ml-2">
+                       <span className="text-[12px] sm:text-[13px] font-bold text-[#0F3D2E] whitespace-nowrap">Women's Wellness</span>
+                       <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight mt-1">Supports hormonal balance and vitality</span>
                     </div>
                   </div>
                 </div>
 
-             </div>
-
-             {/* 6. Women's Wellness (Bottom Center - moved down below cup) */}
-             <div className="absolute bottom-[2%] lg:bottom-[-2%] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20">
-               <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0">
-                 <User className="w-6 h-6" />
-               </div>
-               <div className="flex flex-col text-center">
-                 <span className="text-[13px] font-bold text-[#0F3D2E]">Women's Wellness</span>
-                 <span className="text-[11px] text-[#6b7b72] hidden md:block w-36 leading-tight mt-1">Supports hormonal balance and vitality</span>
-               </div>
              </div>
 
           </div>
@@ -332,12 +326,12 @@ export default function JournalView({ posts }: JournalViewProps) {
         </div>
 
         {/* Carousel Container */}
-        <div className="relative w-full max-w-[1100px] mx-auto flex items-center justify-center mt-4">
+        <div className="relative w-full max-w-[1100px] mx-auto mt-4">
           
           {/* Left Arrow */}
           <button 
             onClick={handlePrevBenefit}
-            className="absolute left-[-15px] md:left-[-24px] z-20 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_2px_15px_rgba(0,0,0,0.08)] border border-[#ece8dc] text-[#c19236] hover:bg-[#fcfbf9] transition-colors"
+            className="absolute top-[150px] md:top-[225px] lg:top-1/2 -translate-y-1/2 left-[-15px] md:left-[-24px] z-20 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_2px_15px_rgba(0,0,0,0.08)] border border-[#ece8dc] text-[#c19236] hover:bg-[#fcfbf9] transition-colors"
           >
             <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
           </button>
@@ -355,7 +349,7 @@ export default function JournalView({ posts }: JournalViewProps) {
                 className="w-full flex flex-col lg:flex-row [grid-area:1/1]"
               >
                 {/* Left Image */}
-                <div className="w-full lg:w-[45%] xl:w-[50%] relative h-[300px] lg:h-auto min-h-[300px]">
+                <div className="w-full lg:w-[45%] xl:w-[50%] relative h-[300px] md:h-[450px] lg:h-auto min-h-[300px]">
                   <img src={currentBenefit.image} alt={currentBenefit.tag} className="absolute inset-0 w-full h-full object-cover" />
                 </div>
 
@@ -373,54 +367,34 @@ export default function JournalView({ posts }: JournalViewProps) {
 
                   <div className="flex flex-col sm:flex-row gap-6 w-full">
                     
-                    {/* Left Column: Key Benefits & Recommended Blends */}
-                    <div className="flex-1 flex flex-col gap-6">
-                      {/* Key Benefits */}
-                      <div>
-                        <h4 className="text-[14px] font-bold text-[#0F3D2E] mb-3">Key Benefits</h4>
-                        <ul className="space-y-2">
-                          {currentBenefit.keyBenefits.map((benefit, idx) => (
-                            <li key={idx} className="flex items-start gap-2">
-                              <div className="mt-[2px]"><CheckCircle2 className="w-[16px] h-[16px] text-[#c19236]" /></div>
-                              <span className="text-[14px] text-[#4a5d53] leading-snug">{benefit}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Recommended Blends */}
-                      <div>
-                        <h4 className="text-[14px] font-bold text-[#0F3D2E] mb-2">Recommended Blends</h4>
-                        <div className="flex items-center gap-3 group cursor-pointer">
-                          <div className="w-12 h-12 rounded-[12px] bg-[#f5f0e6] border border-[#ece8dc] shrink-0 overflow-hidden flex justify-center items-center group-hover:border-[#c19236] transition-colors">
-                            <img src={currentBenefit.recommendedBlend.img} alt={currentBenefit.recommendedBlend.name} className="w-[130%] h-[130%] object-contain scale-[1.1] translate-y-1" />
-                          </div>
-                          <div className="flex flex-col">
-                            <span className="text-[14px] font-bold text-[#0F3D2E] group-hover:text-[#2c4a35] transition-colors">{currentBenefit.recommendedBlend.name}</span>
-                            <span className="text-[12px] text-[#6b7b72] mb-0.5">{currentBenefit.recommendedBlend.desc}</span>
-                            <Link href={`/shop/${currentBenefit.recommendedBlend.id}`} className="text-[#c19236] text-[12px] font-bold flex items-center gap-1 group-hover:text-[#a07629]">
-                              View Product <ArrowRight className="w-3 h-3" />
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
+                    {/* Left Column: Top Benefits */}
+                    <div className="flex-1">
+                      <h4 className="text-[14px] font-bold text-[#0F3D2E] mb-4">Top Benefits</h4>
+                      <ul className="space-y-4">
+                        {currentBenefit.keyBenefits.map((benefit, idx) => (
+                          <li key={idx} className="flex items-center gap-3">
+                            <CheckCircle2 className="w-[18px] h-[18px] text-[#c19236] shrink-0" />
+                            <span className="text-[14px] text-[#4a5d53]">{benefit}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
 
                     {/* Right Column: Key Ingredients */}
-                    <div className="flex-1">
-                      <h4 className="text-[14px] font-bold text-[#0F3D2E] mb-3">Key Ingredients</h4>
-                      <div className="space-y-3">
-                        {currentBenefit.keyIngredients.map((ingredient, idx) => (
-                          <div key={idx} className="flex items-center gap-3 group cursor-pointer">
-                            <div className="w-10 h-10 rounded-full bg-[#fcfbf9] border border-[#ece8dc] flex items-center justify-center shrink-0 group-hover:border-[#c19236] transition-colors">
-                              <img src={ingredient.img} alt={ingredient.name} className="w-5 h-5 object-contain" onError={(e) => { e.currentTarget.src = ingredient.fallback; e.currentTarget.onerror = null; }} />
-                            </div>
-                            <div className="flex flex-col">
+                    <div className="flex-1 sm:pl-4 lg:pl-12">
+                      <h4 className="text-[14px] font-bold text-[#0F3D2E] mb-4">Key Ingredients</h4>
+                      <div className="space-y-4">
+                        {currentBenefit.keyIngredients.map((ingredient, idx) => {
+                          const IconComp = ingredient.Icon;
+                          return (
+                            <div key={idx} className="flex items-center gap-3 group cursor-pointer">
+                              <div className="w-8 h-8 rounded-full bg-[#fcfbf9] border border-[#ece8dc] flex items-center justify-center shrink-0 group-hover:border-[#c19236] transition-colors">
+                                <IconComp className={`w-4 h-4 ${ingredient.color || 'text-[#5e8b42]'}`} />
+                              </div>
                               <span className="text-[14px] font-bold text-[#0F3D2E]">{ingredient.name}</span>
-                              <span className="text-[12px] text-[#6b7b72]">{ingredient.desc}</span>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
 
@@ -434,7 +408,7 @@ export default function JournalView({ posts }: JournalViewProps) {
           {/* Right Arrow */}
           <button 
             onClick={handleNextBenefit}
-            className="absolute right-[-15px] md:right-[-24px] z-20 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_2px_15px_rgba(0,0,0,0.08)] border border-[#ece8dc] text-[#c19236] hover:bg-[#fcfbf9] transition-colors"
+            className="absolute top-[150px] md:top-[225px] lg:top-1/2 -translate-y-1/2 right-[-15px] md:right-[-24px] z-20 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_2px_15px_rgba(0,0,0,0.08)] border border-[#ece8dc] text-[#c19236] hover:bg-[#fcfbf9] transition-colors"
           >
             <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
           </button>

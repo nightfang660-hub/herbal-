@@ -18,6 +18,8 @@ export default function Navbar() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => { 
@@ -44,6 +46,15 @@ export default function Navbar() {
     { label: 'Contact', href: '/contact' },
   ];
 
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      setIsSearchOpen(false);
+      router.push(`/shop?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery('');
+    }
+  };
+
   return (
     <>
       {/* ── Announcement Bar ── */}
@@ -56,7 +67,35 @@ export default function Navbar() {
 
       {/* ── Sticky Navigation ── */}
       <header className="sticky top-0 z-40 w-full bg-[#F8F5EE]/95 backdrop-blur-md border-b border-[#e8e4d9] shadow-sm">
-        <div className="mx-auto flex h-[70px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-[70px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 relative">
+
+          {/* Animated Search Overlay */}
+          <AnimatePresence>
+            {isSearchOpen && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute inset-0 bg-[#F8F5EE] z-50 flex items-center justify-center px-4 sm:px-6 lg:px-8"
+              >
+                <form onSubmit={handleSearchSubmit} className="w-full max-w-2xl flex items-center border-b-2 border-[#0F3D2E] pb-2">
+                  <Search className="w-5 h-5 md:w-6 md:h-6 text-[#0F3D2E] mr-3" />
+                  <input 
+                    type="text"
+                    autoFocus
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search teas, ingredients, benefits..."
+                    className="flex-1 bg-transparent border-none outline-none text-[#0F3D2E] text-[18px] md:text-[22px] placeholder:text-[#2c4a35]/50"
+                    style={{ fontFamily: 'Playfair Display, serif' }}
+                  />
+                  <button type="button" onClick={() => setIsSearchOpen(false)} className="p-2 text-[#0F3D2E] hover:bg-[#e8f2e1] rounded-full transition-colors cursor-pointer ml-3">
+                    <X className="w-5 h-5 md:w-6 md:h-6" />
+                  </button>
+                </form>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Logo */}
           <div className="flex items-center gap-2.5 cursor-pointer shrink-0" onClick={() => router.push('/')}>
@@ -88,18 +127,18 @@ export default function Navbar() {
           {/* Right Icons */}
           <div className="flex items-center gap-1">
             {/* Search */}
-            <button className="p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors cursor-pointer" aria-label="Search">
+            <button onClick={() => setIsSearchOpen(true)} className="p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors cursor-pointer" aria-label="Search">
               <Search className="h-5 w-5" />
             </button>
 
             {/* Account */}
             {mounted && (
               user ? (
-                <button onClick={() => logout()} className="p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors cursor-pointer" title="Sign Out">
+                <button onClick={() => logout()} className="hidden lg:flex p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors cursor-pointer" title="Sign Out">
                   <LogOut className="h-5 w-5" />
                 </button>
               ) : (
-                <Link href="/login" className="p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors" aria-label="Account">
+                <Link href="/login" className="hidden lg:flex p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors" aria-label="Account">
                   <UserIcon className="h-5 w-5" />
                 </Link>
               )
@@ -108,7 +147,7 @@ export default function Navbar() {
             {/* Wishlist */}
             <button
               onClick={() => router.push('/wishlist')}
-              className="relative p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors cursor-pointer"
+              className="hidden lg:flex relative p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors cursor-pointer"
               aria-label="Wishlist"
             >
               <Heart className="h-5 w-5" />
@@ -122,7 +161,7 @@ export default function Navbar() {
             {/* Cart */}
             <button
               onClick={() => router.push('/cart')}
-              className="relative flex items-center gap-1.5 bg-[#0F3D2E] hover:bg-[#1a5240] text-white px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer shadow-sm ml-1"
+              className="hidden lg:flex relative items-center gap-1.5 bg-[#0F3D2E] hover:bg-[#1a5240] text-white px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer shadow-sm ml-1"
               aria-label="Cart"
             >
               <ShoppingCart className="h-4 w-4" />
@@ -242,6 +281,28 @@ export default function Navbar() {
                     </Link>
                   );
                 })}
+                
+                {/* Divider */}
+                <hr className="border-[#e8e5de]" />
+                
+                {/* Mobile User Icons */}
+                <div className="flex flex-col gap-5 pt-2">
+                  {mounted && user ? (
+                    <button onClick={() => { setIsMobileMenuOpen(false); logout(); }} className="flex items-center gap-3 text-[18px] font-semibold text-[#0F3D2E] transition-colors hover:text-[#D4AF37] cursor-pointer">
+                      <LogOut className="h-5 w-5" /> Sign Out
+                    </button>
+                  ) : (
+                    <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 text-[18px] font-semibold text-[#0F3D2E] transition-colors hover:text-[#D4AF37]">
+                      <UserIcon className="h-5 w-5" /> My Profile
+                    </Link>
+                  )}
+                  <button onClick={() => { setIsMobileMenuOpen(false); router.push('/wishlist'); }} className="flex items-center gap-3 text-[18px] font-semibold text-[#0F3D2E] transition-colors hover:text-[#D4AF37] cursor-pointer">
+                    <Heart className="h-5 w-5" /> My Favorites {mounted && wishlistCount > 0 && <span className="ml-1 text-[14px] text-[#D4AF37]">({wishlistCount})</span>}
+                  </button>
+                  <button onClick={() => { setIsMobileMenuOpen(false); router.push('/cart'); }} className="flex items-center gap-3 text-[18px] font-semibold text-[#0F3D2E] transition-colors hover:text-[#D4AF37] cursor-pointer">
+                    <ShoppingCart className="h-5 w-5" /> My Cart {mounted && totalItems > 0 && <span className="ml-1 text-[14px] text-[#D4AF37]">({totalItems})</span>}
+                  </button>
+                </div>
               </div>
               <div className="mt-auto border-t border-[#e8e5de] p-5">
                 <p className="text-xs text-[#6b7b72] text-center" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>

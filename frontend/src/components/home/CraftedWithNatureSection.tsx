@@ -79,24 +79,18 @@ export default function CraftedWithNatureSection() {
         </motion.div>
 
         {/* ── 5 Feature Cards ── */}
-        <motion.div 
-             initial="hidden"
-             whileInView="show"
-             viewport={{ once: true }}
-             variants={{
-               hidden: {},
-               show: { transition: { staggerChildren: 0.1 } }
-             }}
-             style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16 }}
-             className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-5"
+        <div 
+             className="flex lg:grid lg:grid-cols-5 gap-4 overflow-x-auto lg:overflow-visible snap-x snap-mandatory pb-8 lg:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
+             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {cards.map(({ Icon, titleLines, desc }, idx) => (
             <motion.div 
-              key={idx} 
-              variants={{
-                hidden: { opacity: 0, y: 40 },
-                show: { opacity: 1, y: 0, transition: { type: "spring", bounce: 0.3 } }
-              }}
+              key={idx}
+              className="min-w-[240px] sm:min-w-[280px] lg:min-w-0 snap-center shrink-0"
+              initial={{ opacity: 1, scale: 0.85 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ amount: 0.7 }}
+              transition={{ type: "spring", bounce: 0.4 }}
               whileHover={{ 
                 y: -10, 
                 boxShadow: '0 15px 35px rgba(0,0,0,0.15), 0 5px 15px rgba(0,0,0,0.1)' 
@@ -165,7 +159,7 @@ export default function CraftedWithNatureSection() {
               </p>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

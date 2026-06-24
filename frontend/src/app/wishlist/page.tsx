@@ -132,7 +132,7 @@ export default function WishlistPage() {
                   <div className="flex items-center justify-between mt-auto gap-3">
                     <div className="flex flex-col shrink-0">
                       <span className="font-bold text-[#1c2e24] text-[20px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                        ₹{product.price.toFixed(2)}
+                        ₹{product.price}
                       </span>
                     </div>
                     

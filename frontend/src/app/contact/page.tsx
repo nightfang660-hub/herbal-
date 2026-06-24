@@ -12,16 +12,18 @@ export default function ContactPage() {
     <main className="min-h-screen bg-white">
       
       {/* Hero Section (Matching Shop/Journal) */}
-      <section className="relative w-full overflow-hidden bg-[#f5f0e6] min-h-[85vh] flex items-center">
+      <section className="relative w-full overflow-hidden bg-[#f5f0e6] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
         {/* Right Side Background Image (Desktop) */}
         <div 
-          className="absolute inset-y-0 right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-center lg:bg-[90%_center] opacity-30 lg:opacity-100 z-0"
+          className="absolute inset-0 lg:left-auto lg:right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-[position:60%_center] lg:bg-[90%_center] z-0"
           style={{ backgroundImage: `url('/assets/contactherosection.png')` }}
         >
-           <div className="hidden lg:block absolute inset-y-0 left-0 w-[400px] bg-gradient-to-r from-[#f5f0e6] via-[#f5f0e6]/60 to-transparent"></div>
+           {/* Dark gradient on mobile so the white text at the bottom is highly legible */}
+           <div className="lg:hidden absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" style={{ zIndex: 1 }}></div>
+           <div className="hidden lg:block absolute inset-y-0 left-0 w-[150px] bg-gradient-to-r from-[#f5f0e6] via-[#f5f0e6]/60 to-transparent"></div>
         </div>
 
-        <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-6 xl:px-8 py-20 relative z-10">
+        <div className="flex-1 max-w-[1400px] w-full flex flex-col justify-end pb-10 pt-20 lg:justify-center lg:py-20 mx-auto px-6 sm:px-8 xl:px-12 relative z-10">
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -29,7 +31,7 @@ export default function ContactPage() {
               className="w-full lg:w-[45%] xl:w-[48%] space-y-8"
             >
               {/* Subtitle */}
-              <div className="flex items-center gap-4">
+              <div className="hidden lg:flex items-center gap-4">
                 <div className="w-12 h-[2px] bg-[#c19236]"></div>
                 <span className="text-[#c19236] font-bold text-[13px] tracking-widest uppercase">
                   CONTACT US
@@ -38,13 +40,13 @@ export default function ContactPage() {
               </div>
   
               {/* Title */}
-              <h1 className="text-[44px] md:text-[52px] lg:text-[56px] xl:text-[64px] font-bold text-[#0F3D2E] leading-[1.1] tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+              <h1 className="text-[44px] md:text-[52px] lg:text-[56px] xl:text-[64px] font-bold text-white lg:text-[#0F3D2E] leading-[1.1] tracking-tight drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Playfair Display, serif' }}>
                 We'd Love To <br />
                 <span className="text-[#c19236]">Hear From You</span>
               </h1>
               
               {/* Description */}
-              <p className="text-[16px] md:text-[18px] text-[#4a5d53] font-medium leading-[1.8] max-w-[500px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+              <p className="text-[16px] md:text-[18px] text-white/95 lg:text-[#4a5d53] font-medium leading-[1.8] max-w-[500px] drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                 Have a question, feedback, or need assistance? We're here to help you on your wellness journey.
               </p>
   

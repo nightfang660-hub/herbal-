@@ -277,31 +277,33 @@ export default function BlogPage() {
     <div className="flex flex-col w-full min-h-screen bg-[#fcfbf9] pb-10">
       
       {/* 1. Hero Section */}
-      <section className="relative w-full overflow-hidden bg-[#f5f0e6] py-16 lg:py-24">
+      <section className="relative w-full overflow-hidden bg-[#f5f0e6] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
         <div 
-          className="absolute inset-y-0 right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-center opacity-40 lg:opacity-100 z-0"
+          className="absolute inset-0 lg:left-auto lg:right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-[position:60%_center] lg:bg-[90%_center] z-0"
           style={{ backgroundImage: `url('/assets/Journalherosection.png')` }}
         >
-           <div className="hidden lg:block absolute inset-y-0 left-0 w-[400px] bg-gradient-to-r from-[#f5f0e6] via-[#f5f0e6]/60 to-transparent"></div>
+           {/* Dark gradient on mobile so the white text at the bottom is highly legible */}
+           <div className="lg:hidden absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" style={{ zIndex: 1 }}></div>
+           <div className="hidden lg:block absolute inset-y-0 left-0 w-[150px] bg-gradient-to-r from-[#f5f0e6] via-[#f5f0e6]/60 to-transparent"></div>
         </div>
 
-        <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-6 xl:px-8 relative z-10 flex">
+        <div className="flex-1 max-w-[1400px] w-full flex flex-col justify-end pb-10 pt-20 lg:justify-center lg:py-20 mx-auto px-6 sm:px-8 xl:px-12 relative z-10">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             className="w-full lg:w-[45%] xl:w-[48%] space-y-6"
           >
-            <h4 className="text-[10px] font-bold tracking-[0.15em] text-[#b38529] uppercase flex items-center gap-2">
+            <h4 className="hidden lg:flex text-[10px] font-bold tracking-[0.15em] text-[#b38529] uppercase items-center gap-2">
               HERBAL JOURNAL <Leaf className="w-3 h-3" />
             </h4>
 
-            <h1 className="text-[38px] md:text-[48px] lg:text-[56px] font-bold text-[#0F3D2E] leading-[1.1]" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <h1 className="text-[38px] md:text-[48px] lg:text-[56px] font-bold text-white lg:text-[#0F3D2E] leading-[1.1] drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Playfair Display, serif' }}>
               Insights for a<br />
               Healthier You
             </h1>
             
-            <p className="text-[15px] md:text-[16px] text-[#4a5d53] leading-[1.6] max-w-[450px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+            <p className="text-[15px] md:text-[16px] text-white/95 lg:text-[#4a5d53] leading-[1.6] max-w-[450px] drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
               Explore expert tips, herbal guides, wellness rituals, and Ayurvedic wisdom to support your natural wellness journey.
             </p>
 
