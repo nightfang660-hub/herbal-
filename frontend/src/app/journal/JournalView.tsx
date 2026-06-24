@@ -220,13 +220,16 @@ export default function JournalView({ posts }: JournalViewProps) {
           </div>
 
           {/* Right Visual Content */}
-          <div className="w-full lg:w-[65%] relative flex justify-center items-center h-[400px] lg:h-[480px] mt-6 lg:mt-0">
+          <div className="w-full lg:w-[65%] relative flex justify-center items-center h-[350px] sm:h-[400px] lg:h-[480px] mt-6 lg:mt-0">
              
-             {/* Central Tea Cup Image */}
-             <img src="/assets/Adobe%20Express%20-%20file.png" alt="Herbal Tea Cup" className="w-[200px] sm:w-[260px] lg:w-[400px] object-contain z-10 relative mt-16 lg:mt-24 drop-shadow-2xl" />
+             {/* Responsive Wrapper for Arc and Cup */}
+             <div className="relative w-[85%] sm:w-[75%] lg:w-[85%] max-w-[500px] aspect-[2/1] mt-12 lg:mt-20">
              
-             {/* The Arc and Nodes Container */}
-             <div className="absolute w-[220px] h-[110px] sm:w-[320px] sm:h-[160px] lg:w-[500px] lg:h-[250px] top-[25%] sm:top-[22%] lg:top-[18%] z-20">
+                 {/* Central Tea Cup Image */}
+                 <img src="/assets/Adobe%20Express%20-%20file.png" alt="Herbal Tea Cup" className="absolute top-[30%] left-[10%] w-[80%] object-contain z-10 drop-shadow-2xl pointer-events-none" />
+                 
+                 {/* The Arc and Nodes Container */}
+                 <div className="absolute inset-0 z-20">
                 {/* The dashed border arc */}
                 <div className="absolute inset-0 border-t-[1.5px] border-l-[1.5px] border-r-[1.5px] border-dashed border-[#c19236] opacity-50 rounded-t-full pointer-events-none"></div>
 
@@ -302,6 +305,8 @@ export default function JournalView({ posts }: JournalViewProps) {
                     </div>
                   </div>
                 </div>
+
+             </div>
 
              </div>
 
