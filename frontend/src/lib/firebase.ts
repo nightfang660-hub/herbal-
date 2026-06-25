@@ -21,8 +21,7 @@ const storage = getStorage(app);
 
 // Check if running on client and connection to emulator is requested
 if (typeof window !== 'undefined') {
-  const useEmulator = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true' || 
-                        process.env.NODE_ENV === 'development';
+  const useEmulator = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true';
 
   if (useEmulator) {
     // Prevent double binding emulator ports when Next.js hot reloads in development

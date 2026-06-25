@@ -134,9 +134,9 @@ export default function Navbar() {
             {/* Account */}
             {mounted && (
               user ? (
-                <button onClick={() => logout()} className="hidden lg:flex p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors cursor-pointer" title="Sign Out">
-                  <LogOut className="h-5 w-5" />
-                </button>
+                <Link href="/profile" className="hidden lg:flex p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors cursor-pointer" title="My Profile">
+                  <UserIcon className="h-5 w-5" />
+                </Link>
               ) : (
                 <Link href="/login" className="hidden lg:flex p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors" aria-label="Account">
                   <UserIcon className="h-5 w-5" />
@@ -288,12 +288,17 @@ export default function Navbar() {
                 {/* Mobile User Icons */}
                 <div className="flex flex-col gap-5 pt-2">
                   {mounted && user ? (
-                    <button onClick={() => { setIsMobileMenuOpen(false); logout(); }} className="flex items-center gap-3 text-[18px] font-semibold text-[#0F3D2E] transition-colors hover:text-[#D4AF37] cursor-pointer">
-                      <LogOut className="h-5 w-5" /> Sign Out
-                    </button>
+                    <>
+                      <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 text-[18px] font-semibold text-[#0F3D2E] transition-colors hover:text-[#D4AF37] cursor-pointer">
+                        <UserIcon className="h-5 w-5" /> My Profile
+                      </Link>
+                      <button onClick={() => { setIsMobileMenuOpen(false); logout(); }} className="flex items-center gap-3 text-[18px] font-semibold text-[#0F3D2E] transition-colors hover:text-[#D4AF37] cursor-pointer">
+                        <LogOut className="h-5 w-5" /> Sign Out
+                      </button>
+                    </>
                   ) : (
                     <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 text-[18px] font-semibold text-[#0F3D2E] transition-colors hover:text-[#D4AF37]">
-                      <UserIcon className="h-5 w-5" /> My Profile
+                      <UserIcon className="h-5 w-5" /> Sign In
                     </Link>
                   )}
                   <button onClick={() => { setIsMobileMenuOpen(false); router.push('/wishlist'); }} className="flex items-center gap-3 text-[18px] font-semibold text-[#0F3D2E] transition-colors hover:text-[#D4AF37] cursor-pointer">

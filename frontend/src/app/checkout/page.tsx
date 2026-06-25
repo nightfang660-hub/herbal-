@@ -58,12 +58,14 @@ export default function CheckoutPage() {
   
   const [firstErrorField, setFirstErrorField] = useState<string | null>(null);
 
-  // Prepopulate authenticated user information when loaded
+  // Prepopulate authenticated user information and protect route
   useEffect(() => {
-    if (user && !fullName) {
+    if (!authLoading && !user) {
+      router.push('/login?redirect=/checkout');
+    } else if (user && !fullName) {
       setFullName(user.displayName || '');
     }
-  }, [user]);
+  }, [user, authLoading, fullName, router]);
 
   const enrichedItems = items.map(cartItem => {
     const productId = parseInt(cartItem.sku.replace('sku-', ''), 10);
@@ -131,10 +133,14 @@ export default function CheckoutPage() {
 
   if (authLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[50vh] text-xs font-medium text-muted">
+      <div className="flex items-center justify-center min-h-[50vh] text-[14px] font-medium text-[#555]">
         Verifying user credentials...
       </div>
     );
+  }
+
+  if (!user) {
+    return null; // Prevent rendering checkout if not logged in, useEffect will redirect
   }
   
   const clearForm = () => {

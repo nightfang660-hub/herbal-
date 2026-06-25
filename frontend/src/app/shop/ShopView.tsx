@@ -193,7 +193,7 @@ export default function ShopPage() {
                   transition={{ duration: 0.5 }}
                   key={product.id} 
                   onClick={() => router.push(`/shop/${product.id}`)}
-                  className="flex flex-col group cursor-pointer bg-white rounded-2xl md:rounded-3xl border border-[#e8e5de] hover:border-[#ffc107] p-3 md:p-5 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+                  className="flex flex-col group cursor-pointer bg-white rounded-2xl md:rounded-3xl border border-[#e8e5de] p-3 md:p-5 overflow-hidden shadow-sm transition-all duration-300"
                 >
                   {/* Product Image */}
                   <div className="relative w-full h-[160px] md:h-[280px] mb-3 flex items-center justify-center rounded-t-2xl pt-2 px-1">
@@ -233,19 +233,13 @@ export default function ShopPage() {
                       
                       {/* Actions */}
                       <div className="flex items-center gap-2 relative">
-                        {/* Hover Add to Cart Button (Desktop only) */}
-                        <button 
-                          onClick={(e) => { e.stopPropagation(); /* Add to cart logic can be added here */ }}
-                          className="hidden lg:flex items-center justify-center bg-[#0F3D2E] text-white text-[13px] font-bold px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300 absolute right-full mr-2 whitespace-nowrap pointer-events-none group-hover:pointer-events-auto"
-                        >
-                          Add To Cart
-                        </button>
+
 
                         <button 
                           onClick={(e) => { e.stopPropagation(); router.push(`/shop/${product.id}`); }}
-                          className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#ffc107] text-[#0F3D2E] hover:bg-[#e6ae00] transition-colors shadow-sm shrink-0 relative z-10"
+                          className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#0F3D2E] text-white hover:bg-[#1a5441] transition-colors shadow-sm shrink-0 relative z-10"
                         >
-                          <ShoppingBasket className="w-4 h-4 md:w-5 md:h-5" />
+                          <ShoppingCart className="w-4 h-4 md:w-[18px] md:h-[18px]" />
                         </button>
                       </div>
                     </div>

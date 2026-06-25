@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Nunito_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import { LayoutWrapper } from "../components/LayoutWrapper";
 import { AuthProvider } from "../providers/AuthProvider";
 
 const nunito = Nunito_Sans({
@@ -40,11 +39,9 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <AuthProvider>
-          <Navbar />
-          <main className="flex-grow">
+          <LayoutWrapper>
             {children}
-          </main>
-          <Footer />
+          </LayoutWrapper>
         </AuthProvider>
       </body>
     </html>

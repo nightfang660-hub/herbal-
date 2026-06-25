@@ -1,63 +1,36 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Star, ShoppingBasket } from 'lucide-react';
+import { Star, ShoppingCart, Heart } from 'lucide-react';
 import { useCartStore } from '../../features/cart/cartStore';
+import { useWishlistStore } from '../../features/wishlist/wishlistStore';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
 const FEATURED_PRODUCTS = [
-  {
-    id: "fp-1",
-    name: "Ruby Calm Tea",
-    badge: "Relaxation Blend",
-    description: "A soothing blend to help you relax and find your inner calm.",
-    price: 399,
-    originalPrice: 499,
-    image: "/assets/herosection.png",
-    bestseller: true
-  },
-  {
-    id: "fp-2",
-    name: "Ruby Calm Tea",
-    badge: "Women's Wellness Blend",
-    description: "Carefully crafted to support hormonal balance and harmony from within.",
-    price: 449,
-    originalPrice: 599,
-    image: "/home/ruby_calm_hero.png",
-    bestseller: true
-  },
-  {
-    id: "fp-3",
-    name: "Daily Detox Tea",
-    badge: "Purifying Blend",
-    description: "A refreshing blend that supports daily detox and inner clarity.",
-    price: 349,
-    originalPrice: 449,
-    image: "/home/detox_tea.png",
-    bestseller: true
-  },
-  {
-    id: "fp-4",
-    name: "Zen Digest Blend",
-    badge: "Daily Digestive Relief",
-    description: "Daily digestive relief blend with Ginger, Peppermint, Fennel, and Chamomile.",
-    price: 399,
-    originalPrice: 499,
-    image: "/home/digestive_herbal_img.png",
-    bestseller: false
-  }
+  { id: 1, name: "Premium Herbal Blend", price: 450.00, img: "/shop/red_tea.png", rating: 4.5, weight: "15 Packets" },
+  { id: 2, name: "Calming Chamomile", price: 350.00, img: "/shop/green_tea.png", rating: 4.0, weight: "10 Packets" },
+  { id: 3, name: "Morning Matcha", price: 850.00, img: "/shop/blue.png", rating: 4.8, weight: "30 Packets" },
+  { id: 4, name: "Detox Green Wellness", price: 400.00, img: "/shop/ruby_detox.png", rating: 4.1, weight: "15 Packets" },
 ];
 
 function FeaturedProductCard({ product, index }: { product: any, index?: number }) {
+  const router = useRouter();
   const addItem = useCartStore((state) => state.addItem);
+  const { toggleItem, isInWishlist } = useWishlistStore();
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleAddToCart = () => {
     addItem({
       sku: `PACK-${product.id}-1`,
-      name: `${product.name} (1 Packet)`,
+      name: `${product.name} (${product.weight})`,
       priceCents: product.price * 100,
-      image: product.image
+      image: product.img
     });
   };
 
@@ -67,54 +40,54 @@ function FeaturedProductCard({ product, index }: { product: any, index?: number 
         hidden: { opacity: 0, y: 40 },
         show: { opacity: 1, y: 0, transition: { type: "spring", bounce: 0.3 } }
       }}
-      className="group flex flex-col h-full bg-white rounded-[24px] overflow-hidden transition-all duration-300 border-2 border-transparent shadow-[0_0_0_1px_#f0f0f0] hover:shadow-lg hover:border-[#FFC107]"
+      onClick={() => router.push(`/shop/${product.id}`)}
+      className="flex flex-col group cursor-pointer bg-white rounded-2xl md:rounded-3xl border border-[#e8e5de] p-3 md:p-5 overflow-hidden shadow-sm transition-all duration-300"
     >
-      {/* Top Section: Image Area */}
-      <div className="relative aspect-square sm:aspect-[4/5] w-full flex items-center justify-center overflow-hidden bg-[#f9f9f9]">
+      {/* Product Image */}
+      <div className="relative w-full h-[160px] md:h-[280px] mb-3 flex items-center justify-center rounded-t-2xl pt-2 px-1">
+        <button 
+          className={`absolute top-0 right-0 p-1 transition-colors z-10 ${mounted && isInWishlist(product.id) ? 'text-[#D84B5B]' : 'text-[#8b9992] hover:text-[#D84B5B]'}`} 
+          onClick={(e) => { e.stopPropagation(); toggleItem(product.id); }}
+        >
+          <Heart className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} fill={mounted && isInWishlist(product.id) ? 'currentColor' : 'none'} />
+        </button>
         <img 
-          src={product.image} 
+          src={product.img} 
           alt={product.name} 
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+          className={`w-full h-full object-contain drop-shadow-sm transition-transform duration-700 ease-in-out ${product.img.endsWith('/blue.png') ? 'scale-[1.4] translate-y-1' : (product.img.endsWith('/ruby_detox.png') || product.img.endsWith('/blue_tea1.png') ? 'scale-[1.3] translate-y-2' : '')}`} 
         />
       </div>
-
-      {/* Content Section */}
-      <div className="pt-5 pb-6 px-6 flex flex-col flex-grow text-left">
-        {/* Stars */}
-        <div className="flex items-center gap-[4px] mb-3">
-          {[...Array(4)].map((_, i) => (
-            <Star key={i} className="w-[16px] h-[16px] text-[#FFC107] fill-[#FFC107]" />
-          ))}
-          <Star className="w-[16px] h-[16px] text-[#e0e0e0] fill-[#e0e0e0]" />
-        </div>
-
-        {/* Title */}
-        <h3 className="text-[19px] font-bold leading-tight mb-2 text-[#1f2937] group-hover:text-[#0F3D2E] transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+      
+      {/* Product Details */}
+      <div className="flex flex-col flex-1">
+        <h4 className="font-bold text-[#2c4a35] group-hover:text-[#0F3D2E] text-[14px] md:text-[18px] leading-tight mb-1.5 transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
           {product.name}
-        </h3>
-        
-        {/* Badge / Subtitle */}
-        <p className="text-[12px] font-bold text-[#a0a0a0] uppercase tracking-wider mb-6 flex-grow">
-          {product.badge}
-        </p>
+        </h4>
 
-        {/* Bottom Row: Price & Button */}
-        <div className="flex items-center justify-between mt-auto">
-          <span className="text-[20px] font-extrabold text-[#1f2937]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-            ₹{product.price}.00
+        {/* Rating (5 Stars) */}
+        <div className="flex items-center gap-1.5 mb-3">
+          <div className="flex items-center gap-[2px]">
+            {[...Array(5)].map((_, i) => (
+               <Star key={i} className={`w-3 h-3 md:w-3.5 md:h-3.5 ${i < Math.floor(product.rating) ? 'fill-[#ffc107] text-[#ffc107]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
+            ))}
+          </div>
+          <span className="text-[11px] md:text-[13px] font-bold text-[#4a5d53]">({product.rating.toFixed(1)})</span>
+        </div>
+        
+        <div className="flex items-center justify-between mt-auto gap-3 pt-1">
+          <span className="font-bold text-[#0F3D2E] text-[15px] md:text-[20px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+            ₹{product.price}
           </span>
           
-          <button 
-             onClick={(e) => { e.stopPropagation(); handleAddToCart(); }} 
-             className="flex items-center justify-end rounded-full h-[40px] bg-[#FFC107] group-hover:bg-[#0F3D2E] transition-all duration-300 ease-in-out cursor-pointer p-[4px] group-hover:pl-4 group-hover:pr-1 active:scale-95 shadow-sm group-hover:shadow-md"
-          >
-             <span className="text-white font-bold text-[13px] tracking-wide whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out max-w-0 opacity-0 group-hover:max-w-[100px] group-hover:opacity-100 group-hover:mr-3">
-               Add To Cart
-             </span>
-             <div className="w-[32px] h-[32px] bg-transparent group-hover:bg-[#FFC107] rounded-full flex items-center justify-center text-[#1f2937] shrink-0 transition-colors duration-300">
-               <ShoppingBasket className="w-[18px] h-[18px] group-hover:w-[16px] group-hover:h-[16px] transition-all duration-300" strokeWidth={2.5} />
-             </div>
-          </button>
+          {/* Actions */}
+          <div className="flex items-center gap-2 relative">
+            <button 
+              onClick={(e) => { e.stopPropagation(); handleAddToCart(); }}
+              className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#0F3D2E] text-white hover:bg-[#1a5441] transition-colors shadow-sm shrink-0 relative z-10"
+            >
+              <ShoppingCart className="w-4 h-4 md:w-[18px] md:h-[18px]" />
+            </button>
+          </div>
         </div>
       </div>
     </motion.div>

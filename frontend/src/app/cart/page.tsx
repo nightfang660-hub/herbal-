@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useCartStore } from '../../features/cart/cartStore';
 import { ArrowLeft, Minus, Plus, X } from 'lucide-react';
 import { useWishlistStore } from '../../features/wishlist/wishlistStore';
+import { useAuth } from '../../providers/AuthProvider';
 
 // Temporary mock data to map cart items to full product details
 const PRODUCTS = [
@@ -23,6 +24,7 @@ export default function CartPage() {
   const router = useRouter();
   const { items, removeItem, updateQuantity, appliedCoupon, setAppliedCoupon } = useCartStore();
   const { toggleItem, isInWishlist } = useWishlistStore();
+  const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
   const [showCouponModal, setShowCouponModal] = useState(false);
   const [isCouponSelected, setIsCouponSelected] = useState(true);
@@ -269,7 +271,13 @@ export default function CartPage() {
                       Clicking on 'Continue' will not deduct any money
                     </div>
                     <button 
-                      onClick={() => router.push('/checkout')}
+                      onClick={() => {
+                        if (user) {
+                          router.push('/checkout');
+                        } else {
+                          router.push('/login?redirect=/checkout');
+                        }
+                      }}
                       className="w-full bg-[#1c2e24] text-white font-bold text-[16px] py-3 rounded hover:bg-[#2a4536] transition-colors"
                     >
                       Continue

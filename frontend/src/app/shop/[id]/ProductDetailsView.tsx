@@ -1,11 +1,30 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Heart, Share2, ChevronLeft, ChevronRight, ArrowLeft, Check, Leaf, Package, Coffee, ShoppingBasket, ShieldCheck, Droplet, Activity } from 'lucide-react';
+import { Star, Heart, Share2, ChevronLeft, ChevronRight, ArrowLeft, Check, Leaf, Package, Coffee, ShoppingBasket, ShoppingCart, ShieldCheck, Droplet, Activity, MessageCircle, Link, X } from 'lucide-react';
 import { useCartStore } from '../../../features/cart/cartStore';
 import { useWishlistStore } from '../../../features/wishlist/wishlistStore';
+
+// Custom SVG Icons for social media since they were removed from recent lucide-react versions
+const FacebookIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+  </svg>
+);
+
+const TwitterIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+  </svg>
+);
+
+const WhatsAppIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+  </svg>
+);
 
 const PRODUCTS = [
   { id: 1, name: "Premium Herbal Blend", price: 450.00, originalPrice: 500, discount: 10, img: "/shop/red_tea.png", rating: 4.5, reviews: 124, category: "Wellness Blends", type: "Herbal", weight: "15 Packets", benefit: "Relaxation", ingredient: "Mint", description: "A soothing blend of premium herbs designed to promote relaxation. Perfect for winding down after a long day." },
@@ -25,8 +44,14 @@ export default function ProductDetailsPage() {
   const { addItem, items, updateQuantity, removeItem } = useCartStore();
   const { toggleItem, isInWishlist } = useWishlistStore();
   
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const [mainImageIndex, setMainImageIndex] = useState(0);
   const [isAdded, setIsAdded] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   // Review Form States
   const [rating, setRating] = useState(0);
@@ -165,6 +190,38 @@ export default function ProductDetailsPage() {
     setTimeout(() => setIsAdded(false), 3000);
   };
 
+  const handleShare = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: `R-HerbalTea | ${product.name}`,
+          text: `Check out ${product.name}! ${product.description}`,
+          url: window.location.href,
+        });
+      } else {
+        setShowShareModal(true);
+      }
+    } catch (error) {
+      console.log('Error sharing:', error);
+    }
+  };
+
+  const copyToClipboard = () => {
+    // Old school fallback for non-HTTPS contexts (like local network IP)
+    const textArea = document.createElement("textarea");
+    textArea.value = window.location.href;
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+      document.execCommand('copy');
+      alert('Product link copied to clipboard!');
+    } catch (err) {
+      console.error('Copy failed', err);
+    }
+    document.body.removeChild(textArea);
+    setShowShareModal(false);
+  };
+
   const increaseQuantity = () => {
     if (cartItem) updateQuantity(sku, currentQuantity + 1);
   };
@@ -178,7 +235,99 @@ export default function ProductDetailsPage() {
   };
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-[#f5f0e6]">
+    <div className="flex flex-col w-full min-h-screen bg-[#f5f0e6] relative">
+      {/* Share Modal Overlay */}
+      <AnimatePresence>
+        {showShareModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
+            onClick={() => setShowShareModal(false)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-3xl p-6 md:p-8 w-full max-w-md shadow-2xl relative"
+            >
+              <button 
+                onClick={() => setShowShareModal(false)}
+                className="absolute top-4 right-4 p-2 bg-gray-100 rounded-full text-gray-500 hover:text-black hover:bg-gray-200 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              
+              <h3 className="text-[24px] font-bold text-[#0F3D2E] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Share Product</h3>
+              <p className="text-[#6b7b72] text-[15px] mb-6 font-medium">Share this herbal blend with your friends and family.</p>
+              
+              <div className="grid grid-cols-4 gap-4 mb-6">
+                {/* WhatsApp */}
+                <a 
+                  href={`https://wa.me/?text=${encodeURIComponent(`Check out ${product.name} at Herbal Tea! ${window.location.href}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center gap-2 group"
+                >
+                  <div className="w-14 h-14 rounded-full bg-[#25D366]/10 flex items-center justify-center group-hover:bg-[#25D366] transition-colors duration-300">
+                    <WhatsAppIcon className="w-7 h-7 text-[#25D366] group-hover:text-white transition-colors duration-300" />
+                  </div>
+                  <span className="text-[12px] font-bold text-[#0F3D2E]">WhatsApp</span>
+                </a>
+
+                {/* Facebook */}
+                <a 
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center gap-2 group"
+                >
+                  <div className="w-14 h-14 rounded-full bg-[#1877F2]/10 flex items-center justify-center group-hover:bg-[#1877F2] transition-colors duration-300">
+                    <FacebookIcon className="w-7 h-7 text-[#1877F2] group-hover:text-white transition-colors duration-300" />
+                  </div>
+                  <span className="text-[12px] font-bold text-[#0F3D2E]">Facebook</span>
+                </a>
+
+                {/* Twitter */}
+                <a 
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out ${product.name} at Herbal Tea!`)}&url=${encodeURIComponent(window.location.href)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center gap-2 group"
+                >
+                  <div className="w-14 h-14 rounded-full bg-black/10 flex items-center justify-center group-hover:bg-black transition-colors duration-300">
+                    <TwitterIcon className="w-6 h-6 text-black group-hover:text-white transition-colors duration-300" />
+                  </div>
+                  <span className="text-[12px] font-bold text-[#0F3D2E]">Twitter</span>
+                </a>
+
+                {/* Copy Link */}
+                <button 
+                  onClick={copyToClipboard}
+                  className="flex flex-col items-center gap-2 group cursor-pointer border-none bg-transparent"
+                >
+                  <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-gray-200 transition-colors duration-300">
+                    <Link className="w-6 h-6 text-gray-700" />
+                  </div>
+                  <span className="text-[12px] font-bold text-[#0F3D2E]">Copy Link</span>
+                </button>
+              </div>
+              
+              <div className="bg-[#f5f0e6] p-3 rounded-xl border border-[#e8e5de] flex items-center gap-3">
+                <div className="flex-1 overflow-hidden">
+                  <p className="text-[13px] text-[#6b7b72] truncate font-medium">{typeof window !== 'undefined' ? window.location.href : ''}</p>
+                </div>
+                <button onClick={copyToClipboard} className="text-[13px] font-bold text-[#0F3D2E] hover:text-[#8cb73d] transition-colors whitespace-nowrap">
+                  Copy
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="max-w-[1200px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         
         {/* Simple Text Header / Breadcrumbs */}
@@ -270,7 +419,7 @@ export default function ProductDetailsPage() {
                   <button onClick={() => toggleItem(product.id)} className="w-10 h-10 rounded-full bg-[#fdfbf6] flex items-center justify-center text-[#c19236] hover:bg-[#f5f0e6] transition-colors">
                     <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : 'fill-transparent'}`} strokeWidth={2} />
                   </button>
-                  <button className="w-10 h-10 rounded-full bg-[#fdfbf6] flex items-center justify-center text-[#c19236] hover:bg-[#f5f0e6] transition-colors">
+                  <button onClick={handleShare} className="w-10 h-10 rounded-full bg-[#fdfbf6] flex items-center justify-center text-[#c19236] hover:bg-[#f5f0e6] transition-colors">
                     <Share2 className="w-4 h-4" strokeWidth={2} />
                   </button>
                 </div>
@@ -696,10 +845,16 @@ export default function ProductDetailsPage() {
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 key={similar.id} 
                 onClick={() => router.push(`/shop/${similar.id}`)}
-                className="flex flex-col group cursor-pointer bg-white rounded-3xl border border-[#e8e5de] hover:border-[#ffc107] p-5 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+                className="flex flex-col group cursor-pointer bg-white rounded-2xl md:rounded-3xl border border-[#e8e5de] p-3 md:p-5 overflow-hidden shadow-sm transition-all duration-300"
               >
                 {/* Product Image */}
-                <div className="relative w-full h-[280px] mb-2 flex items-center justify-center rounded-t-3xl pt-2 px-1">
+                <div className="relative w-full h-[160px] md:h-[280px] mb-3 flex items-center justify-center rounded-t-2xl pt-2 px-1">
+                  <button 
+                    className={`absolute top-0 right-0 p-1 transition-colors z-10 ${mounted && isInWishlist(similar.id) ? 'text-[#D84B5B]' : 'text-[#8b9992] hover:text-[#D84B5B]'}`} 
+                    onClick={(e) => { e.stopPropagation(); toggleItem(similar.id); }}
+                  >
+                    <Heart className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} fill={mounted && isInWishlist(similar.id) ? 'currentColor' : 'none'} />
+                  </button>
                   <img 
                     src={similar.img} 
                     alt={similar.name} 
@@ -709,44 +864,36 @@ export default function ProductDetailsPage() {
                 
                 {/* Product Details */}
                 <div className="flex flex-col flex-1">
-                  {/* Rating (5 Stars) */}
-                  <div className="flex items-center gap-1 mb-2">
-                    {[...Array(5)].map((_, i) => (
-                       <Star key={i} className={`w-3.5 h-3.5 ${i < Math.floor(similar.rating || 5) ? 'fill-[#ffc107] text-[#ffc107]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
-                    ))}
-                  </div>
-
-                  <h4 className="font-bold text-[#0F3D2E] group-hover:text-[#4caf50] text-[18px] leading-tight mb-2 transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                  <h4 className="font-bold text-[#2c4a35] group-hover:text-[#0F3D2E] text-[14px] md:text-[18px] leading-tight mb-1.5 transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                     {similar.name}
                   </h4>
-                  
-                  <span className="text-[#8b9992] text-[13px] font-medium mb-4 uppercase">
-                    {similar.category} {similar.weight}
-                  </span>
-                  
-                  <div className="flex items-center justify-between mt-auto gap-3">
-                    <div className="flex flex-col shrink-0">
-                      <span className="font-bold text-[#0F3D2E] text-[20px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                        ₹{(similar.price || 0)}
-                      </span>
+
+                  {/* Rating (5 Stars) */}
+                  <div className="flex items-center gap-1.5 mb-3">
+                    <div className="flex items-center gap-[2px]">
+                      {[...Array(5)].map((_, i) => (
+                         <Star key={i} className={`w-3 h-3 md:w-3.5 md:h-3.5 ${i < Math.floor(similar.rating || 5) ? 'fill-[#ffc107] text-[#ffc107]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
+                      ))}
                     </div>
+                    <span className="text-[11px] md:text-[13px] font-bold text-[#4a5d53]">({(similar.rating || 5).toFixed(1)})</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between mt-auto gap-3 pt-1">
+                    <span className="font-bold text-[#0F3D2E] text-[15px] md:text-[20px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                      ₹{similar.price}
+                    </span>
                     
-                    {/* Add To Cart Button */}
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); router.push(`/shop/${similar.id}`); }}
-                      className="relative group/btn flex items-center justify-end h-10 w-10 group-hover:w-[135px] cursor-pointer transition-all duration-300"
-                    >
-                      {/* Expanding text pill */}
-                      <div className="absolute right-4 h-[26px] flex items-center rounded-l-full bg-[#4caf50] text-white overflow-hidden transition-all duration-300 w-0 group-hover:w-[115px] group-hover/btn:!bg-[#ffc107] group-hover/btn:!text-[#0F3D2E] z-0">
-                        <span className="whitespace-nowrap font-bold text-[13px] pl-3">
-                          Add To Cart
-                        </span>
-                      </div>
-                      {/* Fixed yellow circle */}
-                      <div className="relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-[#ffc107] text-[#0F3D2E] shrink-0">
-                        <ShoppingBasket className="w-5 h-5" />
-                      </div>
-                    </button>
+                    {/* Actions */}
+                    <div className="flex items-center gap-2 relative">
+
+
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); router.push(`/shop/${similar.id}`); }}
+                        className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#0F3D2E] text-white hover:bg-[#1a5441] transition-colors shadow-sm shrink-0 relative z-10"
+                      >
+                        <ShoppingCart className="w-4 h-4 md:w-[18px] md:h-[18px]" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </motion.div>

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWishlistStore } from '../../features/wishlist/wishlistStore';
-import { ArrowLeft, Star, Heart, Trash2, ShoppingBasket } from 'lucide-react';
+import { ArrowLeft, Star, Heart, Trash2, ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 // Mock data
@@ -90,7 +90,7 @@ export default function WishlistPage() {
                 transition={{ delay: idx * 0.05 }}
                 key={`wishlist-${product.id}`} 
                 onClick={() => router.push(`/shop/${product.id}`)}
-                className="flex flex-col group cursor-pointer bg-white rounded-3xl border border-[#e8e5de] hover:border-[#ffc107] p-5 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+                className="flex flex-col group cursor-pointer bg-white rounded-3xl border border-[#e8e5de] p-5 overflow-hidden shadow-sm transition-all duration-300"
               >
                 {/* Product Image */}
                 <div className="relative w-full h-[280px] mb-2 flex items-center justify-center rounded-t-3xl pt-2 px-1">
@@ -136,25 +136,15 @@ export default function WishlistPage() {
                       </span>
                     </div>
                     
-                    {/* Add To Cart Button */}
-                    <button 
-                      onClick={(e) => { 
-                        e.stopPropagation(); 
-                        router.push(`/shop/${product.id}`);
-                      }}
-                      className="relative group/btn flex items-center justify-end h-10 w-10 group-hover:w-[135px] cursor-pointer transition-all duration-300"
-                    >
-                      {/* Expanding text pill */}
-                      <div className="absolute right-4 h-[26px] flex items-center rounded-l-full bg-[#4caf50] text-white overflow-hidden transition-all duration-300 w-0 group-hover:w-[115px] group-hover/btn:!bg-[#ffc107] group-hover/btn:!text-[#1c2e24] z-0">
-                        <span className="whitespace-nowrap font-bold text-[13px] pl-3">
-                          Add To Cart
-                        </span>
-                      </div>
-                      {/* Fixed yellow circle */}
-                      <div className="relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-[#ffc107] text-[#1c2e24] shrink-0">
-                        <ShoppingBasket className="w-5 h-5" />
-                      </div>
-                    </button>
+                      <button 
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          router.push(`/shop/${product.id}`);
+                        }}
+                        className="flex items-center justify-center w-10 h-10 rounded-full bg-[#0F3D2E] text-white hover:bg-[#1a5441] transition-colors shadow-sm shrink-0 relative z-10"
+                      >
+                        <ShoppingCart className="w-5 h-5" />
+                      </button>
                   </div>
                 </div>
               </motion.div>
