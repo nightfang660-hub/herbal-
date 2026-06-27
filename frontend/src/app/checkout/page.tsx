@@ -4,21 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '../../features/cart/cartStore';
 import { placeOrder } from '../../lib/api';
-import { ArrowLeft, CreditCard, Lock, ShieldAlert, X } from 'lucide-react';
+import { ArrowLeft, CreditCard, Lock, ShieldAlert, X, MapPin } from 'lucide-react';
 import { useAuth } from '../../providers/AuthProvider';
 
-interface Address {
-  id: string;
-  fullName: string;
-  mobileNo: string;
-  postalCode: string;
-  houseNumber: string;
-  address: string;
-  locality: string;
-  city: string;
-  stateName: string;
-  addressType: string;
-}
+import { getUserAddresses, addUserAddress, updateUserAddress, deleteUserAddress, saveUserOrder, Address } from '../../lib/userProfile';
 
 const PRODUCTS = [
   { id: 1, name: "Premium Herbal Blend", price: 450.00, originalPrice: 500, discount: 10, img: "/home/img1.jpg", rating: 4.5, reviews: 124, category: "Wellness Blends", type: "Herbal", weight: "100g", soldBy: "VIRENDRA KUMAR GUPTA" },
@@ -40,7 +29,6 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [checkoutStep, setCheckoutStep] = useState<'address-list' | 'payment'>('address-list');
-  const [showAddressModal, setShowAddressModal] = useState(false);
 
   const [fullName, setFullName] = useState('');
   const [mobileNo, setMobileNo] = useState('');
@@ -51,21 +39,51 @@ export default function CheckoutPage() {
   const [city, setCity] = useState('');
   const [stateName, setStateName] = useState('');
   const [addressType, setAddressType] = useState('HOME');
+  const [isDefault, setIsDefault] = useState(false);
   
   const [savedAddresses, setSavedAddresses] = useState<Address[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
   
   const [firstErrorField, setFirstErrorField] = useState<string | null>(null);
+  const [showNewAddressForm, setShowNewAddressForm] = useState(false);
 
   // Prepopulate authenticated user information and protect route
   useEffect(() => {
     if (!authLoading && !user) {
       router.push('/login?redirect=/checkout');
-    } else if (user && !fullName) {
-      setFullName(user.displayName || '');
+    } else if (user) {
+      if (!fullName) {
+        setFullName(user.displayName || '');
+      }
+      
+      // Load addresses from Firestore
+      getUserAddresses(user.uid).then((fetchedAddresses) => {
+        if (fetchedAddresses.length > 0) {
+          // If we have addresses, map them to make sure they have all fields CheckoutPage expects
+          const mapped = fetchedAddresses.map(a => ({
+            ...a,
+            fullName: a.fullName || a.name || user.displayName || '',
+            mobileNo: a.mobileNo || a.phone || '',
+            postalCode: a.postalCode || '',
+            houseNumber: a.houseNumber || a.addressLine1 || '',
+            address: a.address || a.addressLine2 || '',
+            locality: a.locality || '',
+            city: a.city || '',
+            stateName: a.stateName || '',
+            addressType: a.addressType || (a.title === 'Office' ? 'OFFICE' : 'HOME')
+          })) as Address[];
+          setSavedAddresses(mapped);
+          
+          // Try to select a default address
+          const defaultAddr = mapped.find(a => a.isDefault);
+          if (defaultAddr && defaultAddr.id) {
+            setSelectedAddressId(defaultAddr.id);
+          }
+        }
+      });
     }
-  }, [user, authLoading, fullName, router]);
+  }, [user, authLoading, router]);
 
   const enrichedItems = items.map(cartItem => {
     const productId = parseInt(cartItem.sku.replace('sku-', ''), 10);
@@ -121,8 +139,24 @@ export default function CheckoutPage() {
       // MOCK BACKEND BEHAVIOR FOR FRONTEND TESTING
       await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network request
 
-      clearCart();
       const mockOrderId = `ORD-${Date.now().toString().slice(-6)}`;
+      
+      if (user) {
+        await saveUserOrder(user.uid, {
+          orderId: mockOrderId,
+          items: enrichedItems.map(item => ({
+            name: item.name,
+            quantity: item.quantity,
+            priceCents: item.priceCents
+          })),
+          total: orderTotal,
+          status: 'Confirmed',
+          shippingAddress: addressObject,
+          date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+        });
+      }
+
+      clearCart();
       router.push(`/checkout/success?orderId=${mockOrderId}`);
     } catch (err: any) {
       setErrorMsg(err.message || 'An unexpected error occurred. Please try again.');
@@ -153,33 +187,38 @@ export default function CheckoutPage() {
     setCity('');
     setStateName('');
     setAddressType('HOME');
+    setIsDefault(false);
     setEditingAddressId(null);
     setFirstErrorField(null);
   };
 
   const handleEditAddress = (addr: Address) => {
-    setFullName(addr.fullName);
-    setMobileNo(addr.mobileNo);
-    setPostalCode(addr.postalCode);
-    setHouseNumber(addr.houseNumber);
-    setAddress(addr.address);
-    setLocality(addr.locality);
-    setCity(addr.city);
-    setStateName(addr.stateName);
-    setAddressType(addr.addressType);
-    setEditingAddressId(addr.id);
+    setFullName(addr.fullName || '');
+    setMobileNo(addr.mobileNo || '');
+    setPostalCode(addr.postalCode || '');
+    setHouseNumber(addr.houseNumber || '');
+    setAddress(addr.address || '');
+    setLocality(addr.locality || '');
+    setCity(addr.city || '');
+    setStateName(addr.stateName || '');
+    setAddressType(addr.addressType || 'HOME');
+    setIsDefault(!!addr.isDefault);
+    setEditingAddressId(addr.id || null);
     setFirstErrorField(null);
-    setShowAddressModal(true);
+    setShowNewAddressForm(true);
   };
 
-  const handleRemoveAddress = (id: string) => {
+  const handleRemoveAddress = async (id: string) => {
+    if (user) {
+      await deleteUserAddress(user.uid, id);
+    }
     const updated = savedAddresses.filter(a => a.id !== id);
     setSavedAddresses(updated);
     if (selectedAddressId === id) {
       setSelectedAddressId(null);
     }
     if (updated.length === 0) {
-      setShowAddressModal(false);
+      setShowNewAddressForm(false);
     }
   };
 
@@ -195,7 +234,7 @@ export default function CheckoutPage() {
     return null;
   };
 
-  const handleAddressSubmit = (e: React.FormEvent) => {
+  const handleAddressSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const firstErr = validateForm();
     
@@ -207,7 +246,6 @@ export default function CheckoutPage() {
     setFirstErrorField(null);
     
     const newAddress: Address = {
-      id: editingAddressId || Date.now().toString(),
       fullName,
       mobileNo,
       postalCode,
@@ -216,26 +254,55 @@ export default function CheckoutPage() {
       locality,
       city,
       stateName,
-      addressType
+      addressType,
+      isDefault
     };
     
-    if (editingAddressId) {
-      setSavedAddresses(prev => prev.map(a => a.id === editingAddressId ? newAddress : a));
-    } else {
-      setSavedAddresses(prev => [...prev, newAddress]);
+    // If setting as default, update other addresses in Firestore to be non-default
+    if (isDefault && user) {
+      const otherDefaults = savedAddresses.filter(a => a.isDefault && a.id !== editingAddressId);
+      for (const oldDef of otherDefaults) {
+        if (oldDef.id) {
+          await updateUserAddress(user.uid, oldDef.id, { isDefault: false });
+        }
+      }
     }
     
-    setSelectedAddressId(newAddress.id);
-    setShowAddressModal(false);
+    if (editingAddressId) {
+      newAddress.id = editingAddressId;
+      if (user) {
+        await updateUserAddress(user.uid, editingAddressId, newAddress);
+      }
+      setSavedAddresses(prev => prev.map(a => {
+        if (a.id === editingAddressId) return newAddress;
+        if (isDefault) return { ...a, isDefault: false };
+        return a;
+      }));
+    } else {
+      if (user) {
+        const newId = await addUserAddress(user.uid, newAddress);
+        newAddress.id = newId;
+      } else {
+        newAddress.id = Date.now().toString();
+      }
+      setSavedAddresses(prev => [...prev.map(a => isDefault ? { ...a, isDefault: false } : a), newAddress]);
+    }
+    
+    setSelectedAddressId(newAddress.id || null);
+    setShowNewAddressForm(false);
     clearForm();
   };
 
   const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>, fieldName: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     let val = e.target.value;
     if (fieldName === 'fullName') {
-      val = val.replace(/[^a-zA-Z\s]/g, '');
+      val = val.replace(/[^a-zA-Z\s]/g, '').toUpperCase();
     } else if (fieldName === 'mobileNo') {
       val = val.replace(/[^0-9]/g, '').slice(0, 10);
+    } else if (fieldName === 'postalCode') {
+      val = val.replace(/[^0-9]/g, '').slice(0, 6);
+    } else if (['houseNumber', 'address', 'locality', 'city', 'stateName'].includes(fieldName)) {
+      val = val.toUpperCase();
     }
     setter(val);
     if (firstErrorField === fieldName) {
@@ -407,7 +474,12 @@ export default function CheckoutPage() {
 
       <div className="pt-6">
         <label className="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" className="w-4 h-4 rounded-sm border-[#d5d5d5] accent-[#0F3D2E]" />
+          <input 
+            type="checkbox" 
+            checked={isDefault}
+            onChange={(e) => setIsDefault(e.target.checked)}
+            className="w-4 h-4 rounded-sm border-[#d5d5d5] accent-[#0F3D2E]" 
+          />
           <span className="text-[14px] text-[#333]">Make this as my default address</span>
         </label>
       </div>
@@ -417,52 +489,6 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-[#f4f2ee] font-sans relative" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
       
-      {/* Centered Modal for 2nd+ Address Add/Edit */}
-      {showAddressModal && savedAddresses.length > 0 && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
-          <div 
-            className="absolute inset-0 bg-black/60 transition-opacity" 
-            onClick={() => setShowAddressModal(false)}
-          ></div>
-          
-          {/* Modal Content */}
-          <div className="relative w-full max-w-[500px] bg-white rounded-md shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between p-5 border-b border-[#f0f0f0]">
-              <h2 className="text-[14px] font-bold text-[#333] uppercase tracking-wide">
-                {editingAddressId ? 'Edit Address' : 'Add New Address'}
-              </h2>
-              <button onClick={() => setShowAddressModal(false)} className="text-[#878787] hover:text-[#333] transition-colors">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <div className="flex-1 overflow-y-auto p-6">
-              <form id="modal-address-form" onSubmit={handleAddressSubmit} noValidate className="space-y-6">
-                {renderFormFields()}
-              </form>
-            </div>
-            
-            <div className="p-5 border-t border-[#f0f0f0] bg-white flex gap-4">
-              <button
-                type="button"
-                onClick={() => setShowAddressModal(false)}
-                className="flex-1 rounded-sm border border-[#d5d5d5] py-3 text-[14px] font-bold text-[#333] hover:bg-gray-50 transition-colors uppercase tracking-widest"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                form="modal-address-form"
-                className="flex-1 rounded-sm bg-[#0F3D2E] py-3 text-[14px] font-bold text-white hover:bg-[#1a5240] transition-all uppercase tracking-widest"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between mb-8">
         <button
@@ -495,28 +521,41 @@ export default function CheckoutPage() {
         {/* Left Column */}
         <div className="lg:col-span-7 space-y-8">
           {checkoutStep === 'address-list' ? (
-            savedAddresses.length === 0 ? (
-              // Inline form for the FIRST address
-              <div className="bg-white border border-[#e5e7eb] rounded-sm p-6 shadow-sm">
-                <h2 className="text-[16px] font-bold text-[#333] mb-6 uppercase tracking-wide">Add New Address</h2>
-                <form onSubmit={handleAddressSubmit} noValidate className="space-y-6">
-                  {renderFormFields()}
-                  <div className="border-t border-[#f0f0f0] pt-6 mt-6">
-                    <button
-                      type="submit"
-                      className="w-full rounded-sm bg-[#0F3D2E] py-3.5 text-[14px] font-bold text-white hover:bg-[#1a5240] transition-all uppercase tracking-widest"
-                    >
-                      Save Address
-                    </button>
+            savedAddresses.length === 0 || showNewAddressForm ? (
+                <div className="bg-white border border-[#e5e7eb] rounded-sm p-6 shadow-sm">
+                  <div className="flex items-center justify-between mb-6 border-b border-[#f0f0f0] pb-4">
+                    <h2 className="text-[16px] font-bold text-[#333] uppercase tracking-wide">{editingAddressId ? 'Edit Address' : 'Add New Address'}</h2>
+                    {savedAddresses.length > 0 && (
+                      <button onClick={() => { setShowNewAddressForm(false); clearForm(); }} className="text-[#878787] hover:text-[#333] text-[12px] font-bold uppercase underline">Cancel</button>
+                    )}
                   </div>
-                </form>
-              </div>
+                  <form onSubmit={handleAddressSubmit} noValidate className="space-y-6">
+                    {renderFormFields()}
+                    <div className="border-t border-[#f0f0f0] pt-6 mt-6 flex gap-4">
+                      {savedAddresses.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => { setShowNewAddressForm(false); clearForm(); }}
+                          className="flex-1 rounded-sm border border-[#d5d5d5] py-3.5 text-[14px] font-bold text-[#333] hover:bg-gray-50 transition-colors uppercase tracking-widest"
+                        >
+                          Cancel
+                        </button>
+                      )}
+                      <button
+                        type="submit"
+                        className="flex-1 rounded-sm bg-[#0F3D2E] py-3.5 text-[14px] font-bold text-white hover:bg-[#1a5240] transition-all uppercase tracking-widest"
+                      >
+                        Save Address
+                      </button>
+                    </div>
+                  </form>
+                </div>
             ) : (
               <div className="space-y-6">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-[18px] font-bold text-[#333]">Select Delivery Address</h2>
                   <button 
-                    onClick={() => { clearForm(); setShowAddressModal(true); }} 
+                    onClick={() => { clearForm(); setShowNewAddressForm(true); }} 
                     className="border border-[#333] text-[#333] text-[12px] font-bold px-4 py-2 rounded-sm hover:bg-gray-50 uppercase"
                   >
                     Add New Address
@@ -532,10 +571,10 @@ export default function CheckoutPage() {
                           type="radio" 
                           name="selectedAddress"
                           checked={selectedAddressId === addr.id}
-                          onChange={() => setSelectedAddressId(addr.id)}
+                          onChange={() => setSelectedAddressId(addr.id || '')}
                           className="mt-1 w-4 h-4 accent-[#eab308] cursor-pointer" 
                         />
-                        <div className="flex-1 cursor-pointer" onClick={() => setSelectedAddressId(addr.id)}>
+                        <div className="flex-1 cursor-pointer" onClick={() => setSelectedAddressId(addr.id || '')}>
                           <div className="flex items-center gap-3 mb-2">
                             <span className="text-[15px] font-bold text-[#333]">{addr.fullName}</span>
                             <span className="text-[10px] font-bold text-[#0F3D2E] border border-[#0F3D2E] px-2 py-0.5 rounded-full uppercase tracking-wider">{addr.addressType}</span>
@@ -555,19 +594,12 @@ export default function CheckoutPage() {
                       </div>
                       {selectedAddressId === addr.id && (
                         <div className="flex gap-4 ml-7">
-                          <button onClick={() => handleRemoveAddress(addr.id)} className="border border-[#d5d5d5] text-[13px] font-bold px-6 py-2 rounded-sm hover:bg-gray-50 uppercase text-[#333]">Remove</button>
+                          <button onClick={() => handleRemoveAddress(addr.id || '')} className="border border-[#d5d5d5] text-[13px] font-bold px-6 py-2 rounded-sm hover:bg-gray-50 uppercase text-[#333]">Remove</button>
                           <button onClick={() => handleEditAddress(addr)} className="border border-[#d5d5d5] text-[13px] font-bold px-6 py-2 rounded-sm hover:bg-gray-50 uppercase text-[#333]">Edit</button>
                         </div>
                       )}
                     </div>
                   ))}
-                </div>
-
-                <div 
-                  className="bg-white border border-dashed border-[#d5d5d5] rounded-sm p-4 text-left cursor-pointer hover:bg-gray-50 transition-colors" 
-                  onClick={() => { clearForm(); setShowAddressModal(true); }}
-                >
-                  <span className="text-[#0F3D2E] font-bold text-[14px]">+ Add New Address</span>
                 </div>
               </div>
             )
@@ -682,7 +714,7 @@ export default function CheckoutPage() {
                 Continue
               </button>
             )}
-            {checkoutStep === 'address-list' && savedAddresses.length === 0 && !showAddressModal && (
+            {checkoutStep === 'address-list' && savedAddresses.length === 0 && !showNewAddressForm && (
               <div className="text-[12px] text-[#878787] text-center italic mt-2">
                 Save your address to continue
               </div>

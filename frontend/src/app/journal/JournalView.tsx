@@ -200,8 +200,8 @@ export default function JournalView({ posts }: JournalViewProps) {
       </section>
 
       {/* 3. What Benefits Do Our Teas Offer? */}
-      <section className="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-gradient-to-br from-[#eaf0e2] to-[#f3f6ee] border border-[#e0e8d5] rounded-3xl p-6 lg:p-8 flex flex-col lg:flex-row items-center gap-6 relative overflow-hidden shadow-sm">
+      <section className="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 lg:py-8">
+        <div className="bg-gradient-to-br from-[#eaf0e2] to-[#f3f6ee] border border-[#e0e8d5] rounded-3xl p-5 lg:p-8 flex flex-col lg:flex-row items-center gap-2 lg:gap-6 relative overflow-hidden shadow-sm">
           
           {/* Left Text Content */}
           <div className="w-full lg:w-[35%] relative z-10">
@@ -220,13 +220,13 @@ export default function JournalView({ posts }: JournalViewProps) {
           </div>
 
           {/* Right Visual Content */}
-          <div className="w-full lg:w-[65%] relative flex justify-center items-center h-[350px] sm:h-[400px] lg:h-[480px] mt-6 lg:mt-0">
+          <div className="w-full lg:w-[65%] relative flex justify-center items-center h-[260px] sm:h-[320px] lg:h-[480px] mt-2 lg:mt-0">
              
              {/* Responsive Wrapper for Arc and Cup */}
-             <div className="relative w-[85%] sm:w-[75%] lg:w-[85%] max-w-[500px] aspect-[2/1] mt-12 lg:mt-20">
+             <div className="relative w-[85%] sm:w-[75%] lg:w-[85%] max-w-[500px] aspect-[2/1] mt-8 lg:mt-20">
              
                  {/* Central Tea Cup Image */}
-                 <img src="/assets/Adobe%20Express%20-%20file.png" alt="Herbal Tea Cup" className="absolute top-[30%] left-[10%] w-[80%] object-contain z-10 drop-shadow-2xl pointer-events-none" />
+                 <img src="/assets/Adobe%20Express%20-%20file.png" alt="Herbal Tea Cup" className="absolute top-[15%] sm:top-[18%] left-[20%] w-[60%] object-contain z-10 drop-shadow-2xl pointer-events-none" />
                  
                  {/* The Arc and Nodes Container */}
                  <div className="absolute inset-0 z-20">

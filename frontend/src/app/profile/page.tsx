@@ -9,6 +9,7 @@ import {
   CheckCircle2, AlertCircle, Edit2, Trash2, Plus
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getUserAddresses, addUserAddress, updateUserAddress, deleteUserAddress, getUserOrders, getUserProfile, updateUserProfile, Address } from '../../lib/userProfile';
 
 type ViewState = 'dashboard' | 'orders' | 'addresses' | 'notifications' | 'settings';
 
@@ -17,10 +18,84 @@ export default function ProfilePage() {
   const router = useRouter();
   const [activeView, setActiveView] = useState<ViewState>('dashboard');
   const [selectedInvoice, setSelectedInvoice] = useState<any | null>(null);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [profileData, setProfileData] = useState({ fullName: '', phoneNumber: '' });
+
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [addressForm, setAddressForm] = useState({
+    title: '',
+    name: '',
+    addressLine1: '',
+    addressLine2: '',
+    phone: '',
+    isDefault: false
+  });
+
+  const handleEditAddress = (address: any) => {
+    setAddressForm(address);
+    setEditingAddressId(address.id);
+    setShowAddressForm(true);
+  };
+
+  const handleDeleteAddress = async (id: string) => {
+    if (user) {
+      await deleteUserAddress(user.uid, id);
+      setAddresses(addresses.filter(a => a.id !== id));
+    }
+  };
+
+  const handleSaveAddress = async () => {
+    if (!user) return;
+    
+    if (editingAddressId) {
+      // If setting as default, update others first (this is optimistic locally)
+      if (addressForm.isDefault) {
+        setAddresses(addresses.map(a => a.id === editingAddressId ? { ...addressForm, id: editingAddressId } : { ...a, isDefault: false }));
+      } else {
+        setAddresses(addresses.map(a => a.id === editingAddressId ? { ...addressForm, id: editingAddressId } : a));
+      }
+      
+      await updateUserAddress(user.uid, editingAddressId, addressForm);
+    } else {
+      const newId = await addUserAddress(user.uid, addressForm);
+      const newAddress = { ...addressForm, id: newId };
+      if (newAddress.isDefault) {
+        setAddresses([...addresses.map(a => ({ ...a, isDefault: false })), newAddress]);
+      } else {
+        setAddresses([...addresses, newAddress]);
+      }
+    }
+    setShowAddressForm(false);
+    setEditingAddressId(null);
+  };
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
+    } else if (user) {
+      // Load addresses from Firestore
+      getUserAddresses(user.uid).then((fetchedAddresses) => {
+        if (fetchedAddresses.length > 0) {
+          setAddresses(fetchedAddresses);
+        } else {
+          // Keep a mock default if none exist in firestore for showcase, or just leave empty
+          setAddresses([]);
+        }
+      });
+      // Load orders from Firestore
+      getUserOrders(user.uid).then((fetchedOrders) => {
+        setOrders(fetchedOrders);
+      });
+      // Load profile info
+      getUserProfile(user.uid).then((profile) => {
+        if (profile) {
+          setProfileData({ fullName: profile.fullName || user.displayName || '', phoneNumber: profile.phoneNumber || '' });
+        } else {
+          setProfileData({ fullName: user.displayName || '', phoneNumber: '' });
+        }
+      });
     }
   }, [user, loading, router]);
 
@@ -73,27 +148,28 @@ export default function ProfilePage() {
   );
 
   const renderOrders = () => {
-    const mockOrders = [
-      { id: 'ORD-738291', date: 'Oct 12, 2026', items: 'Premium Herbal Blend (2)', total: '₹900', status: 'Delivered', statusColor: 'text-green-600 bg-green-50' },
-      { id: 'ORD-654123', date: 'Sep 28, 2026', items: 'Calming Chamomile, Morning Matcha', total: '₹1200', status: 'In Transit', statusColor: 'text-blue-600 bg-blue-50' },
-    ];
     return (
       <div className="space-y-4">
-        {mockOrders.map(order => (
+        {orders.length === 0 ? (
+          <div className="bg-white border border-[#E8E6DE] rounded-[16px] p-8 text-center text-[#6E7C70] shadow-sm">
+            <Package className="w-12 h-12 mx-auto mb-4 text-[#A0AAB2]" />
+            <p>You haven't placed any orders yet.</p>
+          </div>
+        ) : orders.map(order => (
           <div key={order.id} className="bg-white border border-[#E8E6DE] rounded-[16px] p-5 shadow-sm">
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-4 border-b border-[#F0F0F0] pb-4">
               <div>
-                <h4 className="font-bold text-[#1D2E25] text-[15px]">Order #{order.id}</h4>
+                <h4 className="font-bold text-[#1D2E25] text-[15px]">Order #{order.orderId || order.id}</h4>
                 <p className="text-[13px] text-[#6E7C70]">Placed on {order.date}</p>
               </div>
-              <div className={`px-3 py-1 rounded-full text-[12px] font-bold self-start sm:self-auto ${order.statusColor}`}>
-                {order.status}
+              <div className={`px-3 py-1 rounded-full text-[12px] font-bold self-start sm:self-auto ${order.status === 'Confirmed' ? 'text-blue-600 bg-blue-50' : 'text-green-600 bg-green-50'}`}>
+                {order.status || 'Delivered'}
               </div>
             </div>
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
               <div>
-                <p className="text-[14px] text-[#333] font-medium">{order.items}</p>
-                <p className="text-[14px] font-bold text-[#0F3D2E] mt-1">Total: {order.total}</p>
+                <p className="text-[14px] text-[#333] font-medium">{Array.isArray(order.items) ? order.items.map((i: any) => `${i.name} (${i.quantity})`).join(', ') : order.items}</p>
+                <p className="text-[14px] font-bold text-[#0F3D2E] mt-1">Total: ₹{order.total}</p>
               </div>
               <button 
                 onClick={() => setSelectedInvoice(order)}
@@ -109,29 +185,83 @@ export default function ProfilePage() {
   };
 
   const renderAddresses = () => {
-    return (
-      <div className="space-y-4">
-        <div className="bg-[#e8f2e1] border border-[#0F3D2E]/20 rounded-[16px] p-5 flex items-start gap-4">
-          <MapPin className="w-5 h-5 text-[#0F3D2E] mt-0.5" />
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <h4 className="font-bold text-[#0F3D2E] text-[15px]">Home (Default)</h4>
-              <span className="bg-[#0F3D2E] text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Primary</span>
-            </div>
-            <p className="text-[14px] text-[#6E7C70] leading-relaxed">
-              {user.displayName || 'Wellness User'}<br/>
-              Apt 4B, Herbal Heights, MG Road<br/>
-              Bangalore, Karnataka - 560001<br/>
-              Ph: +91 9876543210
-            </p>
+    if (showAddressForm) {
+      return (
+        <div className="bg-white border border-[#E8E6DE] rounded-[16px] shadow-sm p-6 space-y-4">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-[15px] font-bold text-[#1D2E25]">{editingAddressId ? 'Edit Address' : 'Add New Address'}</h3>
+            <button onClick={() => { setShowAddressForm(false); setEditingAddressId(null); }} className="text-[#A0AAB2] hover:text-[#1D2E25] transition-colors">
+              <X className="w-5 h-5" />
+            </button>
           </div>
-          <div className="flex flex-col gap-2">
-            <button className="text-[#A0AAB2] hover:text-[#0F3D2E] transition-colors"><Edit2 className="w-4 h-4" /></button>
-            <button className="text-[#A0AAB2] hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[12px] font-bold text-[#878787] uppercase mb-1">Title (e.g. Home, Work)</label>
+              <input type="text" value={addressForm.title} onChange={e => setAddressForm({...addressForm, title: e.target.value})} className="w-full border border-[#E8E6DE] rounded-lg px-4 py-2.5 text-[14px] focus:outline-none focus:border-[#0F3D2E]" />
+            </div>
+            <div>
+              <label className="block text-[12px] font-bold text-[#878787] uppercase mb-1">Full Name</label>
+              <input type="text" value={addressForm.name} onChange={e => setAddressForm({...addressForm, name: e.target.value})} placeholder={user?.displayName || 'Wellness User'} className="w-full border border-[#E8E6DE] rounded-lg px-4 py-2.5 text-[14px] focus:outline-none focus:border-[#0F3D2E]" />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-[12px] font-bold text-[#878787] uppercase mb-1">Address Line 1</label>
+              <input type="text" value={addressForm.addressLine1} onChange={e => setAddressForm({...addressForm, addressLine1: e.target.value})} className="w-full border border-[#E8E6DE] rounded-lg px-4 py-2.5 text-[14px] focus:outline-none focus:border-[#0F3D2E]" />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-[12px] font-bold text-[#878787] uppercase mb-1">Address Line 2 (City, State, ZIP)</label>
+              <input type="text" value={addressForm.addressLine2} onChange={e => setAddressForm({...addressForm, addressLine2: e.target.value})} className="w-full border border-[#E8E6DE] rounded-lg px-4 py-2.5 text-[14px] focus:outline-none focus:border-[#0F3D2E]" />
+            </div>
+            <div>
+              <label className="block text-[12px] font-bold text-[#878787] uppercase mb-1">Phone Number</label>
+              <input type="tel" value={addressForm.phone} onChange={e => setAddressForm({...addressForm, phone: e.target.value})} className="w-full border border-[#E8E6DE] rounded-lg px-4 py-2.5 text-[14px] focus:outline-none focus:border-[#0F3D2E]" />
+            </div>
+            <div className="flex items-center mt-6">
+              <input type="checkbox" id="isDefault" checked={addressForm.isDefault} onChange={e => setAddressForm({...addressForm, isDefault: e.target.checked})} className="w-4 h-4 text-[#0F3D2E] rounded border-[#E8E6DE] focus:ring-[#0F3D2E]" />
+              <label htmlFor="isDefault" className="ml-2 text-[14px] text-[#1D2E25]">Set as Default Address</label>
+            </div>
+          </div>
+          <div className="pt-4 flex justify-end gap-3 border-t border-[#F0F0F0] mt-6">
+            <button onClick={() => { setShowAddressForm(false); setEditingAddressId(null); }} className="px-5 py-2.5 rounded-lg text-[#6E7C70] text-[14px] font-bold hover:bg-[#F5F8F3] transition-colors">Cancel</button>
+            <button onClick={handleSaveAddress} className="bg-[#0F3D2E] text-white text-[14px] font-bold px-6 py-2.5 rounded-lg hover:bg-[#146B43] shadow-md transition-colors">Save Address</button>
           </div>
         </div>
+      );
+    }
 
-        <button className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-[#E8E6DE] text-[#0F3D2E] rounded-[16px] p-4 hover:bg-white hover:border-[#0F3D2E]/30 transition-all font-bold text-[14px]">
+    return (
+      <div className="space-y-4">
+        {addresses.map(address => (
+          <div key={address.id} className={`${address.isDefault ? 'bg-[#e8f2e1] border-[#0F3D2E]/20' : 'bg-white border-[#E8E6DE]'} border rounded-[16px] p-5 flex items-start gap-4 transition-colors`}>
+            <MapPin className={`w-5 h-5 mt-0.5 ${address.isDefault ? 'text-[#0F3D2E]' : 'text-[#A0AAB2]'}`} />
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <h4 className={`font-bold ${address.isDefault ? 'text-[#0F3D2E]' : 'text-[#1D2E25]'} text-[15px]`}>
+                  {address.title || address.addressType || 'ADDRESS'}
+                </h4>
+                {address.isDefault && <span className="bg-[#0F3D2E] text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Primary</span>}
+              </div>
+              <p className="text-[14px] text-[#6E7C70] leading-relaxed">
+                {address.name || address.fullName || user?.displayName || 'Wellness User'}<br/>
+                {address.addressLine1 || (address.houseNumber ? `${address.houseNumber}, ${address.address || ''}` : '')}<br/>
+                {address.addressLine2 || (address.city ? `${address.locality ? address.locality + ', ' : ''}${address.city}, ${address.stateName || ''} - ${address.postalCode || ''}` : '')}<br/>
+                Ph: {address.phone || address.mobileNo}
+              </p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <button onClick={() => handleEditAddress(address)} className="text-[#A0AAB2] hover:text-[#0F3D2E] transition-colors"><Edit2 className="w-4 h-4" /></button>
+              <button onClick={() => handleDeleteAddress(address.id || '')} className="text-[#A0AAB2] hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
+            </div>
+          </div>
+        ))}
+
+        <button 
+          onClick={() => { 
+            setAddressForm({ title: '', name: '', addressLine1: '', addressLine2: '', phone: '', isDefault: addresses.length === 0 }); 
+            setShowAddressForm(true); 
+            setEditingAddressId(null); 
+          }} 
+          className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-[#E8E6DE] text-[#0F3D2E] rounded-[16px] p-4 hover:bg-white hover:border-[#0F3D2E]/30 transition-all font-bold text-[14px]"
+        >
           <Plus className="w-4 h-4" /> Add New Address
         </button>
       </div>
@@ -164,6 +294,13 @@ export default function ProfilePage() {
     );
   };
 
+  const handleSaveProfile = async () => {
+    if (user) {
+      await updateUserProfile(user.uid, profileData);
+      alert('Profile updated successfully!');
+    }
+  };
+
   const renderSettings = () => {
     return (
       <div className="bg-white border border-[#E8E6DE] rounded-[16px] shadow-sm p-6 space-y-6">
@@ -172,7 +309,7 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-[12px] font-bold text-[#878787] uppercase mb-1">Full Name</label>
-              <input type="text" defaultValue={user.displayName || ''} className="w-full border border-[#E8E6DE] rounded-lg px-4 py-2.5 text-[14px] focus:outline-none focus:border-[#0F3D2E]" />
+              <input type="text" value={profileData.fullName} onChange={e => setProfileData({...profileData, fullName: e.target.value})} className="w-full border border-[#E8E6DE] rounded-lg px-4 py-2.5 text-[14px] focus:outline-none focus:border-[#0F3D2E]" />
             </div>
             <div>
               <label className="block text-[12px] font-bold text-[#878787] uppercase mb-1">Email Address</label>
@@ -180,7 +317,7 @@ export default function ProfilePage() {
             </div>
             <div>
               <label className="block text-[12px] font-bold text-[#878787] uppercase mb-1">Phone Number</label>
-              <input type="tel" placeholder="+91" className="w-full border border-[#E8E6DE] rounded-lg px-4 py-2.5 text-[14px] focus:outline-none focus:border-[#0F3D2E]" />
+              <input type="tel" value={profileData.phoneNumber} onChange={e => setProfileData({...profileData, phoneNumber: e.target.value})} placeholder="+91" className="w-full border border-[#E8E6DE] rounded-lg px-4 py-2.5 text-[14px] focus:outline-none focus:border-[#0F3D2E]" />
             </div>
           </div>
         </div>
@@ -193,7 +330,7 @@ export default function ProfilePage() {
         </div>
 
         <div className="pt-6 border-t border-[#F0F0F0] flex justify-end">
-          <button className="bg-[#0F3D2E] text-white text-[14px] font-bold px-8 py-3 rounded-lg hover:bg-[#146B43] transition-colors shadow-md">
+          <button onClick={handleSaveProfile} className="bg-[#0F3D2E] text-white text-[14px] font-bold px-8 py-3 rounded-lg hover:bg-[#146B43] transition-colors shadow-md">
             Save Changes
           </button>
         </div>
@@ -220,12 +357,12 @@ export default function ProfilePage() {
         >
           <div className="w-[100px] h-[100px] rounded-full bg-white border border-[#E8E6DE] shadow-sm flex items-center justify-center shrink-0">
             <span className="text-[40px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>
-              {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
+              {(profileData.fullName || user.displayName) ? (profileData.fullName || user.displayName)?.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
             </span>
           </div>
           <div className="flex-1">
             <h1 className="text-[32px] md:text-[40px] font-bold text-[#0F3D2E] mb-1" style={{ fontFamily: 'Playfair Display, serif' }}>
-              {user.displayName || 'Wellness Explorer'}
+              {profileData.fullName || user.displayName || 'Wellness Explorer'}
             </h1>
             <p className="text-[#6E7C70] text-[16px]">{user.email}</p>
             <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 bg-[#e8f2e1] text-[#0F5132] rounded-full text-[12px] font-bold tracking-wide uppercase">
@@ -338,7 +475,7 @@ export default function ProfilePage() {
                   </div>
                   <div>
                     <h2 className="text-[18px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>Order Invoice</h2>
-                    <p className="text-[13px] text-[#6E7C70]">#{selectedInvoice.id}</p>
+                    <p className="text-[13px] text-[#6E7C70]">#{selectedInvoice.orderId || selectedInvoice.id}</p>
                   </div>
                 </div>
                 <button onClick={() => setSelectedInvoice(null)} className="p-2 text-[#A0AAB2] hover:text-[#1D2E25] hover:bg-[#E8E6DE] rounded-full transition-colors">
@@ -350,11 +487,23 @@ export default function ProfilePage() {
                 <div className="flex justify-between items-start mb-8">
                   <div>
                     <h3 className="text-[12px] font-bold text-[#878787] uppercase tracking-wider mb-2">Billed To</h3>
-                    <p className="text-[14px] text-[#1D2E25] font-bold">{user.displayName || 'Wellness Explorer'}</p>
+                    <p className="text-[14px] text-[#1D2E25] font-bold">
+                      {selectedInvoice?.shippingAddress?.fullName || user.displayName || 'Wellness Explorer'}
+                    </p>
                     <p className="text-[13px] text-[#6E7C70] mt-1">
-                      Apt 4B, Herbal Heights<br/>
-                      MG Road, Bangalore<br/>
-                      Karnataka - 560001
+                      {selectedInvoice?.shippingAddress ? (
+                        <>
+                          {selectedInvoice.shippingAddress.address}<br/>
+                          {selectedInvoice.shippingAddress.city}, {selectedInvoice.shippingAddress.state}<br/>
+                          {selectedInvoice.shippingAddress.country} - {selectedInvoice.shippingAddress.postalCode}
+                        </>
+                      ) : (
+                        <>
+                          Apt 4B, Herbal Heights<br/>
+                          MG Road, Bangalore<br/>
+                          Karnataka - 560001
+                        </>
+                      )}
                     </p>
                   </div>
                   <div className="text-right">
@@ -372,12 +521,19 @@ export default function ProfilePage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[#F0F0F0]">
-                      {selectedInvoice.items.split(',').map((item: string, i: number) => (
+                      {Array.isArray(selectedInvoice.items) 
+                        ? selectedInvoice.items.map((item: any, i: number) => (
+                        <tr key={i}>
+                          <td className="py-4 px-4 text-[14px] text-[#1D2E25]">{item.name} x {item.quantity}</td>
+                          <td className="py-4 px-4 text-[14px] text-[#1D2E25] text-right font-medium">₹{(item.priceCents * item.quantity / 100).toFixed(0)}</td>
+                        </tr>
+                      ))
+                        : typeof selectedInvoice.items === 'string' ? selectedInvoice.items.split(',').map((item: string, i: number) => (
                         <tr key={i}>
                           <td className="py-4 px-4 text-[14px] text-[#1D2E25]">{item.trim()}</td>
-                          <td className="py-4 px-4 text-[14px] text-[#1D2E25] text-right font-medium">{i === 0 ? selectedInvoice.total : 'Included'}</td>
+                          <td className="py-4 px-4 text-[14px] text-[#1D2E25] text-right font-medium">{i === 0 ? `₹${selectedInvoice.total}` : 'Included'}</td>
                         </tr>
-                      ))}
+                      )) : null}
                     </tbody>
                   </table>
                 </div>
@@ -386,7 +542,7 @@ export default function ProfilePage() {
                   <div className="w-[200px] space-y-2">
                     <div className="flex justify-between text-[13px] text-[#6E7C70]">
                       <span>Subtotal</span>
-                      <span>{selectedInvoice.total}</span>
+                      <span>₹{selectedInvoice.total}</span>
                     </div>
                     <div className="flex justify-between text-[13px] text-[#6E7C70]">
                       <span>Shipping</span>
@@ -394,7 +550,7 @@ export default function ProfilePage() {
                     </div>
                     <div className="flex justify-between text-[16px] font-bold text-[#0F3D2E] pt-2 border-t border-[#F0F0F0]">
                       <span>Total</span>
-                      <span>{selectedInvoice.total}</span>
+                      <span>₹{selectedInvoice.total}</span>
                     </div>
                   </div>
                 </div>

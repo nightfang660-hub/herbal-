@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Star, ShoppingCart, Heart } from 'lucide-react';
+import { Star, ShoppingCart, Heart, Check } from 'lucide-react';
 import { useCartStore } from '../../features/cart/cartStore';
 import { useWishlistStore } from '../../features/wishlist/wishlistStore';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const FEATURED_PRODUCTS = [
   { id: 1, name: "Premium Herbal Blend", price: 450.00, img: "/shop/red_tea.png", rating: 4.5, weight: "15 Packets" },
@@ -15,11 +15,12 @@ const FEATURED_PRODUCTS = [
   { id: 4, name: "Detox Green Wellness", price: 400.00, img: "/shop/ruby_detox.png", rating: 4.1, weight: "15 Packets" },
 ];
 
-function FeaturedProductCard({ product, index }: { product: any, index?: number }) {
+function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: number, onAdd: (name: string) => void }) {
   const router = useRouter();
   const addItem = useCartStore((state) => state.addItem);
   const { toggleItem, isInWishlist } = useWishlistStore();
   const [mounted, setMounted] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
   
   useEffect(() => {
     setMounted(true);
@@ -32,6 +33,9 @@ function FeaturedProductCard({ product, index }: { product: any, index?: number 
       priceCents: product.price * 100,
       image: product.img
     });
+    setIsAdded(true);
+    onAdd(product.name);
+    setTimeout(() => setIsAdded(false), 2000);
   };
 
   return (
@@ -54,7 +58,7 @@ function FeaturedProductCard({ product, index }: { product: any, index?: number 
         <img 
           src={product.img} 
           alt={product.name} 
-          className={`w-full h-full object-contain drop-shadow-sm transition-transform duration-700 ease-in-out ${product.img.endsWith('/blue.png') ? 'scale-[1.4] translate-y-1' : (product.img.endsWith('/ruby_detox.png') || product.img.endsWith('/blue_tea1.png') ? 'scale-[1.3] translate-y-2' : '')}`} 
+          className="w-full h-full object-contain drop-shadow-sm transition-transform duration-700 ease-in-out" 
         />
       </div>
       
@@ -82,10 +86,14 @@ function FeaturedProductCard({ product, index }: { product: any, index?: number 
           {/* Actions */}
           <div className="flex items-center gap-2 relative">
             <button 
-              onClick={(e) => { e.stopPropagation(); handleAddToCart(); }}
-              className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#0F3D2E] text-white hover:bg-[#1a5441] transition-colors shadow-sm shrink-0 relative z-10"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(); }}
+              className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full text-white transition-colors shadow-sm shrink-0 relative z-10 hover:scale-105 active:scale-95 ${isAdded ? 'bg-[#5b8c5a]' : 'bg-[#0F3D2E] hover:bg-[#1a5441]'}`}
             >
-              <ShoppingCart className="w-4 h-4 md:w-[18px] md:h-[18px]" />
+              {isAdded ? (
+                <Check className="w-4 h-4 md:w-[18px] md:h-[18px]" />
+              ) : (
+                <ShoppingCart className="w-4 h-4 md:w-[18px] md:h-[18px]" />
+              )}
             </button>
           </div>
         </div>
@@ -95,6 +103,15 @@ function FeaturedProductCard({ product, index }: { product: any, index?: number 
 }
 
 export default function FeaturedProductsSection() {
+  const [notification, setNotification] = useState<string | null>(null);
+
+  const handleProductAdd = (productName: string) => {
+    setNotification(`${productName} added to cart!`);
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000);
+  };
+
   return (
     <section className="bg-[#f4f1e6] py-12 border-b border-black/5 overflow-hidden relative" id="shop">
       <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
@@ -130,10 +147,28 @@ export default function FeaturedProductsSection() {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 w-full mx-auto"
         >
           {FEATURED_PRODUCTS.map((product, idx) => (
-            <FeaturedProductCard key={product.id} product={product} index={idx} />
+            <FeaturedProductCard key={product.id} product={product} index={idx} onAdd={handleProductAdd} />
           ))}
         </motion.div>
       </div>
+      
+      {/* Global Notification Toast */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] bg-[#0F3D2E] text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 font-semibold text-[13px] md:text-[14px]"
+            style={{ fontFamily: 'Nunito Sans, sans-serif' }}
+          >
+            <div className="bg-[#5b8c5a] rounded-full p-1">
+              <Check className="w-3 h-3 md:w-4 md:h-4 text-white stroke-[3]" />
+            </div>
+            {notification}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

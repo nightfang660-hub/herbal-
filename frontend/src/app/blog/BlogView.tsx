@@ -259,6 +259,11 @@ const ARTICLES = [
 export default function BlogPage() {
   const [activeTopic, setActiveTopic] = useState('All Articles');
   const [currentFeaturedIdx, setCurrentFeaturedIdx] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(8);
+
+  useEffect(() => {
+    setVisibleCount(8);
+  }, [activeTopic]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -272,6 +277,8 @@ export default function BlogPage() {
   const filteredArticles = activeTopic === 'All Articles' 
     ? ARTICLES 
     : ARTICLES.filter(article => article.tag.toLowerCase().includes(activeTopic.toLowerCase()) || activeTopic.toLowerCase().includes(article.tag.toLowerCase()));
+
+  const visibleArticles = filteredArticles.slice(0, visibleCount);
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-[#fcfbf9] pb-10">
@@ -346,7 +353,8 @@ export default function BlogPage() {
       </section>
 
       {/* 3. Featured Article & Popular Topics */}
-      <section className="py-12 bg-[#fcfbf9]">
+      {activeTopic === 'All Articles' && (
+        <section className="py-12 bg-[#fcfbf9]">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8">
           <div className="flex flex-col lg:flex-row gap-8">
             
@@ -440,6 +448,7 @@ export default function BlogPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* 4. Latest Articles Grid */}
       <section className="py-10 bg-[#fcfbf9]">
@@ -451,7 +460,7 @@ export default function BlogPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredArticles.length > 0 ? filteredArticles.map((article, idx) => (
+            {visibleArticles.length > 0 ? visibleArticles.map((article, idx) => (
               <Link href={`/blog/${article.id}`} key={idx}>
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
@@ -482,11 +491,16 @@ export default function BlogPage() {
             )}
           </div>
 
-          <div className="mt-12 flex justify-center">
-            <button className="group flex items-center gap-2 border-[1.5px] border-[#0F3D2E]/40 text-[#0F3D2E] bg-transparent hover:bg-[#0F3D2E] hover:border-[#0F3D2E] hover:text-white px-8 py-3.5 rounded-full transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 text-[14px] font-bold" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-              Load More Articles <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
-            </button>
-          </div>
+          {filteredArticles.length > visibleCount && (
+            <div className="mt-12 flex justify-center">
+              <button 
+                onClick={() => setVisibleCount(prev => prev + 8)}
+                className="group flex items-center gap-2 border-[1.5px] border-[#0F3D2E]/40 text-[#0F3D2E] bg-transparent hover:bg-[#0F3D2E] hover:border-[#0F3D2E] hover:text-white px-8 py-3.5 rounded-full transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 text-[14px] font-bold" style={{ fontFamily: 'Nunito Sans, sans-serif' }}
+              >
+                Load More Articles <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
+              </button>
+            </div>
+          )}
         </div>
       </section>
 

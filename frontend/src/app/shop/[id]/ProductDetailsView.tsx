@@ -351,7 +351,7 @@ export default function ProductDetailsPage() {
             className="flex flex-col-reverse md:flex-row gap-4 md:gap-6"
           >
             {/* Thumbnails */}
-            <div className="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-x-hidden md:overflow-y-auto scrollbar-hide p-1 shrink-0">
+            <div className="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-x-hidden md:overflow-y-auto scrollbar-hide p-1 shrink-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                {variants.map((variant, idx) => (
                  <button
                    key={idx}

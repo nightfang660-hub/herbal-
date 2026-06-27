@@ -16,7 +16,7 @@ service cloud.firestore {
     }
 
     // User profile configurations
-    match /users/{userId} {
+    match /users/{userId}/{document=**} {
       allow read, write: if isOwner(userId) || isAdmin();
     }
 

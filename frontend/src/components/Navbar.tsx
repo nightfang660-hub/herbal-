@@ -32,6 +32,20 @@ export default function Navbar() {
     window.scrollTo(0, 0);
   }, []);
 
+  // Prevent background scrolling when drawers are open
+  useEffect(() => {
+    if (isMobileMenuOpen || isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    // Cleanup function
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen, isOpen]);
+
 
   const totalItems = mounted ? getItemCount() : 0;
   const wishlistCount = mounted ? wishlistItems.length : 0;
@@ -168,7 +182,7 @@ export default function Navbar() {
               <span className="hidden sm:inline">Cart</span>
               {mounted && totalItems > 0 && (
                 <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white text-[9px] font-bold text-[#0F3D2E]">
-                  {totalItems}
+                  {totalItems > 9 ? '9+' : totalItems}
                 </span>
               )}
             </button>
@@ -176,9 +190,14 @@ export default function Navbar() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden p-2 rounded-full text-[#2c4a35] hover:bg-[#e8e5de] transition-colors ml-1 cursor-pointer"
+              className="lg:hidden relative p-2 rounded-full text-[#2c4a35] hover:bg-[#e8e5de] transition-colors ml-1 cursor-pointer"
             >
               <Menu className="h-6 w-6" />
+              {mounted && totalItems > 0 && (
+                <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-[#D84B5B] text-[9px] font-bold text-white shadow-[0_0_0_2px_#F8F5EE]">
+                  {totalItems > 9 ? '9+' : totalItems}
+                </span>
+              )}
             </button>
           </div>
         </div>
@@ -305,7 +324,7 @@ export default function Navbar() {
                     <Heart className="h-5 w-5" /> My Favorites {mounted && wishlistCount > 0 && <span className="ml-1 text-[14px] text-[#D4AF37]">({wishlistCount})</span>}
                   </button>
                   <button onClick={() => { setIsMobileMenuOpen(false); router.push('/cart'); }} className="flex items-center gap-3 text-[18px] font-semibold text-[#0F3D2E] transition-colors hover:text-[#D4AF37] cursor-pointer">
-                    <ShoppingCart className="h-5 w-5" /> My Cart {mounted && totalItems > 0 && <span className="ml-1 text-[14px] text-[#D4AF37]">({totalItems})</span>}
+                    <ShoppingCart className="h-5 w-5" /> My Cart {mounted && totalItems > 0 && <span className="ml-1 text-[14px] text-[#D4AF37]">({totalItems > 9 ? '9+' : totalItems})</span>}
                   </button>
                 </div>
               </div>

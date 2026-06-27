@@ -252,7 +252,7 @@ export default function IngredientsPage() {
       </section>
 
       {/* Why These Ingredients Matter */}
-      <section className="py-10 lg:py-12 bg-white border-y border-[#ece8dc]">
+      <section className="py-10 lg:py-12 bg-white border-y border-[#ece8dc] relative z-[60]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
@@ -321,11 +321,13 @@ export default function IngredientsPage() {
       </section>
 
       {/* FAQ Section */}
-      <FAQSection 
+      <div className="relative z-[60] bg-[#fcfbf9]">
+        <FAQSection 
         title="Frequently Asked Questions" 
         subtitle="Everything you need to know about our herbal ingredients, sourcing, and benefits. Can't find your answer? Reach out to our herbalist team."
         faqs={ingredientFAQs} 
       />
+      </div>
     </main>
   );
 }

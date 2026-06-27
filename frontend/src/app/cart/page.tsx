@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '../../features/cart/cartStore';
-import { ArrowLeft, Minus, Plus, X } from 'lucide-react';
+import { ArrowLeft, Minus, Plus, X, Trash2 } from 'lucide-react';
 import { useWishlistStore } from '../../features/wishlist/wishlistStore';
 import { useAuth } from '../../providers/AuthProvider';
 
@@ -163,9 +163,10 @@ export default function CartPage() {
                           <div className="flex items-center gap-4 mt-3 pt-3 border-t border-[#f0f0f0] text-[13px] font-bold text-[#555]">
                             <button 
                               onClick={() => removeItem(item.sku)}
-                              className="hover:text-[#333] transition-colors"
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#fff0f2] text-[#d84b5b] hover:bg-[#ffe4e8] hover:text-[#c43848] transition-colors border border-[#ffd1d7]"
                             >
-                              REMOVE
+                              <Trash2 className="w-3.5 h-3.5" />
+                              <span className="tracking-wide">REMOVE</span>
                             </button>
                           </div>
                         </div>

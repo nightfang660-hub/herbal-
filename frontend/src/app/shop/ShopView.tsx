@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Leaf, Star, Heart, Search, ShoppingBasket, ShoppingCart, ArrowRight, FlaskConical, Sprout } from 'lucide-react';
+import { ArrowLeft, Leaf, Star, Heart, Search, ShoppingBasket, ShoppingCart, ArrowRight, FlaskConical, Sprout, Check } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCartStore } from '../../features/cart/cartStore';
 import { useWishlistStore } from '../../features/wishlist/wishlistStore';
@@ -45,11 +45,45 @@ export default function ShopPage() {
   const [priceValue, setPriceValue] = useState(1020); // Default to max
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [addedItems, setAddedItems] = useState<{[key: number]: boolean}>({});
+  const [notification, setNotification] = useState<string | null>(null);
 
   const { toggleItem, isInWishlist } = useWishlistStore();
+  const { addItem } = useCartStore();
+
+  const handleAddToCart = (product: any, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem({
+      sku: `product-${product.id}`,
+      name: product.name,
+      priceCents: product.price * 100,
+      image: product.img
+    });
+    setAddedItems(prev => ({ ...prev, [product.id]: true }));
+    setNotification(`${product.name} added to cart!`);
+    
+    setTimeout(() => {
+      setAddedItems(prev => ({ ...prev, [product.id]: false }));
+    }, 2000);
+    
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000);
+  };
 
   React.useEffect(() => {
     setMounted(true);
+    
+    // Restore scroll position when returning from product details
+    const savedScroll = sessionStorage.getItem('shopScrollPosition');
+    if (savedScroll && !q) {
+      setTimeout(() => {
+        window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' });
+        sessionStorage.removeItem('shopScrollPosition');
+      }, 100);
+    }
+    
     if (q) {
       setSearchQuery(q);
       // Automatically scroll to the shop section when searching
@@ -59,6 +93,11 @@ export default function ShopPage() {
       }
     }
   }, [q]);
+
+  const handleProductClick = (id: number) => {
+    sessionStorage.setItem('shopScrollPosition', window.scrollY.toString());
+    router.push(`/shop/${id}`);
+  };
 
   // Powerful Filtering Logic
   const filteredProducts = PRODUCTS.filter(p => {
@@ -192,7 +231,7 @@ export default function ShopPage() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5 }}
                   key={product.id} 
-                  onClick={() => router.push(`/shop/${product.id}`)}
+                  onClick={() => handleProductClick(product.id)}
                   className="flex flex-col group cursor-pointer bg-white rounded-2xl md:rounded-3xl border border-[#e8e5de] p-3 md:p-5 overflow-hidden shadow-sm transition-all duration-300"
                 >
                   {/* Product Image */}
@@ -206,7 +245,7 @@ export default function ShopPage() {
                     <img 
                       src={product.img} 
                       alt={product.name} 
-                      className={`w-full h-full object-contain drop-shadow-sm transition-transform duration-700 ease-in-out ${product.img.endsWith('/blue.png') ? 'scale-[1.4] translate-y-1' : (product.img.endsWith('/ruby_detox.png') || product.img.endsWith('/blue_tea1.png') ? 'scale-[1.3] translate-y-2' : '')}`} 
+                      className="w-full h-full object-contain drop-shadow-sm transition-transform duration-700 ease-in-out" 
                     />
                   </div>
                   
@@ -236,10 +275,14 @@ export default function ShopPage() {
 
 
                         <button 
-                          onClick={(e) => { e.stopPropagation(); router.push(`/shop/${product.id}`); }}
-                          className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#0F3D2E] text-white hover:bg-[#1a5441] transition-colors shadow-sm shrink-0 relative z-10"
+                          onClick={(e) => handleAddToCart(product, e)}
+                          className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full text-white transition-colors shadow-sm shrink-0 relative z-10 hover:scale-105 active:scale-95 ${addedItems[product.id] ? 'bg-[#5b8c5a]' : 'bg-[#0F3D2E] hover:bg-[#1a5441]'}`}
                         >
-                          <ShoppingCart className="w-4 h-4 md:w-[18px] md:h-[18px]" />
+                          {addedItems[product.id] ? (
+                            <Check className="w-4 h-4 md:w-[18px] md:h-[18px]" />
+                          ) : (
+                            <ShoppingCart className="w-4 h-4 md:w-[18px] md:h-[18px]" />
+                          )}
                         </button>
                       </div>
                     </div>
@@ -618,6 +661,24 @@ export default function ShopPage() {
               </div>
             </motion.div>
           </>
+        )}
+      </AnimatePresence>
+
+      {/* Global Notification Toast */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] bg-[#0F3D2E] text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 font-semibold text-[13px] md:text-[14px]"
+            style={{ fontFamily: 'Nunito Sans, sans-serif' }}
+          >
+            <div className="bg-[#5b8c5a] rounded-full p-1">
+              <Check className="w-3 h-3 md:w-4 md:h-4 text-white stroke-[3]" />
+            </div>
+            {notification}
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
