@@ -217,10 +217,10 @@ export default function JournalView({ posts }: JournalViewProps) {
 
               {/* Button */}
               <div className="pt-2 lg:pt-0">
-                <button className="flex items-center gap-3 bg-[#0F3D2E] text-white px-5 lg:px-8 py-2.5 lg:py-3.5 rounded-[8px] lg:rounded-full hover:bg-[#1a5441] transition-colors shadow-md text-[13px] lg:text-[15px] font-bold lg:font-semibold">
+                <Link href="/shop" className="inline-flex items-center gap-3 bg-[#0F3D2E] text-white px-5 lg:px-8 py-2.5 lg:py-3.5 rounded-[8px] lg:rounded-full hover:bg-[#1a5441] transition-colors shadow-md text-[13px] lg:text-[15px] font-bold lg:font-semibold">
                   <span className="tracking-wide">Explore Our Teas</span>
                   <ArrowRight className="w-4 h-4 text-white lg:text-[#e2b755]" />
-                </button>
+                </Link>
               </div>
             </motion.div>
           </div>
@@ -306,9 +306,9 @@ export default function JournalView({ posts }: JournalViewProps) {
             <p className="text-[13px] lg:text-[15px] text-[#4a5d53] mb-5 lg:mb-6 leading-relaxed max-w-[300px] lg:max-w-[350px]">
               Our carefully crafted herbal blends are designed to support your holistic wellness journey.
             </p>
-            <button className="flex items-center justify-center gap-2 bg-[#0F3D2E] text-white px-6 lg:px-7 py-2.5 lg:py-3 rounded-md hover:bg-[#1a5441] transition-colors font-semibold text-[12px] lg:text-[13px]">
+            <Link href="/blog" className="inline-flex items-center justify-center gap-2 bg-[#0F3D2E] text-white px-6 lg:px-7 py-2.5 lg:py-3 rounded-md hover:bg-[#1a5441] transition-colors font-semibold text-[12px] lg:text-[13px]">
               Explore All Benefits <ArrowRight className="w-4 h-4" />
-            </button>
+            </Link>
           </div>
 
           {/* Right Visual Content */}
