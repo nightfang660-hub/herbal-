@@ -9,7 +9,7 @@ import { useAuth } from '../../providers/AuthProvider';
 
 // Temporary mock data to map cart items to full product details
 const PRODUCTS = [
-  { id: 1, name: "Premium Herbal Blend", price: 450.00, originalPrice: 500, discount: 10, img: "/home/img1.jpg", rating: 4.5, reviews: 124, category: "Wellness Blends", type: "Herbal", weight: "100g", soldBy: "VIRENDRA KUMAR GUPTA" },
+  { id: 1, name: "Ruby Calm Tea", price: 230.00, originalPrice: 270, discount: 15, img: "/assets/product/file_000000008de072079cfe74523df70bde.png", rating: 4.5, reviews: 124, category: "Wellness Blends", type: "Herbal", weight: "20 Packets", soldBy: "R-HerbalTea Organics" },
   { id: 2, name: "Calming Chamomile", price: 350.00, originalPrice: 400, discount: 12, img: "/home/img2.jpg", rating: 4.0, reviews: 89, category: "Loose Leaf", type: "Decaf", weight: "50g", soldBy: "ANAJ WALA ORGANICS" },
   { id: 3, name: "Morning Matcha", price: 850.00, originalPrice: 1000, discount: 15, img: "/home/img3.jpg", rating: 4.8, reviews: 342, category: "Matcha", type: "Caffeinated", weight: "250g", soldBy: "Shyam Enterprises" },
   { id: 4, name: "Detox Green Wellness", price: 400.00, originalPrice: 500, discount: 20, img: "/home/img4.jpg", rating: 4.1, reviews: 56, category: "Wellness Blends", type: "Caffeinated", weight: "100g", soldBy: "CHAMUNDA FASHION.." },
