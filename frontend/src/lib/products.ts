@@ -71,6 +71,9 @@ export async function getProducts(): Promise<Product[]> {
     querySnapshot.forEach((doc) => {
       products.push(doc.data() as Product);
     });
+    if (products.length === 0) {
+      return SEED_PRODUCTS;
+    }
     return products;
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -86,7 +89,8 @@ export async function getProductById(id: string | number): Promise<Product | nul
     if (productSnap.exists()) {
       return productSnap.data() as Product;
     }
-    return null;
+    // Fallback if not found in db (e.g. unseeded Vercel environment)
+    return SEED_PRODUCTS.find(p => p.id.toString() === id.toString()) || null;
   } catch (error) {
     console.error('Error fetching product:', error);
     // Fallback to seed data
