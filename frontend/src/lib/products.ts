@@ -29,9 +29,9 @@ const SEED_PRODUCTS: Product[] = [
     desc: "A soothing blend to relax your mind and uplift your mood.", 
     description: "A soothing blend of premium herbs designed to promote relaxation. Perfect for winding down after a long day.",
     bestSeller: true, 
-    price: 450.00, 
-    originalPrice: 500, 
-    discount: 10, 
+    price: 230.00, 
+    originalPrice: 270, 
+    discount: 15, 
     img: "/assets/product/file_000000008de072079cfe74523df70bde.png", 
     images: [
       "/assets/product/file_000000008de072079cfe74523df70bde.png",

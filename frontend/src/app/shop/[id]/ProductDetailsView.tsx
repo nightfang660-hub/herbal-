@@ -157,10 +157,10 @@ export default function ProductDetailsPage() {
 
   const packSizes = [
     {
-      weight: '20 Packets',
-      price: 220,
-      originalPrice: 270,
-      discount: 18 // Approx 18.5% discount
+      weight: product.weight || '20 Packets',
+      price: product.price,
+      originalPrice: product.originalPrice,
+      discount: product.discount || Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     }
   ];
 
