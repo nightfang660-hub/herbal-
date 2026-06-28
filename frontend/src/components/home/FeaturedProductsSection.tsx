@@ -9,10 +9,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const FEATURED_PRODUCTS = [
-  { id: 1, name: "Premium Herbal Blend", price: 450.00, img: "/shop/red_tea.png", rating: 4.5, weight: "15 Packets" },
-  { id: 2, name: "Calming Chamomile", price: 350.00, img: "/shop/green_tea.png", rating: 4.0, weight: "10 Packets" },
-  { id: 3, name: "Morning Matcha", price: 850.00, img: "/shop/blue.png", rating: 4.8, weight: "30 Packets" },
-  { id: 4, name: "Detox Green Wellness", price: 400.00, img: "/shop/ruby_detox.png", rating: 4.1, weight: "15 Packets" },
+  { id: 1, name: "Ruby Calm Tea", desc: "A soothing blend to relax your mind and uplift your mood.", bestSeller: true, price: 450.00, img: "/assets/product/file_000000008de072079cfe74523df70bde.png", rating: 4.5, weight: "15 Packets" },
 ];
 
 function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: number, onAdd: (name: string) => void }) {
@@ -45,10 +42,10 @@ function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: 
         show: { opacity: 1, y: 0, transition: { type: "spring", bounce: 0.3 } }
       }}
       onClick={() => router.push(`/shop/${product.id}`)}
-      className="flex flex-col group cursor-pointer bg-white rounded-2xl md:rounded-3xl border border-[#e8e5de] p-3 md:p-5 overflow-hidden shadow-sm transition-all duration-300"
+      className="flex flex-col group cursor-pointer bg-white rounded-[20px] md:rounded-3xl border border-[#e8e5de] p-3 md:p-5 overflow-hidden shadow-sm transition-all duration-300"
     >
       {/* Product Image */}
-      <div className="relative w-full h-[160px] md:h-[280px] mb-3 flex items-center justify-center rounded-t-2xl pt-2 px-1">
+      <div className="relative w-full h-[110px] md:h-[280px] mb-2 md:mb-3 flex items-center justify-center rounded-t-2xl pt-1 md:pt-2 px-1">
         <button 
           className={`absolute top-0 right-0 p-1 transition-colors z-10 ${mounted && isInWishlist(product.id) ? 'text-[#D84B5B]' : 'text-[#8b9992] hover:text-[#D84B5B]'}`} 
           onClick={(e) => { e.stopPropagation(); toggleItem(product.id); }}
@@ -64,22 +61,31 @@ function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: 
       
       {/* Product Details */}
       <div className="flex flex-col flex-1">
-        <h4 className="font-bold text-[#2c4a35] group-hover:text-[#0F3D2E] text-[14px] md:text-[18px] leading-tight mb-1.5 transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+
+
+        <h4 className="font-bold text-[#0F3D2E] text-[13px] md:text-[17px] leading-tight mb-1 md:mb-2 transition-colors duration-300 line-clamp-2 md:line-clamp-none" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
           {product.name}
         </h4>
 
         {/* Rating (5 Stars) */}
-        <div className="flex items-center gap-1.5 mb-3">
-          <div className="flex items-center gap-[2px]">
+        <div className="flex items-center gap-1 md:gap-1.5 mb-2 md:mb-3">
+          <div className="flex items-center gap-[1px] md:gap-[2px]">
             {[...Array(5)].map((_, i) => (
-               <Star key={i} className={`w-3 h-3 md:w-3.5 md:h-3.5 ${i < Math.floor(product.rating) ? 'fill-[#ffc107] text-[#ffc107]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
+               <Star key={i} className={`w-2.5 h-2.5 md:w-[14px] md:h-[14px] ${i < Math.floor(product.rating) ? 'fill-[#ffc107] text-[#ffc107]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
             ))}
           </div>
-          <span className="text-[11px] md:text-[13px] font-bold text-[#4a5d53]">({product.rating.toFixed(1)})</span>
+          <span className="text-[10px] md:text-[12px] font-bold text-[#6b7b72] ml-0.5">({product.rating.toFixed(1)})</span>
+        </div>
+
+        {/* Description */}
+        <div className="mb-2 md:mb-3">
+          <p className="text-[11px] md:text-[13px] text-[#6b7b72] leading-[1.4] md:leading-[1.5] line-clamp-2">
+            {product.desc}
+          </p>
         </div>
         
-        <div className="flex items-center justify-between mt-auto gap-3 pt-1">
-          <span className="font-bold text-[#0F3D2E] text-[15px] md:text-[20px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+        <div className="flex items-center justify-between mt-auto pt-1">
+          <span className="font-bold text-[#0F3D2E] text-[14px] md:text-[18px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
             ₹{product.price}
           </span>
           
@@ -87,12 +93,12 @@ function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: 
           <div className="flex items-center gap-2 relative">
             <button 
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(); }}
-              className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full text-white transition-colors shadow-sm shrink-0 relative z-10 hover:scale-105 active:scale-95 ${isAdded ? 'bg-[#5b8c5a]' : 'bg-[#0F3D2E] hover:bg-[#1a5441]'}`}
+              className={`flex items-center justify-center w-7 h-7 md:w-9 md:h-9 rounded-full text-white transition-colors shadow-sm shrink-0 relative z-10 hover:scale-105 active:scale-95 ${isAdded ? 'bg-[#5b8c5a]' : 'bg-[#183a2d] hover:bg-[#0f281e]'}`}
             >
               {isAdded ? (
-                <Check className="w-4 h-4 md:w-[18px] md:h-[18px]" />
+                <Check className="w-3.5 h-3.5 md:w-4 md:h-4" strokeWidth={2.5} />
               ) : (
-                <ShoppingCart className="w-4 h-4 md:w-[18px] md:h-[18px]" />
+                <ShoppingCart className="w-3.5 h-3.5 md:w-4 md:h-4" strokeWidth={2} />
               )}
             </button>
           </div>
@@ -113,7 +119,7 @@ export default function FeaturedProductsSection() {
   };
 
   return (
-    <section className="bg-[#f4f1e6] py-12 border-b border-black/5 overflow-hidden relative" id="shop">
+    <section className="bg-[#f4f1e6] py-12 overflow-hidden relative" id="shop">
       <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
         {/* Header */}
         <motion.div 

@@ -215,49 +215,9 @@ const WELLNESS_CARDS = [
   }
 ];
 
-const FEATURED_PRODUCTS = [
-  {
-    id: "fp-1",
-    name: "Ruby Calm Tea",
-    badge: "Relaxation Blend",
-    description: "A soothing blend to help you relax and find your inner calm.",
-    price: 399,
-    originalPrice: 499,
-    image: "/home/about_us.png",
-    bestseller: true
-  },
-  {
-    id: "fp-2",
-    name: "Ruby Calm Tea",
-    badge: "Women's Wellness Blend",
-    description: "Carefully crafted to support hormonal balance and harmony from within.",
-    price: 449,
-    originalPrice: 599,
-    image: "/home/ruby_calm_hero.png",
-    bestseller: true
-  },
-  {
-    id: "fp-3",
-    name: "Daily Detox Tea",
-    badge: "Purifying Blend",
-    description: "A refreshing blend that supports daily detox and inner clarity.",
-    price: 349,
-    originalPrice: 449,
-    image: "/home/detox_tea.png",
-    bestseller: true
-  },
-  {
-    id: "fp-4",
-    name: "Zen Digest Blend",
-    badge: "Daily Digestive Relief",
-    description: "Daily digestive relief blend with Ginger, Peppermint, Fennel, and Chamomile.",
-    price: 399,
-    originalPrice: 499,
-    image: "/home/digestive_herbal_img.png",
-    bestseller: false
-  }
-];
-function FeaturedProductCard({ product, index }: { product: any, index?: number }) {
+import { getProducts, Product } from '../lib/products';
+
+function FeaturedProductCard({ product, index }: { product: Product, index?: number }) {
   const addItem = useCartStore((state) => state.addItem);
 
   const handleAddToCart = () => {
@@ -265,62 +225,75 @@ function FeaturedProductCard({ product, index }: { product: any, index?: number 
       sku: `PACK-${product.id}-1`,
       name: `${product.name} (1 Packet)`,
       priceCents: product.price * 100,
-      image: product.image
+      image: product.img
     });
   };
 
-  const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
-
   return (
-    <div className="group bg-white flex flex-col h-full border border-[#f0f0f0] transition-shadow duration-300 hover:shadow-lg cursor-pointer">
-      {/* Top Section: Image Area */}
-      <div className="relative aspect-[4/5] w-full bg-[#f9f9f9] flex items-center justify-center overflow-hidden">
-        {/* Discount Badge */}
-        {discount > 0 && (
-          <div className="absolute top-4 right-4 bg-[#8cb73d] text-white text-[13px] font-bold px-3 py-1 rounded-tl-[12px] rounded-tr-[12px] rounded-br-[12px] rounded-bl-sm z-10 tracking-wide">
-            {index === 0 ? 'NEW' : `-${discount}%`}
+    <div 
+      className="flex flex-col group cursor-pointer bg-white rounded-[20px] md:rounded-3xl border border-[#e8e5de] p-3 md:p-5 overflow-hidden shadow-sm transition-all duration-300 h-full"
+    >
+      {/* Product Image */}
+      <div className="relative w-full h-[110px] md:h-[280px] mb-2 md:mb-3 flex items-center justify-center rounded-t-2xl pt-1 md:pt-2 px-1">
+        <button 
+          className="absolute top-0 right-0 p-1 transition-colors z-10 text-[#8b9992] hover:text-[#D84B5B]"
+        >
+          <Heart className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} fill="none" />
+        </button>
+        <img 
+          src={product.img} 
+          alt={product.name} 
+          className="w-full h-full object-contain drop-shadow-sm transition-transform duration-700 ease-in-out" 
+        />
+      </div>
+      
+      {/* Product Details */}
+      <div className="flex flex-col flex-1">
+        {/* Best Seller Badge */}
+        {product.bestSeller && (
+          <div className="mb-1 md:mb-2 flex items-start">
+            <span className="bg-[#f0f4e3] text-[#2c4a35] px-1.5 md:px-2 py-0.5 rounded-[3px] md:rounded-[4px] text-[9px] md:text-[10px] font-bold tracking-widest uppercase">
+              BEST SELLER
+            </span>
           </div>
         )}
-        <img 
-          src={product.image} 
-          alt={product.name} 
-          className="w-full h-full mix-blend-multiply object-cover group-hover:scale-105 transition-transform duration-700" 
-        />
 
-        {/* Hover Action Buttons */}
-        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 z-20">
-          <button className="w-[60px] h-[60px] bg-white rounded-full flex items-center justify-center text-[#1a202c] hover:text-white hover:bg-[#8cb73d] transition-all shadow-md transform translate-y-4 group-hover:translate-y-0 duration-300 ease-out">
-            <Eye className="w-[26px] h-[26px]" strokeWidth={2.5} />
-          </button>
-          <button onClick={(e) => { e.stopPropagation(); handleAddToCart(); }} className="w-[60px] h-[60px] bg-white rounded-full flex items-center justify-center text-[#1a202c] hover:text-white hover:bg-[#8cb73d] transition-all shadow-md transform translate-y-4 group-hover:translate-y-0 duration-300 delay-75 ease-out">
-            <ShoppingCart className="w-[26px] h-[26px]" strokeWidth={2.5} />
-          </button>
-          <button className="w-[60px] h-[60px] bg-white rounded-full flex items-center justify-center text-[#1a202c] hover:text-white hover:bg-[#8cb73d] transition-all shadow-md transform translate-y-4 group-hover:translate-y-0 duration-300 delay-150 ease-out">
-            <Heart className="w-[26px] h-[26px]" strokeWidth={2.5} />
-          </button>
-        </div>
-      </div>
-
-      {/* Content Section */}
-      <div className="pt-6 pb-8 px-6 flex flex-col items-center flex-grow bg-white text-center">
-        {/* Stars */}
-        <div className="flex items-center justify-center gap-[2px] mb-4">
-          {[...Array(4)].map((_, i) => (
-            <Star key={i} className="w-[15px] h-[15px] text-[#ffc107] fill-[#ffc107]" />
-          ))}
-          <Star className="w-[15px] h-[15px] text-[#ffc107]" />
-          <span className="text-[13px] text-[#8cb73d] ml-1.5 font-semibold">(24)</span>
-        </div>
-
-        {/* Title */}
-        <h3 className="text-[16px] font-bold text-[#1f2937] leading-tight mb-4" style={{ fontFamily: 'Inter, sans-serif' }}>
+        <h4 className="font-bold text-[#0F3D2E] text-[13px] md:text-[17px] leading-tight mb-1 md:mb-2 transition-colors duration-300 line-clamp-2 md:line-clamp-none" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
           {product.name}
-        </h3>
+        </h4>
+
+        {/* Rating (5 Stars) */}
+        <div className="flex items-center gap-1 md:gap-1.5 mb-2 md:mb-3">
+          <div className="flex items-center gap-[1px] md:gap-[2px]">
+            {[...Array(5)].map((_, i) => (
+               <Star key={i} className={`w-2.5 h-2.5 md:w-[14px] md:h-[14px] ${i < Math.floor(product.rating) ? 'fill-[#ffc107] text-[#ffc107]' : (i === Math.floor(product.rating) && product.rating % 1 !== 0 ? 'fill-[#ffc107] text-[#ffc107] opacity-50' : 'fill-[#e8e5de] text-[#e8e5de]')}`} />
+            ))}
+          </div>
+          <span className="text-[10px] md:text-[12px] font-bold text-[#6b7b72] ml-0.5">({product.rating.toFixed(1)})</span>
+        </div>
+
+        {/* Description */}
+        <div className="mb-2 md:mb-3">
+          <p className="text-[11px] md:text-[13px] text-[#6b7b72] leading-[1.4] md:leading-[1.5] line-clamp-2">
+            {product.description || product.desc}
+          </p>
+        </div>
         
-        {/* Price */}
-        <div className="flex items-center justify-center gap-3">
-          <span className="text-[20px] font-extrabold text-[#8cb73d] leading-none">₹{product.price}</span>
-          <span className="text-[18px] font-bold text-[#c4c4c4] line-through leading-none">₹{product.originalPrice}</span>
+        {/* Price & Cart */}
+        <div className="flex items-center justify-between mt-auto pt-1 relative">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2">
+              <span className="text-[14px] md:text-[18px] font-bold text-[#2c4a35]">₹{product.price}</span>
+              <span className="text-[11px] md:text-[13px] text-[#8b9992] line-through">₹{product.originalPrice}</span>
+            </div>
+          </div>
+          
+          <button 
+            onClick={(e) => { e.stopPropagation(); handleAddToCart(); }}
+            className="flex items-center justify-center w-7 h-7 md:w-9 md:h-9 bg-[#183a2d] hover:bg-[#0f281e] rounded-full text-white transition-colors shadow-sm shrink-0 relative z-10 hover:scale-105 active:scale-95"
+          >
+            <ShoppingCart className="w-3.5 h-3.5 md:w-4 md:h-4" strokeWidth={2} />
+          </button>
         </div>
       </div>
     </div>
@@ -336,7 +309,7 @@ function FAQSection() {
   };
 
   return (
-    <section className="w-full bg-[#f4f2ee] py-14 lg:py-16 relative">
+    <section className="w-full bg-[#fcfbf9] py-14 lg:py-16 relative">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-8">
         
         {/* Header */}
@@ -431,7 +404,7 @@ function HowItWorksSection() {
   ];
 
   return (
-    <section className="bg-white pt-24 pb-12 relative overflow-hidden border-b border-border/10">
+    <section className="bg-white pt-24 pb-12 relative overflow-hidden">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}
@@ -526,7 +499,7 @@ function WellnessSolutionsSection() {
   ];
 
   return (
-    <section className="bg-[#fdfbf6] py-20 relative border-b border-black/5">
+    <section className="bg-[#fcfbf9] py-20 relative">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}
@@ -739,7 +712,7 @@ function TestimonialsSection() {
   const prevPage = () => setCurrentIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
 
   return (
-    <section className="bg-[#fdfbf6] py-14 relative overflow-hidden">
+    <section className="bg-[#fcfbf9] py-14 relative overflow-hidden">
       {/* Decorative leaf motifs background (abstracted as subtle blobs) */}
       <div className="absolute top-0 left-0 w-48 h-48 bg-gradient-to-br from-[#e8f2e1]/40 to-transparent rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-48 h-48 bg-gradient-to-tl from-[#e8f2e1]/40 to-transparent rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
@@ -832,8 +805,13 @@ export default function Home() {
   const [isHovered, setIsHovered] = useState(false);
 
   const [selectedWellness, setSelectedWellness] = useState<typeof WELLNESS_CARDS[0] | null>(null);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
 
   useEffect(() => {
+    getProducts().then(products => {
+      setFeaturedProducts(products);
+    });
+    
     let animationFrameId: number;
     const scrollContainer = scrollRef.current;
     let scrollPos = scrollContainer ? scrollContainer.scrollLeft : 0;
@@ -971,7 +949,7 @@ export default function Home() {
       </section>
 
       {/* ── TRUST & WELLNESS BENEFITS STRIP ── */}
-      <section className="w-full relative bg-[#F8F5EE] py-20 lg:py-24 overflow-hidden border-b border-[#EFE7D7]">
+      <section className="w-full relative bg-[#fcfbf9] py-20 lg:py-24 overflow-hidden border-y border-[#ece8dc]">
         {/* Subtle Background Decor */}
         {/* Soft sage green gradients */}
         <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-br from-[#A8B5A2]/10 to-transparent rounded-full blur-[80px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
@@ -1067,7 +1045,7 @@ export default function Home() {
 
 
       {/* Featured Products Collection */}
-      <section className="bg-[#f4f1e6] py-20 border-b border-black/5 overflow-hidden relative">
+      <section className="bg-white py-20 relative overflow-hidden">
         <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
           {/* Header */}
           <div className="flex flex-col md:flex-row items-center justify-center relative mb-14 gap-6">
@@ -1084,8 +1062,8 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 w-full mx-auto">
-            {FEATURED_PRODUCTS.map((product, idx) => (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 w-full mx-auto">
+            {featuredProducts.slice(0, 4).map((product, idx) => (
               <FeaturedProductCard key={product.id} product={product} index={idx} />
             ))}
           </div>
@@ -1100,7 +1078,7 @@ export default function Home() {
 
 
       {/* About Us Section */}
-      <section className="bg-[#f4f1e6] py-24 relative overflow-hidden border-b border-border/20">
+      <section className="bg-white py-24 relative overflow-hidden">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           
           <div className="flex flex-col lg:flex-row gap-16 items-center mb-24">

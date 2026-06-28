@@ -1,16 +1,41 @@
 'use client';
 
-import React from 'react';
-import { Leaf, Flower2, Coffee, MoonStar, ShieldCheck } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Leaf, Palette, Coffee, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function CraftedWithNatureSection() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveIndex(Number(entry.target.getAttribute('data-index')));
+          }
+        });
+      },
+      {
+        root: scrollContainerRef.current,
+        threshold: 0.6, // Trigger when 60% of the card is visible
+      }
+    );
+
+    const cards = scrollContainerRef.current?.querySelectorAll('.nature-card');
+    if (cards) {
+      cards.forEach((card) => observer.observe(card));
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const cards = [
-    { Icon: Leaf,     title: '100% Herbal',    titleLines: ['100% Herbal'],         desc: 'Pure plant-based\ningredients.' },
-    { Icon: Flower2,  title: 'Hormonal Wellness', titleLines: ['Hormonal', 'Wellness'], desc: "Crafted for women's\nbalance and comfort." },
-    { Icon: Coffee,   title: 'Supports Digestion', titleLines: ['Supports', 'Digestion'], desc: 'Helps maintain everyday\ndigestive wellbeing.' },
-    { Icon: MoonStar, title: 'Promotes Calmness', titleLines: ['Promotes', 'Calmness'],  desc: 'A soothing ritual for\nrelaxation and peace.' },
-    { Icon: ShieldCheck, title: 'Made In India',   titleLines: ['Made In India'],       desc: 'Carefully blended with\npremium ingredients.' },
+    { Icon: Coffee,      title: 'Refreshing Taste', titleLines: ['Refreshing Taste'], desc: 'A delightful and\nrefreshing herbal blend.' },
+    { Icon: Palette,     title: 'Vibrant Hues',     titleLines: ['Vibrant Hues'],     desc: 'Beautiful colors from\npure natural ingredients.' },
+    { Icon: Leaf,        title: 'Natural Sweet',    titleLines: ['Natural Sweet'],    desc: 'Naturally sweetened\n(liquorice in natural sweet).' },
+    { Icon: ShieldCheck, title: 'Made In India',    titleLines: ['Made In India'],    desc: 'Carefully blended with\npremium ingredients.' },
   ] as { Icon: React.ComponentType<any>, title: string, titleLines: string[], desc: string }[];
 
   return (
@@ -78,15 +103,17 @@ export default function CraftedWithNatureSection() {
           </p>
         </motion.div>
 
-        {/* ── 5 Feature Cards ── */}
+        {/* ── 4 Feature Cards ── */}
         <div 
-             className="flex lg:grid lg:grid-cols-5 gap-4 overflow-x-auto lg:overflow-visible snap-x snap-mandatory pb-8 lg:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
+             ref={scrollContainerRef}
+             className="flex lg:grid lg:grid-cols-4 gap-4 overflow-x-auto lg:overflow-visible snap-x snap-mandatory pb-8 lg:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {cards.map(({ Icon, titleLines, desc }, idx) => (
             <motion.div 
               key={idx}
-              className="min-w-[240px] sm:min-w-[280px] lg:min-w-0 snap-center shrink-0"
+              data-index={idx}
+              className={`nature-card min-w-[240px] sm:min-w-[280px] lg:min-w-0 snap-center shrink-0 border-[1.5px] transition-colors duration-300 ${activeIndex === idx ? 'border-[#c9a55a] lg:border-transparent lg:hover:border-[#c9a55a]' : 'border-transparent lg:hover:border-[#c9a55a]'}`}
               initial={{ opacity: 1, scale: 0.85 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ amount: 0.7 }}
@@ -104,7 +131,7 @@ export default function CraftedWithNatureSection() {
                 boxShadow: '0 8px 30px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08)',
                 background: '#FDFCF9', // Off-white card background
                 alignItems: 'center',
-                padding: '44px 20px 48px', // Balanced padding
+                padding: '42.5px 18.5px 46.5px', // Adjusted for border width
                 marginBottom: '20px', // Lift cards slightly higher on the green band
                 cursor: 'pointer', // Add pointer cursor to indicate interactivity
               }}

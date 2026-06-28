@@ -12,7 +12,7 @@ export default function AboutPage() {
     <main className="min-h-screen bg-[#fcfbf9]">
       
       {/* Hero Section */}
-      <section className="relative w-full overflow-hidden bg-[#f5f0e6] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
+      <section className="relative w-full overflow-hidden bg-[#f5f0e6] border-b border-[#ece8dc] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
         {/* Right Side Background Image (Desktop) */}
         <div 
           className="absolute inset-0 lg:left-auto lg:right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-[position:60%_center] lg:bg-[90%_center] z-0"
@@ -46,7 +46,12 @@ export default function AboutPage() {
             </h1>
             
             {/* Description */}
-            <p className="text-[16px] md:text-[18px] text-white/95 lg:text-[#4a5d53] font-medium max-w-md leading-[1.8] drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+            <div className="lg:hidden bg-gradient-to-r from-[#c19236]/30 to-transparent border-l-4 border-[#c19236] p-3 rounded-r-lg shadow-sm backdrop-blur-sm">
+              <p className="text-[15px] text-white font-medium leading-[1.7] drop-shadow-md" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                Discover the journey behind <span className="text-[#e2b755] font-bold">R-HerbalTea</span>, where ancient botanical wisdom meets modern holistic health to bring you blends that restore balance and vitality.
+              </p>
+            </div>
+            <p className="hidden lg:block text-[18px] text-[#4a5d53] font-medium max-w-md leading-[1.8]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
               Discover the journey behind R-HerbalTea, where ancient botanical wisdom meets modern holistic health to bring you blends that restore balance and vitality.
             </p>
 
@@ -94,11 +99,11 @@ export default function AboutPage() {
                 <div className="w-12 h-[1px] bg-[#dccb96]"></div>
               </div>
 
-              <p className="text-[15px] md:text-[16px] text-[#556358] leading-[1.8]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                At R-HerbalTea, we believe true wellness begins with nature. Our herbal teas are carefully crafted using handpicked, 100% natural ingredients to support your body, calm your mind, and uplift your everyday life.
+              <p className="text-[16px] md:text-[18px] text-[#1a3b2b] font-semibold leading-[1.8] mt-6" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                At <span className="text-[#cda434] font-bold">R-HerbalTea</span>, we believe true wellness begins with nature. Our herbal teas are carefully crafted using handpicked, 100% natural ingredients to support your body, calm your mind, and uplift your everyday life.
               </p>
               
-              <p className="text-[15px] md:text-[16px] text-[#556358] leading-[1.8]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+              <p className="text-[16px] md:text-[18px] text-[#2c4a35] font-medium leading-[1.8]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                 From calming blends to immunity boosters, every cup is made with love, purity and a promise of better well-being. We work closely with sustainable farmers to ensure that what reaches your cup is nothing short of exceptional.
               </p>
               
@@ -142,8 +147,8 @@ export default function AboutPage() {
 
                 {/* Text Content */}
                 <div className="flex-1 text-center sm:text-left mt-2 sm:mt-0">
-                  <h5 className="text-[19px] font-bold text-[#1a3b2b] mb-3" style={{ fontFamily: 'Playfair Display, serif' }}>{item.title}</h5>
-                  <p className="text-[14px] text-[#556358] leading-[1.7]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{item.desc}</p>
+                  <h5 className="text-[19px] font-bold text-[#1a3b2b] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>{item.title}</h5>
+                  <p className="text-[15px] font-medium text-[#2c4a35] leading-[1.7]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{item.desc}</p>
                 </div>
 
                 {/* Image */}
@@ -158,7 +163,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Vision Section */}
-      <section className="py-20 bg-[#fcfbf9]">
+      <section className="py-20 bg-white border-t border-[#ece8dc]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col-reverse lg:flex-row items-center gap-16">
           
           {/* Left Content */}
@@ -209,7 +214,7 @@ export default function AboutPage() {
       </section>
 
       {/* The Ingredient Story Section */}
-      <section className="py-20 bg-[#fdfbf6] border-t border-[#ece8dc]">
+      <section className="py-20 bg-[#fcfbf9] border-t border-[#ece8dc]">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-[36px] md:text-[44px] font-bold text-[#1c2e24] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
@@ -223,16 +228,57 @@ export default function AboutPage() {
           </div>
           
           <div className="relative">
+            {/* Mobile/Tablet Layout (Visible below 1024px) */}
+            <div className="flex lg:hidden flex-col gap-10 relative z-10 mt-8">
+              <div className="flex justify-center">
+                <motion.img 
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{ duration: 0.7 }}
+                  src="/assets/edited-photo .png" 
+                  alt="Herbal Ingredients" 
+                  className="w-full max-w-[280px] sm:max-w-[360px] h-auto object-contain drop-shadow-2xl" 
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {[
+                  { title: "Hibiscus & Beetroot", desc: "Deeply detoxifies the blood, enhances natural stamina, and is rich in vital antioxidants.", icon: <Heart className="w-6 h-6" /> },
+                  { title: "Pure Mulethi", desc: "Soothes sore throats, promotes digestive comfort, and helps balance hormones naturally.", icon: <Leaf className="w-6 h-6" /> },
+                  { title: "Organic Moringa", desc: "Often called the Miracle Tree, it boosts natural immunity and reduces internal inflammation.", icon: <ShieldCheck className="w-6 h-6" /> },
+                  { title: "3rd Party Testing", desc: "Every single batch undergoes rigorous testing for purity, potency, and maximum benefits.", icon: <Award className="w-6 h-6" /> },
+                ].map((item, idx) => (
+                  <motion.div 
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.1 }}
+                    transition={{ duration: 0.5, delay: idx * 0.1 }}
+                    className="bg-white rounded-[16px] p-6 border border-[#ece8dc] shadow-sm flex flex-col items-center text-center"
+                  >
+                    <div className="w-14 h-14 rounded-full bg-[#fcfbf9] flex items-center justify-center mb-4 text-[#4a6b3d] shadow-inner">
+                      {item.icon}
+                    </div>
+                    <h4 className="text-[17px] font-bold text-[#1a3b2b] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>{item.title}</h4>
+                    <p className="text-[14px] text-[#6b7b72] leading-[1.6]">
+                      {item.desc}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
             {/* Desktop Layout */}
-            <div className="hidden lg:flex items-center justify-between relative z-10">
+            <div className="hidden lg:flex items-center justify-between relative z-10 mt-10">
               
               {/* Left Column */}
               <div className="w-1/3 flex flex-col gap-12 pr-4 relative">
                 <motion.div 
                   initial={{ opacity: 0, x: -20, scale: 0.9 }}
                   whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 1.2 }}
-                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  viewport={{ once: true, amount: 0.1 }}
                   className="relative bg-white rounded-[16px] p-6 border border-[#ece8dc] shadow-[0_2px_15px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center text-center group hover:-translate-y-1 hover:shadow-lg transition-all duration-300 w-full max-w-[260px] aspect-[4/3] mr-auto"
                 >
                   <div className="w-14 h-14 rounded-full bg-[#fcfbf9] flex items-center justify-center mb-4 text-[#4a6b3d]">
@@ -249,8 +295,8 @@ export default function AboutPage() {
                 <motion.div 
                   initial={{ opacity: 0, x: -20, scale: 0.9 }}
                   whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 1.4 }}
-                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  viewport={{ once: true, amount: 0.1 }}
                   className="relative bg-white rounded-[16px] p-6 border border-[#ece8dc] shadow-[0_2px_15px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center text-center group hover:-translate-y-1 hover:shadow-lg transition-all duration-300 w-full max-w-[260px] aspect-[4/3] mr-auto"
                 >
                   <div className="w-14 h-14 rounded-full bg-[#fcfbf9] flex items-center justify-center mb-4 text-[#4a6b3d]">
@@ -271,7 +317,7 @@ export default function AboutPage() {
                   initial={{ opacity: 0, scale: 0.5 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.7, type: "spring", bounce: 0.3 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, amount: 0.1 }}
                   className="relative w-full max-w-[480px]"
                 >
                   <img src="/assets/edited-photo .png" alt="Herbal Ingredients" className="w-full h-auto hover:scale-105 transition-transform duration-700 scale-[1.15]" />
@@ -283,8 +329,8 @@ export default function AboutPage() {
                 <motion.div 
                   initial={{ opacity: 0, x: 20, scale: 0.9 }}
                   whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 1.2 }}
-                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  viewport={{ once: true, amount: 0.1 }}
                   className="relative bg-white rounded-[16px] p-6 border border-[#ece8dc] shadow-[0_2px_15px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center text-center group hover:-translate-y-1 hover:shadow-lg transition-all duration-300 w-full max-w-[260px] aspect-[4/3] ml-auto"
                 >
                   {/* Connection Dot */}
@@ -301,8 +347,8 @@ export default function AboutPage() {
                 <motion.div 
                   initial={{ opacity: 0, x: 20, scale: 0.9 }}
                   whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 1.4 }}
-                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  viewport={{ once: true, amount: 0.1 }}
                   className="relative bg-white rounded-[16px] p-6 border border-[#ece8dc] shadow-[0_2px_15px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center text-center group hover:-translate-y-1 hover:shadow-lg transition-all duration-300 w-full max-w-[260px] aspect-[4/3] ml-auto"
                 >
                   {/* Connection Dot */}

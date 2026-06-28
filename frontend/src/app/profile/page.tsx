@@ -101,7 +101,7 @@ export default function ProfilePage() {
 
   if (loading || !user) {
     return (
-      <div className="min-h-screen bg-[#F8F5EE] flex items-center justify-center">
+      <div className="min-h-screen bg-[#fcfbf9] flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-[#0F3D2E]/20 border-t-[#0F3D2E] rounded-full animate-spin" />
       </div>
     );
@@ -345,7 +345,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F5EE] font-sans pt-8 pb-20" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+    <div className="min-h-screen bg-[#fcfbf9] font-sans pt-8 pb-20" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useCartStore } from '../features/cart/cartStore';
 import { useWishlistStore } from '../features/wishlist/wishlistStore';
 import { ShoppingBag, X, Plus, Minus, Trash2, User as UserIcon, LogOut, Search, Heart, Menu, ShoppingCart } from 'lucide-react';
@@ -21,6 +21,26 @@ export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [mounted, setMounted] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  // Close search on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (isSearchOpen && searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        const toggleBtn = document.getElementById('search-toggle-btn');
+        if (toggleBtn && toggleBtn.contains(event.target as Node)) {
+          return;
+        }
+        setIsSearchOpen(false);
+      }
+    }
+    if (isSearchOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSearchOpen]);
 
   useEffect(() => { 
     setMounted(true); 
@@ -87,10 +107,11 @@ export default function Navbar() {
           <AnimatePresence>
             {isSearchOpen && (
               <motion.div 
+                ref={searchRef}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="absolute inset-0 bg-[#F8F5EE] z-50 flex items-center justify-center px-4 sm:px-6 lg:px-8"
+                className="absolute inset-0 bg-[#F8F5EE] z-50 flex items-center justify-center px-4 sm:px-6 lg:px-8 shadow-sm"
               >
                 <form onSubmit={handleSearchSubmit} className="w-full max-w-2xl flex items-center border-b-2 border-[#0F3D2E] pb-2">
                   <Search className="w-5 h-5 md:w-6 md:h-6 text-[#0F3D2E] mr-3" />
@@ -141,7 +162,7 @@ export default function Navbar() {
           {/* Right Icons */}
           <div className="flex items-center gap-1">
             {/* Search */}
-            <button onClick={() => setIsSearchOpen(true)} className="p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors cursor-pointer" aria-label="Search">
+            <button id="search-toggle-btn" onClick={() => setIsSearchOpen(true)} className="p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors cursor-pointer" aria-label="Search">
               <Search className="h-5 w-5" />
             </button>
 

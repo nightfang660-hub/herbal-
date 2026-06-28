@@ -26,17 +26,7 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const PRODUCTS = [
-  { id: 1, name: "Premium Herbal Blend", price: 450.00, originalPrice: 500, discount: 10, img: "/shop/red_tea.png", rating: 4.5, reviews: 124, category: "Wellness Blends", type: "Herbal", weight: "15 Packets", benefit: "Relaxation", ingredient: "Mint", description: "A soothing blend of premium herbs designed to promote relaxation. Perfect for winding down after a long day." },
-  { id: 2, name: "Calming Chamomile", price: 350.00, originalPrice: 400, discount: 12, img: "/shop/green_tea.png", rating: 4.0, reviews: 89, category: "Loose Leaf", type: "Decaf", weight: "10 Packets", benefit: "Relaxation", ingredient: "Chamomile", description: "Classic chamomile tea with a gentle, calming effect. Known for its sleep-promoting properties and mild flavor." },
-  { id: 3, name: "Morning Matcha", price: 850.00, originalPrice: 1000, discount: 15, img: "/shop/blue.png", rating: 4.8, reviews: 342, category: "Matcha", type: "Caffeinated", weight: "30 Packets", benefit: "Energy", ingredient: "Matcha", description: "High-grade ceremonial matcha to give you a clean, sustained energy boost throughout your morning." },
-  { id: 4, name: "Detox Green Wellness", price: 400.00, originalPrice: 500, discount: 20, img: "/shop/ruby_detox.png", rating: 4.1, reviews: 56, category: "Wellness Blends", type: "Caffeinated", weight: "15 Packets", benefit: "Digestion", ingredient: "Mint", description: "A refreshing green tea detox blend. Helps cleanse the body and support healthy digestion naturally." },
-  { id: 5, name: "Sleepy Time Essence", price: 300.00, originalPrice: 350, discount: 14, img: "/shop/blue_tea1.png", rating: 4.7, reviews: 210, category: "Tea Bags", type: "Herbal", weight: "10 Packets", benefit: "Relaxation", ingredient: "Chamomile", description: "The ultimate bedtime companion. This herbal essence is specially crafted to help you drift off into a deep sleep." },
-  { id: 6, name: "Energy Boost Root", price: 600.00, originalPrice: 750, discount: 20, img: "/shop/red_tea.png", rating: 4.3, reviews: 112, category: "Loose Leaf", type: "Caffeinated", weight: "20 Packets", benefit: "Energy", ingredient: "Ginger", description: "A powerful root-based blend to revitalize your senses and provide a strong natural energy boost." },
-  { id: 7, name: "Immunity Shield", price: 550.00, originalPrice: 650, discount: 15, img: "/shop/green_tea.png", rating: 4.9, reviews: 420, category: "Wellness Blends", type: "Herbal", weight: "20 Packets", benefit: "Immunity", ingredient: "Ginger", description: "Strengthen your body's natural defenses with our Immunity Shield blend, rich in antioxidants and vitamins." },
-  { id: 8, name: "Focus & Clarity", price: 750.00, originalPrice: 850, discount: 11, img: "/shop/ruby_detox.png", rating: 4.6, reviews: 175, category: "Matcha", type: "Caffeinated", weight: "30 Packets", benefit: "Energy", ingredient: "Matcha", description: "Enhance your concentration and mental clarity with this specialized matcha mix, perfect for deep work sessions." },
-  { id: 9, name: "Digestive Soothe", price: 380.00, originalPrice: 420, discount: 9, img: "/shop/blue_tea1.png", rating: 4.2, reviews: 93, category: "Tea Bags", type: "Herbal", weight: "10 Packets", benefit: "Digestion", ingredient: "Ginger", description: "A gentle, soothing blend formulated to aid digestion and settle the stomach after meals." },
-];
+import { getProductById, getProducts, Product } from '../../../lib/products';
 
 export default function ProductDetailsPage() {
   const params = useParams();
@@ -45,11 +35,28 @@ export default function ProductDetailsPage() {
   const { toggleItem, isInWishlist } = useWishlistStore();
   
   const [mounted, setMounted] = useState(false);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     setMounted(true);
-  }, []);
+    async function loadProduct() {
+      if (params.id) {
+        const data = await getProductById(params.id as string);
+        setProduct(data);
+        const allData = await getProducts();
+        setProducts(allData);
+      }
+      setLoading(false);
+    }
+    loadProduct();
+  }, [params.id]);
+
+  const productId = parseInt(params.id as string);
 
   const [mainImageIndex, setMainImageIndex] = useState(0);
+  const [selectedPackIndex, setSelectedPackIndex] = useState(0);
   const [isAdded, setIsAdded] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
 
@@ -127,53 +134,39 @@ export default function ProductDetailsPage() {
     }
   };
 
-  // Find product by ID from URL params
-  // Find product by ID from URL params
-  const productId = Number(params.id);
-  const product = PRODUCTS.find(p => p.id === productId) || PRODUCTS[0];
-
-  let secondThumbnailImg = '/shop/red_1.png';
-  if (product.name === 'Calming Chamomile' || product.name === 'Immunity Shield') {
-    secondThumbnailImg = '/shop/green_bg.png';
-  } else if (product.name === 'Detox Green Wellness') {
-    secondThumbnailImg = '/shop/blue_bg.png';
-  } else if (product.name === 'Sleepy Time Essence' || product.name === 'Digestive Soothe') {
-    secondThumbnailImg = '/shop/blue_bg1.png';
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#f8f5ee] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0F3D2E]"></div>
+      </div>
+    );
   }
 
-  const variants = [
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-[#f8f5ee] flex flex-col items-center justify-center p-4">
+        <h1 className="text-3xl font-bold text-[#0F3D2E] mb-4">Product Not Found</h1>
+        <button onClick={() => router.push('/shop')} className="text-[#c19236] hover:underline font-bold">
+          Return to Shop
+        </button>
+      </div>
+    );
+  }
+
+  const images = product.images && product.images.length > 0 ? product.images : [product.img];
+
+  const packSizes = [
     {
-      img: product.img,
-      weight: product.weight,
-      price: product.price,
-      originalPrice: product.originalPrice,
-      discount: product.discount
-    },
-    {
-      img: secondThumbnailImg,
-      weight: product.weight,
-      price: product.price,
-      originalPrice: product.originalPrice,
-      discount: product.discount
-    },
-    {
-      img: '/shop/ruby_detox.png',
-      weight: '30 Packets',
-      price: product.price + 200,
-      originalPrice: product.originalPrice ? product.originalPrice + 240 : null,
-      discount: product.discount
-    },
-    {
-      img: '/shop/green_tea.png',
-      weight: '50 Packets',
-      price: product.price + 350,
-      originalPrice: product.originalPrice ? product.originalPrice + 400 : null,
-      discount: product.discount
+      weight: '20 Packets',
+      price: 220,
+      originalPrice: 270,
+      discount: 18 // Approx 18.5% discount
     }
   ];
 
-  const currentVariant = variants[mainImageIndex];
-  const sku = `sku-${product.id}-${mainImageIndex}`;
+  const currentPack = packSizes[selectedPackIndex];
+  const currentImage = images[mainImageIndex];
+  const sku = `sku-${product.id}-${selectedPackIndex}`;
   const cartItem = items.find(i => i.sku === sku);
   const currentQuantity = cartItem?.quantity || 0;
 
@@ -181,9 +174,9 @@ export default function ProductDetailsPage() {
     if (!cartItem) {
       addItem({
         sku,
-        name: `${product.name} (${currentVariant.weight})`,
-        priceCents: currentVariant.price * 100,
-        image: currentVariant.img
+        name: `${product.name} (${currentPack.weight})`,
+        priceCents: currentPack.price * 100,
+        image: images[0]
       });
     }
     setIsAdded(true);
@@ -331,14 +324,14 @@ export default function ProductDetailsPage() {
       <div className="max-w-[1200px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         
         {/* Simple Text Header / Breadcrumbs */}
-        <div className="mb-8 md:mb-10 flex items-center gap-2 text-[14px] text-[#6b7b72] font-medium" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-          <span className="hover:text-[#0F3D2E] cursor-pointer" onClick={() => router.push('/')}>Home</span>
-          <ChevronRight className="w-4 h-4 text-[#d1c8ba]" />
-          <span className="hover:text-[#0F3D2E] cursor-pointer" onClick={() => router.push('/shop')}>Shop</span>
-          <ChevronRight className="w-4 h-4 text-[#d1c8ba]" />
-          <span className="hover:text-[#0F3D2E] cursor-pointer">Herbal Tea</span>
-          <ChevronRight className="w-4 h-4 text-[#d1c8ba]" />
-          <span className="text-[#0F3D2E]">{product.name}</span>
+        <div className="mb-6 md:mb-10 flex flex-wrap items-center gap-1 md:gap-2 text-[12px] md:text-[14px] text-[#6b7b72] font-medium" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+          <span className="hover:text-[#0F3D2E] cursor-pointer whitespace-nowrap" onClick={() => router.push('/')}>Home</span>
+          <ChevronRight className="w-3 h-3 md:w-4 md:h-4 text-[#d1c8ba] shrink-0" />
+          <span className="hover:text-[#0F3D2E] cursor-pointer whitespace-nowrap" onClick={() => router.push('/shop')}>Shop</span>
+          <ChevronRight className="w-3 h-3 md:w-4 md:h-4 text-[#d1c8ba] shrink-0" />
+          <span className="hover:text-[#0F3D2E] cursor-pointer whitespace-nowrap">Herbal Tea</span>
+          <ChevronRight className="w-3 h-3 md:w-4 md:h-4 text-[#d1c8ba] shrink-0" />
+          <span className="text-[#0F3D2E] whitespace-nowrap">{product.name}</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
@@ -352,23 +345,20 @@ export default function ProductDetailsPage() {
           >
             {/* Thumbnails */}
             <div className="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-x-hidden md:overflow-y-auto scrollbar-hide p-1 shrink-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-               {variants.map((variant, idx) => (
+               {images.map((img, idx) => (
                  <button
                    key={idx}
                    onClick={() => setMainImageIndex(idx)}
-                   className={`relative w-[85px] h-[85px] rounded-xl overflow-hidden bg-white transition-all shrink-0 p-2 flex items-center justify-center shadow-sm ${mainImageIndex === idx ? 'border-2 border-[#b98e3b]' : 'border border-[#e8e5de] hover:border-[#d1c8ba]'}`}
+                   className={`relative w-[60px] h-[60px] md:w-[85px] md:h-[85px] bg-transparent transition-all shrink-0 p-1 flex items-center justify-center ${mainImageIndex === idx ? 'border-2 border-[#b98e3b]' : 'border border-[#e8e5de] hover:border-[#d1c8ba]'}`}
                  >
-                   <img src={variant.img} alt={`Thumbnail ${idx + 1}`} className="w-[85%] h-[85%] object-contain" />
+                   <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-contain mix-blend-multiply" />
                  </button>
                ))}
             </div>
 
             {/* Main Large Image */}
-            <div className="relative flex-1 aspect-[4/3] md:aspect-square bg-[#f8f4e6] rounded-[32px] p-8 flex items-center justify-center overflow-hidden">
-               <div className="absolute top-6 left-6 bg-[#b98e3b] text-white text-[13px] font-bold px-4 py-1.5 rounded-full z-10 shadow-sm tracking-wide">
-                 Bestseller
-               </div>
-               <img src={currentVariant.img} alt={product.name} className="w-[85%] h-[85%] object-contain drop-shadow-2xl" />
+            <div className="relative w-full h-[250px] md:h-auto md:flex-1 md:aspect-square bg-transparent flex items-center justify-center shrink-0">
+               <img src={currentImage} alt={product.name} className="w-full h-full object-contain mix-blend-multiply" />
             </div>
           </motion.div>
 
@@ -390,7 +380,7 @@ export default function ProductDetailsPage() {
                   className="absolute -top-16 right-0 bg-white border border-[#8cb73d]/30 text-[#0F3D2E] shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-xl p-4 flex items-center gap-4 z-50 min-w-[300px]"
                 >
                   <div className="w-12 h-12 rounded bg-[#eaf4d5] flex items-center justify-center shrink-0 overflow-hidden">
-                    <img src={currentVariant.img} alt="cart item" className="w-full h-full object-contain p-1" />
+                    <img src={images[0]} alt="cart item" className="w-full h-full object-contain p-1" />
                   </div>
                   <div className="flex-1">
                     <p className="font-bold text-sm text-[#0F3D2E] flex items-center gap-1"><Check className="w-4 h-4 text-[#8cb73d]" /> Added to cart!</p>
@@ -411,13 +401,13 @@ export default function ProductDetailsPage() {
               <div className="flex justify-between items-start gap-4 mb-1">
                 <div className="flex flex-col">
                   <span className="text-[#c19236] text-[12px] font-bold uppercase tracking-widest mb-1">{product.category} BLEND</span>
-                  <h1 className="text-[36px] md:text-[42px] font-bold text-[#0F3D2E] leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+                  <h1 className="text-[28px] md:text-[42px] font-bold text-[#0F3D2E] leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
                     {product.name}
                   </h1>
                 </div>
                 <div className="flex items-center gap-3 shrink-0 pt-2">
-                  <button onClick={() => toggleItem(product.id)} className="w-10 h-10 rounded-full bg-[#fdfbf6] flex items-center justify-center text-[#c19236] hover:bg-[#f5f0e6] transition-colors">
-                    <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : 'fill-transparent'}`} strokeWidth={2} />
+                  <button onClick={() => toggleItem(Number(product.id))} className="w-10 h-10 rounded-full bg-[#fdfbf6] flex items-center justify-center text-[#c19236] hover:bg-[#f5f0e6] transition-colors">
+                    <Heart className={`w-5 h-5 ${isInWishlist(Number(product.id)) ? 'fill-current' : 'fill-transparent'}`} strokeWidth={2} />
                   </button>
                   <button onClick={handleShare} className="w-10 h-10 rounded-full bg-[#fdfbf6] flex items-center justify-center text-[#c19236] hover:bg-[#f5f0e6] transition-colors">
                     <Share2 className="w-4 h-4" strokeWidth={2} />
@@ -444,19 +434,15 @@ export default function ProductDetailsPage() {
               </span>
             </div>
 
-            {/* Price Block */}
-            <div className="flex items-center gap-3 mb-5">
-              <span className="text-[32px] text-[#0F3D2E] font-bold tracking-tight">
-                ₹{currentVariant.price}
-              </span>
-              {currentVariant.originalPrice && (
-                <span className="text-[#a0aab2] text-[20px] line-through font-medium">
-                  ₹{currentVariant.originalPrice}
-                </span>
+            {/* Price */}
+            <div className="flex items-center gap-3 mb-6">
+              <span className="font-bold text-[#0F3D2E] text-[32px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>₹{currentPack.price}</span>
+              {currentPack.originalPrice && (
+                <span className="text-[#a0aab2] line-through text-[18px]">₹{currentPack.originalPrice}</span>
               )}
-              {currentVariant.discount && (
+              {currentPack.discount && (
                 <span className="text-[#4caf50] bg-[#edf7ed] text-[12px] font-bold px-2.5 py-1 rounded-md ml-2 tracking-wide">
-                  Save {currentVariant.discount}%
+                  Save {currentPack.discount}%
                 </span>
               )}
             </div>
@@ -482,45 +468,35 @@ export default function ProductDetailsPage() {
             {/* Choose Pack Size */}
             <div className="mb-6">
               <h4 className="text-[#0F3D2E] font-bold text-[15px] mb-3">Choose Pack Size</h4>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
                 {/* Size 1 */}
-                <div className="border-[1.5px] border-[#0F3D2E] rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer bg-white">
-                  <span className="text-[#0F3D2E] font-bold text-[14px]">30 Packets</span>
-                  <span className="text-[#6b7b72] text-[13px] mt-0.5">₹499</span>
-                </div>
-                {/* Size 2 */}
-                <div className="border border-[#e8e5de] rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#0F3D2E] transition-colors bg-white">
-                  <span className="text-[#0F3D2E] font-bold text-[14px]">60 Packets</span>
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <span className="text-[#6b7b72] text-[13px]">₹999</span>
-                    <span className="text-[#4caf50] bg-[#edf7ed] text-[10px] font-bold px-1.5 py-0.5 rounded">Save 20%</span>
-                  </div>
-                </div>
-                {/* Size 3 */}
-                <div className="border border-[#e8e5de] rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer hover:border-[#0F3D2E] transition-colors bg-white">
-                  <span className="text-[#0F3D2E] font-bold text-[14px]">100 Packets</span>
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <span className="text-[#6b7b72] text-[13px]">₹1,799</span>
-                    <span className="text-[#4caf50] bg-[#edf7ed] text-[10px] font-bold px-1.5 py-0.5 rounded">Save 25%</span>
+                <div 
+                  onClick={() => setSelectedPackIndex(0)}
+                  className={`border-[1.5px] rounded-xl p-2 md:p-3 flex flex-col items-center justify-center cursor-pointer transition-colors bg-white ${selectedPackIndex === 0 ? 'border-[#0F3D2E]' : 'border-[#e8e5de] hover:border-[#0F3D2E]'}`}
+                >
+                  <span className={`font-bold text-[12px] md:text-[14px] ${selectedPackIndex === 0 ? 'text-[#0F3D2E]' : 'text-[#6b7b72]'}`}>20 Packets</span>
+                  <div className="flex flex-col xl:flex-row items-center gap-1 xl:gap-1.5 mt-0.5">
+                    <span className="text-[#6b7b72] text-[11px] md:text-[13px]">₹{packSizes[0].price}</span>
+                    <span className="text-[#4caf50] bg-[#edf7ed] text-[9px] md:text-[10px] font-bold px-1 md:px-1.5 py-0 md:py-0.5 rounded whitespace-nowrap">Save 18%</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-4 mb-2">
+            <div className="flex gap-2 md:gap-4 mb-2">
               {/* Quantity */}
-              <div className="flex items-center justify-between border border-[#e8e5de] rounded-[10px] px-2 py-2 w-[110px] bg-white">
-                <button onClick={decreaseQuantity} className="text-[#a0aab2] hover:text-[#0F3D2E] transition-colors font-medium text-lg w-8 h-8 flex items-center justify-center">-</button>
-                <span className="font-bold text-[15px] text-[#0F3D2E]">{currentQuantity === 0 ? 1 : currentQuantity}</span>
-                <button onClick={increaseQuantity} className="text-[#a0aab2] hover:text-[#0F3D2E] transition-colors font-medium text-lg w-8 h-8 flex items-center justify-center">+</button>
+              <div className="flex items-center justify-between border border-[#e8e5de] rounded-[10px] px-1 md:px-2 py-1.5 md:py-2 w-[80px] md:w-[110px] bg-white shrink-0">
+                <button onClick={decreaseQuantity} className="text-[#a0aab2] hover:text-[#0F3D2E] transition-colors font-medium text-[15px] md:text-lg w-6 md:w-8 h-6 md:h-8 flex items-center justify-center">-</button>
+                <span className="font-bold text-[13px] md:text-[15px] text-[#0F3D2E]">{currentQuantity === 0 ? 1 : currentQuantity}</span>
+                <button onClick={increaseQuantity} className="text-[#a0aab2] hover:text-[#0F3D2E] transition-colors font-medium text-[15px] md:text-lg w-6 md:w-8 h-6 md:h-8 flex items-center justify-center">+</button>
               </div>
 
               {/* Add to Cart */}
               <button 
                 onClick={handleAddToCart}
-                className="flex-[1.5] bg-[#e2b755] text-[#0F3D2E] hover:bg-[#d4a844] font-bold text-[15px] rounded-[10px] transition-colors flex items-center justify-center gap-2 px-4"
+                className="flex-[1.5] bg-[#e2b755] text-[#0F3D2E] hover:bg-[#d4a844] font-bold text-[12px] md:text-[15px] rounded-[10px] transition-colors flex items-center justify-center gap-1 md:gap-2 px-2 md:px-4"
               >
-                <ShoppingBasket className="w-5 h-5" />
+                <ShoppingBasket className="w-3.5 h-3.5 md:w-5 md:h-5" />
                 Add to Cart
               </button>
 
@@ -530,7 +506,7 @@ export default function ProductDetailsPage() {
                   if (currentQuantity === 0) handleAddToCart();
                   router.push('/checkout');
                 }}
-                className="flex-1 bg-[#0F3D2E] text-white hover:bg-[#1a5441] font-bold text-[15px] rounded-[10px] transition-colors px-4"
+                className="flex-1 bg-[#0F3D2E] text-white hover:bg-[#1a5441] font-bold text-[12px] md:text-[15px] rounded-[10px] transition-colors px-2 md:px-4 whitespace-nowrap"
               >
                 Buy Now
               </button>
@@ -539,68 +515,68 @@ export default function ProductDetailsPage() {
         </div>
 
         {/* --- Product Details Tabs Section --- */}
-        <div className="w-full mt-16 border-t border-[#e8e5de] pt-12">
+        <div className="w-full mt-8 md:mt-16">
           
           {/* Benefits & Ingredients Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-16 relative">
             
             {/* Left: Product Benefits Card */}
-            <div className="bg-white rounded-[24px] border border-[#ece8dc] p-10 md:p-12 shadow-sm relative overflow-hidden flex flex-col">
+            <div className="bg-white rounded-[24px] border border-[#ece8dc] p-6 md:p-12 shadow-sm relative overflow-hidden flex flex-col">
               {/* Decorative Leaves Bottom Left */}
               <Leaf className="absolute -bottom-10 -left-10 w-48 h-48 text-[#4a6b3d] opacity-[0.03] pointer-events-none -rotate-45" />
               
-              <h3 className="font-bold text-[#1c2e24] text-[28px] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Why You'll Love It</h3>
-              <div className="w-12 h-[3px] bg-[#4a6b3d] mb-10 rounded-full"></div>
+              <h3 className="font-bold text-[#1c2e24] text-[24px] md:text-[28px] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Why You'll Love It</h3>
+              <div className="w-12 h-[3px] bg-[#4a6b3d] mb-6 md:mb-10 rounded-full"></div>
               
-              <div className="flex flex-col gap-8 relative z-10">
+              <div className="flex flex-col gap-5 md:gap-8 relative z-10">
                 
                 {/* Benefit 1 */}
-                <div className="flex items-start gap-5">
-                  <div className="w-12 h-12 rounded-full bg-[#f4f7f5] flex items-center justify-center shrink-0 border border-[#e8ecea]">
-                     <Leaf className="w-5 h-5 text-[#4a6b3d]" />
+                <div className="flex items-start gap-4 md:gap-5">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#f4f7f5] flex items-center justify-center shrink-0 border border-[#e8ecea]">
+                     <Leaf className="w-4 h-4 md:w-5 md:h-5 text-[#4a6b3d]" />
                   </div>
                   <div className="flex flex-col">
-                    <h4 className="font-bold text-[#1c2e24] text-[16px] mb-1">Sustained Energy & Focus</h4>
-                    <p className="text-[14px] text-[#6b7b72] leading-relaxed">
+                    <h4 className="font-bold text-[#1c2e24] text-[15px] md:text-[16px] mb-1">Sustained Energy & Focus</h4>
+                    <p className="text-[13px] md:text-[14px] text-[#6b7b72] leading-relaxed">
                       Provides clean, calm energy without the jitters or crashes.
                     </p>
                   </div>
                 </div>
 
                 {/* Benefit 2 */}
-                <div className="flex items-start gap-5">
-                  <div className="w-12 h-12 rounded-full bg-[#f4f7f5] flex items-center justify-center shrink-0 border border-[#e8ecea]">
-                     <ShieldCheck className="w-5 h-5 text-[#4a6b3d]" />
+                <div className="flex items-start gap-4 md:gap-5">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#f4f7f5] flex items-center justify-center shrink-0 border border-[#e8ecea]">
+                     <ShieldCheck className="w-4 h-4 md:w-5 md:h-5 text-[#4a6b3d]" />
                   </div>
                   <div className="flex flex-col">
-                    <h4 className="font-bold text-[#1c2e24] text-[16px] mb-1">Antioxidant Rich</h4>
-                    <p className="text-[14px] text-[#6b7b72] leading-relaxed">
+                    <h4 className="font-bold text-[#1c2e24] text-[15px] md:text-[16px] mb-1">Antioxidant Rich</h4>
+                    <p className="text-[13px] md:text-[14px] text-[#6b7b72] leading-relaxed">
                       Packed with catechins that help fight free radicals and support immunity.
                     </p>
                   </div>
                 </div>
 
                 {/* Benefit 3 */}
-                <div className="flex items-start gap-5">
-                  <div className="w-12 h-12 rounded-full bg-[#f4f7f5] flex items-center justify-center shrink-0 border border-[#e8ecea]">
-                     <Droplet className="w-5 h-5 text-[#4a6b3d]" />
+                <div className="flex items-start gap-4 md:gap-5">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#f4f7f5] flex items-center justify-center shrink-0 border border-[#e8ecea]">
+                     <Droplet className="w-4 h-4 md:w-5 md:h-5 text-[#4a6b3d]" />
                   </div>
                   <div className="flex flex-col">
-                    <h4 className="font-bold text-[#1c2e24] text-[16px] mb-1">Detox & Cleanse</h4>
-                    <p className="text-[14px] text-[#6b7b72] leading-relaxed">
+                    <h4 className="font-bold text-[#1c2e24] text-[15px] md:text-[16px] mb-1">Detox & Cleanse</h4>
+                    <p className="text-[13px] md:text-[14px] text-[#6b7b72] leading-relaxed">
                       Supports natural detoxification and helps your body feel lighter.
                     </p>
                   </div>
                 </div>
 
                 {/* Benefit 4 */}
-                <div className="flex items-start gap-5">
-                  <div className="w-12 h-12 rounded-full bg-[#f4f7f5] flex items-center justify-center shrink-0 border border-[#e8ecea]">
-                     <Activity className="w-5 h-5 text-[#4a6b3d]" />
+                <div className="flex items-start gap-4 md:gap-5">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#f4f7f5] flex items-center justify-center shrink-0 border border-[#e8ecea]">
+                     <Activity className="w-4 h-4 md:w-5 md:h-5 text-[#4a6b3d]" />
                   </div>
                   <div className="flex flex-col">
-                    <h4 className="font-bold text-[#1c2e24] text-[16px] mb-1">Metabolism Support</h4>
-                    <p className="text-[14px] text-[#6b7b72] leading-relaxed">
+                    <h4 className="font-bold text-[#1c2e24] text-[15px] md:text-[16px] mb-1">Metabolism Support</h4>
+                    <p className="text-[13px] md:text-[14px] text-[#6b7b72] leading-relaxed">
                       May help boost metabolism and support healthy weight management.
                     </p>
                   </div>
@@ -610,50 +586,50 @@ export default function ProductDetailsPage() {
             </div>
 
             {/* Right: Ingredients Breakdown Card */}
-            <div className="bg-white rounded-[24px] border border-[#ece8dc] p-10 md:p-12 shadow-sm relative overflow-hidden flex flex-col">
+            <div className="bg-white rounded-[24px] border border-[#ece8dc] p-6 md:p-12 shadow-sm relative overflow-hidden flex flex-col">
 
-              <h3 className="font-bold text-[#1c2e24] text-[28px] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>What's Inside</h3>
-              <p className="text-[14px] text-[#6b7b72] mb-8 font-medium">100% natural ingredients, nothing else.</p>
+              <h3 className="font-bold text-[#1c2e24] text-[24px] md:text-[28px] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>What's Inside</h3>
+              <p className="text-[13px] md:text-[14px] text-[#6b7b72] mb-5 md:mb-8 font-medium">100% natural ingredients, nothing else.</p>
               
-              <div className="grid grid-cols-2 gap-4 relative z-10">
+              <div className="grid grid-cols-2 gap-3 md:gap-4 relative z-10">
                 
                 {/* Ingredient 1 */}
                 <div className="rounded-[16px] overflow-hidden border border-[#ece8dc] flex flex-col bg-white">
-                  <div className="w-full h-32 relative overflow-hidden">
+                  <div className="w-full h-24 md:h-32 relative overflow-hidden">
                     <img src="/home/beetroot-v2.png" alt="Beetroot" className="w-full h-full object-cover" />
                   </div>
-                  <div className="py-3 px-2 text-center border-t border-[#ece8dc]">
-                    <span className="font-bold text-[#1c2e24] text-[14px]">Beetroot</span>
+                  <div className="py-2 md:py-3 px-2 text-center border-t border-[#ece8dc]">
+                    <span className="font-bold text-[#1c2e24] text-[13px] md:text-[14px]">Beetroot</span>
                   </div>
                 </div>
 
                 {/* Ingredient 2 */}
                 <div className="rounded-[16px] overflow-hidden border border-[#ece8dc] flex flex-col bg-white">
-                  <div className="w-full h-32 relative overflow-hidden">
+                  <div className="w-full h-24 md:h-32 relative overflow-hidden">
                     <img src="/shop/petals.png" alt="Hibiscus" className="w-full h-full object-cover" />
                   </div>
-                  <div className="py-3 px-2 text-center border-t border-[#ece8dc]">
-                    <span className="font-bold text-[#1c2e24] text-[14px]">Hibiscus</span>
+                  <div className="py-2 md:py-3 px-2 text-center border-t border-[#ece8dc]">
+                    <span className="font-bold text-[#1c2e24] text-[13px] md:text-[14px]">Hibiscus</span>
                   </div>
                 </div>
 
                 {/* Ingredient 3 */}
                 <div className="rounded-[16px] overflow-hidden border border-[#ece8dc] flex flex-col bg-white">
-                  <div className="w-full h-32 relative overflow-hidden">
+                  <div className="w-full h-24 md:h-32 relative overflow-hidden">
                     <img src="/home/mulethi-v2.png" alt="Licorice" className="w-full h-full object-cover" />
                   </div>
-                  <div className="py-3 px-2 text-center border-t border-[#ece8dc]">
-                    <span className="font-bold text-[#1c2e24] text-[14px]">Licorice</span>
+                  <div className="py-2 md:py-3 px-2 text-center border-t border-[#ece8dc]">
+                    <span className="font-bold text-[#1c2e24] text-[13px] md:text-[14px]">Licorice</span>
                   </div>
                 </div>
 
                 {/* Ingredient 4 */}
                 <div className="rounded-[16px] overflow-hidden border border-[#ece8dc] flex flex-col bg-white">
-                  <div className="w-full h-32 relative overflow-hidden">
+                  <div className="w-full h-24 md:h-32 relative overflow-hidden">
                     <img src="/home/moringa-v2.png" alt="Moringa" className="w-full h-full object-cover" />
                   </div>
-                  <div className="py-3 px-2 text-center border-t border-[#ece8dc]">
-                    <span className="font-bold text-[#1c2e24] text-[14px]">Moringa</span>
+                  <div className="py-2 md:py-3 px-2 text-center border-t border-[#ece8dc]">
+                    <span className="font-bold text-[#1c2e24] text-[13px] md:text-[14px]">Moringa</span>
                   </div>
                 </div>
 
@@ -749,19 +725,19 @@ export default function ProductDetailsPage() {
               }
             `}</style>
             <div className="overflow-hidden w-full relative">
-              <div className="marquee-track gap-6 pb-4">
+              <div className="marquee-track gap-4 md:gap-6 pb-2 md:pb-4">
                 {[...reviewsList, ...reviewsList, ...reviewsList, ...reviewsList].map((review, idx) => (
                   <div 
                     key={`${review.id}-${idx}`} 
-                    className="w-[350px] shrink-0 bg-white rounded-[16px] p-6 md:p-8 text-left border border-[#ece8dc] shadow-sm flex flex-col hover:-translate-y-2 hover:shadow-md transition-all duration-300 group"
+                    className="w-[280px] md:w-[350px] shrink-0 bg-white rounded-[16px] p-5 md:p-8 text-left border border-[#ece8dc] shadow-sm flex flex-col hover:-translate-y-2 hover:shadow-md transition-all duration-300 group"
                   >
                     {/* Stars & Text */}
-                    <div className="flex gap-1 mb-4">
+                    <div className="flex gap-1 mb-3 md:mb-4">
                       {[1,2,3,4,5].map(s=>(
-                        <Star key={s} className={`w-4 h-4 ${s <= review.rating ? 'fill-[#e2b755] text-[#e2b755]' : 'text-gray-300'}`}/>
+                        <Star key={s} className={`w-3.5 h-3.5 md:w-4 md:h-4 ${s <= review.rating ? 'fill-[#e2b755] text-[#e2b755]' : 'text-gray-300'}`}/>
                       ))}
                     </div>
-                    <p className="text-[#556358] text-[14px] leading-relaxed mb-6 flex-grow" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                    <p className="text-[#556358] text-[13px] md:text-[14px] leading-relaxed mb-4 md:mb-6 flex-grow" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                       "{review.text}"
                     </p>
 
@@ -783,22 +759,22 @@ export default function ProductDetailsPage() {
           </div>
 
           {/* Add Review Form */}
-          <div className="bg-white p-8 md:p-10 rounded-[24px] border-2 border-[#ece8dc] shadow-sm mb-16">
-             <div className="flex justify-between items-start mb-6">
+          <div className="bg-white p-6 md:p-10 rounded-[24px] border-2 border-[#ece8dc] shadow-sm mb-16">
+             <div className="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4 sm:gap-0">
                <div>
-                 <h2 className="text-[24px] font-bold text-[#0F3D2E] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Add Reviews</h2>
-                 <p className="text-[13px] text-[#6b7b72] font-medium">Your email address will not be published. Required fields are marked *</p>
+                 <h2 className="text-[20px] md:text-[24px] font-bold text-[#0F3D2E] mb-1 md:mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Add Reviews</h2>
+                 <p className="text-[12px] md:text-[13px] text-[#6b7b72] font-medium">Your email address will not be published. Required fields are marked *</p>
                </div>
-               <div className="flex flex-col items-end">
-                 <span className="text-[12px] font-bold text-[#0F3D2E] mb-1">Select Rating:</span>
+               <div className="flex flex-col items-start sm:items-end">
+                 <span className="text-[11px] md:text-[12px] font-bold text-[#0F3D2E] mb-1">Select Rating:</span>
                  <div className="flex items-center gap-3">
-                   {errors.rating && <span className="text-red-500 text-[12px] font-medium">{errors.rating}</span>}
+                   {errors.rating && <span className="text-red-500 text-[11px] md:text-[12px] font-medium">{errors.rating}</span>}
                    <div className="flex gap-1">
                       {[1,2,3,4,5].map(s=>(
                         <Star 
                           key={s} 
                           onClick={() => { setRating(s); if(errors.rating) setErrors({...errors, rating: undefined}) }}
-                          className={`w-5 h-5 cursor-pointer transition-colors ${rating >= s ? 'fill-[#cda434] text-[#cda434]' : 'text-gray-300 hover:text-[#cda434]'}`}
+                          className={`w-4 h-4 md:w-5 md:h-5 cursor-pointer transition-colors ${rating >= s ? 'fill-[#cda434] text-[#cda434]' : 'text-gray-300 hover:text-[#cda434]'}`}
                         />
                       ))}
                    </div>
@@ -806,100 +782,100 @@ export default function ProductDetailsPage() {
                </div>
              </div>
              
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
                 <div className="flex flex-col">
-                  <input type="text" placeholder="Full Name *" value={name} onChange={(e) => {const val = e.target.value.replace(/[^a-zA-Z\s]/g, ''); setName(val); if(errors.name) setErrors({...errors, name: undefined})}} className={`p-4 rounded-xl border-2 ${errors.name ? 'border-red-500' : 'border-[#ece8dc]'} bg-[#fdfcf9] focus:outline-none focus:border-[#cda434] text-[15px] text-[#1c2e24] placeholder:text-[#7a887f] placeholder:font-semibold font-medium transition-colors`} />
-                  {errors.name && <span className="text-red-500 text-[12px] mt-1 ml-2 font-medium">{errors.name}</span>}
+                  <input type="text" placeholder="Full Name *" value={name} onChange={(e) => {const val = e.target.value.replace(/[^a-zA-Z\s]/g, ''); setName(val); if(errors.name) setErrors({...errors, name: undefined})}} className={`p-3 md:p-4 rounded-xl border-2 ${errors.name ? 'border-red-500' : 'border-[#ece8dc]'} bg-[#fdfcf9] focus:outline-none focus:border-[#cda434] text-[13px] md:text-[15px] text-[#1c2e24] placeholder:text-[#7a887f] placeholder:font-semibold font-medium transition-colors`} />
+                  {errors.name && <span className="text-red-500 text-[11px] md:text-[12px] mt-1 ml-2 font-medium">{errors.name}</span>}
                 </div>
                 <div className="flex flex-col">
-                  <input type="email" placeholder="Email Address *" value={email} onChange={(e) => {setEmail(e.target.value); if(errors.email) setErrors({...errors, email: undefined})}} className={`p-4 rounded-xl border-2 ${errors.email ? 'border-red-500' : 'border-[#ece8dc]'} bg-[#fdfcf9] focus:outline-none focus:border-[#cda434] text-[15px] text-[#1c2e24] placeholder:text-[#7a887f] placeholder:font-semibold font-medium transition-colors`} />
-                  {errors.email && <span className="text-red-500 text-[12px] mt-1 ml-2 font-medium">{errors.email}</span>}
+                  <input type="email" placeholder="Email Address *" value={email} onChange={(e) => {setEmail(e.target.value); if(errors.email) setErrors({...errors, email: undefined})}} className={`p-3 md:p-4 rounded-xl border-2 ${errors.email ? 'border-red-500' : 'border-[#ece8dc]'} bg-[#fdfcf9] focus:outline-none focus:border-[#cda434] text-[13px] md:text-[15px] text-[#1c2e24] placeholder:text-[#7a887f] placeholder:font-semibold font-medium transition-colors`} />
+                  {errors.email && <span className="text-red-500 text-[11px] md:text-[12px] mt-1 ml-2 font-medium">{errors.email}</span>}
                 </div>
              </div>
-             <div className="flex flex-col mb-6">
-               <textarea placeholder="Your Review (Optional for 4-5 stars, Required for 1-3 stars)" value={reason} onChange={(e) => {setReason(e.target.value); if(errors.reason) setErrors({...errors, reason: undefined})}} className={`w-full p-4 rounded-xl border-2 ${errors.reason ? 'border-red-500' : 'border-[#ece8dc]'} bg-[#fdfcf9] h-32 focus:outline-none focus:border-[#cda434] text-[15px] text-[#1c2e24] placeholder:text-[#7a887f] placeholder:font-semibold font-medium resize-none transition-colors`} />
-               {errors.reason && <span className="text-red-500 text-[12px] mt-1 ml-2">{errors.reason}</span>}
+             <div className="flex flex-col mb-4 md:mb-6">
+               <textarea placeholder="Your Review (Optional for 4-5 stars, Required for 1-3 stars)" value={reason} onChange={(e) => {setReason(e.target.value); if(errors.reason) setErrors({...errors, reason: undefined})}} className={`w-full p-3 md:p-4 rounded-xl border-2 ${errors.reason ? 'border-red-500' : 'border-[#ece8dc]'} bg-[#fdfcf9] h-24 md:h-32 focus:outline-none focus:border-[#cda434] text-[13px] md:text-[15px] text-[#1c2e24] placeholder:text-[#7a887f] placeholder:font-semibold font-medium resize-none transition-colors`} />
+               {errors.reason && <span className="text-red-500 text-[11px] md:text-[12px] mt-1 ml-2">{errors.reason}</span>}
              </div>
              <div className="flex items-center gap-4">
-               <button onClick={handlePostReview} className="bg-[#0F3D2E] text-white hover:bg-[#1a5240] transition-colors px-8 py-3.5 rounded-[14px] font-bold text-[15px] shadow-sm">
+               <button onClick={handlePostReview} className="bg-[#0F3D2E] text-white hover:bg-[#1a5240] transition-colors px-6 py-3 md:px-8 md:py-3.5 rounded-[12px] md:rounded-[14px] font-bold text-[13px] md:text-[15px] shadow-sm w-full md:w-auto">
                  Post Review
                </button>
-               {isReviewSuccess && <span className="text-[#0F3D2E] text-[14px] font-bold">Review posted successfully!</span>}
+               {isReviewSuccess && <span className="text-[#0F3D2E] text-[13px] md:text-[14px] font-bold">Review posted successfully!</span>}
              </div>
           </div>
 
         </div>
 
         {/* Similar Products Section */}
-        <div className="mt-8">
-          <div className="mb-10">
-            <h2 className="text-[24px] md:text-[30px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>Similar Products</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {PRODUCTS.filter(p => p.id !== product.id).slice(0, 4).map((similar, idx) => (
-              <motion.div 
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                key={similar.id} 
-                onClick={() => router.push(`/shop/${similar.id}`)}
-                className="flex flex-col group cursor-pointer bg-white rounded-2xl md:rounded-3xl border border-[#e8e5de] p-3 md:p-5 overflow-hidden shadow-sm transition-all duration-300"
-              >
-                {/* Product Image */}
-                <div className="relative w-full h-[160px] md:h-[280px] mb-3 flex items-center justify-center rounded-t-2xl pt-2 px-1">
-                  <button 
-                    className={`absolute top-0 right-0 p-1 transition-colors z-10 ${mounted && isInWishlist(similar.id) ? 'text-[#D84B5B]' : 'text-[#8b9992] hover:text-[#D84B5B]'}`} 
-                    onClick={(e) => { e.stopPropagation(); toggleItem(similar.id); }}
-                  >
-                    <Heart className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} fill={mounted && isInWishlist(similar.id) ? 'currentColor' : 'none'} />
-                  </button>
-                  <img 
-                    src={similar.img} 
-                    alt={similar.name} 
-                    className={`w-full h-full object-contain drop-shadow-sm transition-transform duration-700 ease-in-out ${similar.img.endsWith('/blue.png') ? 'scale-[1.4] translate-y-1' : (similar.img.endsWith('/ruby_detox.png') || similar.img.endsWith('/blue_tea1.png') ? 'scale-[1.3] translate-y-2' : '')}`} 
-                  />
-                </div>
-                
-                {/* Product Details */}
-                <div className="flex flex-col flex-1">
-                  <h4 className="font-bold text-[#2c4a35] group-hover:text-[#0F3D2E] text-[14px] md:text-[18px] leading-tight mb-1.5 transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                    {similar.name}
-                  </h4>
-
-                  {/* Rating (5 Stars) */}
-                  <div className="flex items-center gap-1.5 mb-3">
-                    <div className="flex items-center gap-[2px]">
-                      {[...Array(5)].map((_, i) => (
-                         <Star key={i} className={`w-3 h-3 md:w-3.5 md:h-3.5 ${i < Math.floor(similar.rating || 5) ? 'fill-[#ffc107] text-[#ffc107]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
-                      ))}
-                    </div>
-                    <span className="text-[11px] md:text-[13px] font-bold text-[#4a5d53]">({(similar.rating || 5).toFixed(1)})</span>
+        {products.filter((p: Product) => p.id !== product.id).length > 0 && (
+          <div className="mt-8">
+            <div className="mb-10">
+              <h2 className="text-[24px] md:text-[30px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>Similar Products</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {products.filter((p: Product) => p.id !== product.id).slice(0, 4).map((similar: Product, idx: number) => (
+                <motion.div 
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+                  key={similar.id} 
+                  onClick={() => router.push(`/shop/${similar.id}`)}
+                  className="flex flex-col group cursor-pointer bg-white rounded-2xl md:rounded-3xl border border-[#e8e5de] p-3 md:p-5 overflow-hidden shadow-sm transition-all duration-300"
+                >
+                  {/* Product Image */}
+                  <div className="relative w-full h-[160px] md:h-[280px] mb-3 flex items-center justify-center rounded-t-2xl pt-2 px-1">
+                    <button 
+                      className={`absolute top-0 right-0 p-1 transition-colors z-10 ${mounted && isInWishlist(Number(similar.id)) ? 'text-[#D84B5B]' : 'text-[#8b9992] hover:text-[#D84B5B]'}`} 
+                      onClick={(e) => { e.stopPropagation(); toggleItem(Number(similar.id)); }}
+                    >
+                      <Heart className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} fill={mounted && isInWishlist(Number(similar.id)) ? 'currentColor' : 'none'} />
+                    </button>
+                    <img 
+                      src={similar.img} 
+                      alt={similar.name} 
+                      className={`w-full h-full object-contain drop-shadow-sm transition-transform duration-700 ease-in-out ${similar.img.endsWith('/blue.png') ? 'scale-[1.4] translate-y-1' : (similar.img.endsWith('/ruby_detox.png') || similar.img.endsWith('/blue_tea1.png') ? 'scale-[1.3] translate-y-2' : '')}`} 
+                    />
                   </div>
                   
-                  <div className="flex items-center justify-between mt-auto gap-3 pt-1">
-                    <span className="font-bold text-[#0F3D2E] text-[15px] md:text-[20px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                      ₹{similar.price}
-                    </span>
+                  {/* Product Details */}
+                  <div className="flex flex-col flex-1">
+                    <h4 className="font-bold text-[#2c4a35] group-hover:text-[#0F3D2E] text-[14px] md:text-[18px] leading-tight mb-1.5 transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                      {similar.name}
+                    </h4>
+
+                    {/* Rating (5 Stars) */}
+                    <div className="flex items-center gap-1.5 mb-3">
+                      <div className="flex items-center gap-[2px]">
+                        {[...Array(5)].map((_, i) => (
+                           <Star key={i} className={`w-3 h-3 md:w-3.5 md:h-3.5 ${i < Math.floor(similar.rating || 5) ? 'fill-[#ffc107] text-[#ffc107]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
+                        ))}
+                      </div>
+                      <span className="text-[11px] md:text-[13px] font-bold text-[#4a5d53]">({(similar.rating || 5).toFixed(1)})</span>
+                    </div>
                     
-                    {/* Actions */}
-                    <div className="flex items-center gap-2 relative">
-
-
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); router.push(`/shop/${similar.id}`); }}
-                        className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#0F3D2E] text-white hover:bg-[#1a5441] transition-colors shadow-sm shrink-0 relative z-10"
-                      >
-                        <ShoppingCart className="w-4 h-4 md:w-[18px] md:h-[18px]" />
-                      </button>
+                    <div className="flex items-center justify-between mt-auto gap-3 pt-1">
+                      <span className="font-bold text-[#0F3D2E] text-[15px] md:text-[20px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                        ₹{similar.price}
+                      </span>
+                      
+                      {/* Actions */}
+                      <div className="flex items-center gap-2 relative">
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); router.push(`/shop/${similar.id}`); }}
+                          className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#0F3D2E] text-white hover:bg-[#1a5441] transition-colors shadow-sm shrink-0 relative z-10"
+                        >
+                          <ShoppingCart className="w-4 h-4 md:w-[18px] md:h-[18px]" />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
       </div>
     </div>

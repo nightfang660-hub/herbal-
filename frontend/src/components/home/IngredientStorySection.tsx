@@ -77,7 +77,7 @@ export default function IngredientStorySection() {
   };
 
   return (
-    <section className="bg-white py-12 relative overflow-hidden border-b border-[#ece8dc]">
+    <section className="bg-white py-12 relative overflow-hidden">
       <div className="max-w-[1300px] mx-auto px-4 sm:px-6 xl:px-8">
         
         <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-12">

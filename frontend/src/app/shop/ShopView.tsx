@@ -7,24 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useCartStore } from '../../features/cart/cartStore';
 import { useWishlistStore } from '../../features/wishlist/wishlistStore';
 
-// Herbal Tea specific products with rich data for filtering
-const PRODUCTS = [
-  { id: 1, name: "Premium Herbal Blend", price: 450.00, originalPrice: 500, discount: 10, img: "/shop/red_tea.png", rating: 4.5, reviews: 124, category: "Wellness Blends", type: "Herbal", weight: "15 Packets", benefit: "Relaxation", ingredient: "Mint" },
-  { id: 2, name: "Calming Chamomile", price: 350.00, originalPrice: 400, discount: 12, img: "/shop/green_tea.png", rating: 4.0, reviews: 89, category: "Loose Leaf", type: "Decaf", weight: "10 Packets", benefit: "Relaxation", ingredient: "Chamomile" },
-  { id: 3, name: "Morning Matcha", price: 850.00, originalPrice: 1000, discount: 15, img: "/shop/blue.png", rating: 4.8, reviews: 342, category: "Matcha", type: "Caffeinated", weight: "30 Packets", benefit: "Energy", ingredient: "Matcha" },
-  { id: 4, name: "Detox Green Wellness", price: 400.00, originalPrice: 500, discount: 20, img: "/shop/ruby_detox.png", rating: 4.1, reviews: 56, category: "Wellness Blends", type: "Caffeinated", weight: "15 Packets", benefit: "Digestion", ingredient: "Mint" },
-  { id: 5, name: "Sleepy Time Essence", price: 300.00, originalPrice: 350, discount: 14, img: "/shop/blue_tea1.png", rating: 4.7, reviews: 210, category: "Tea Bags", type: "Herbal", weight: "10 Packets", benefit: "Relaxation", ingredient: "Chamomile" },
-  { id: 6, name: "Energy Boost Root", price: 600.00, originalPrice: 750, discount: 20, img: "/shop/red_tea.png", rating: 4.3, reviews: 112, category: "Loose Leaf", type: "Caffeinated", weight: "20 Packets", benefit: "Energy", ingredient: "Ginger" },
-  { id: 7, name: "Immunity Shield", price: 550.00, originalPrice: 650, discount: 15, img: "/shop/green_tea.png", rating: 4.9, reviews: 420, category: "Wellness Blends", type: "Herbal", weight: "20 Packets", benefit: "Immunity", ingredient: "Ginger" },
-  { id: 8, name: "Focus & Clarity", price: 750.00, originalPrice: 850, discount: 11, img: "/shop/ruby_detox.png", rating: 4.6, reviews: 175, category: "Matcha", type: "Caffeinated", weight: "30 Packets", benefit: "Energy", ingredient: "Matcha" },
-  { id: 9, name: "Digestive Soothe", price: 380.00, originalPrice: 420, discount: 9, img: "/shop/blue_tea1.png", rating: 4.2, reviews: 93, category: "Tea Bags", type: "Herbal", weight: "10 Packets", benefit: "Digestion", ingredient: "Ginger" },
-  { id: 10, name: "Ginger Glow Wellness", price: 420.00, originalPrice: 480, discount: 12, img: "/shop/red_tea.png", rating: 4.6, reviews: 105, category: "Wellness Blends", type: "Herbal", weight: "15 Packets", benefit: "Digestion", ingredient: "Ginger" },
-  { id: 11, name: "Minty Fresh Start", price: 340.00, originalPrice: 390, discount: 13, img: "/shop/green_tea.png", rating: 4.4, reviews: 67, category: "Tea Bags", type: "Caffeinated", weight: "20 Packets", benefit: "Energy", ingredient: "Mint" },
-  { id: 12, name: "Pure Matcha Premium", price: 920.00, originalPrice: 1050, discount: 12, img: "/shop/blue.png", rating: 4.9, reviews: 412, category: "Matcha", type: "Caffeinated", weight: "30 Packets", benefit: "Energy", ingredient: "Matcha" },
-  { id: 13, name: "Nighttime Harmony", price: 410.00, originalPrice: 450, discount: 9, img: "/shop/blue_tea1.png", rating: 4.7, reviews: 156, category: "Loose Leaf", type: "Decaf", weight: "15 Packets", benefit: "Relaxation", ingredient: "Chamomile" },
-  { id: 14, name: "Tropical Detox", price: 460.00, originalPrice: 520, discount: 11, img: "/shop/ruby_detox.png", rating: 4.3, reviews: 88, category: "Wellness Blends", type: "Herbal", weight: "20 Packets", benefit: "Digestion", ingredient: "Mint" },
-  { id: 15, name: "Golden Immunity", price: 580.00, originalPrice: 660, discount: 12, img: "/shop/red_tea.png", rating: 4.8, reviews: 234, category: "Loose Leaf", type: "Herbal", weight: "15 Packets", benefit: "Immunity", ingredient: "Ginger" },
-];
+import { getProducts, Product } from '../../lib/products';
 
 const CATEGORIES = ['All', 'Loose Leaf', 'Tea Bags', 'Matcha', 'Wellness Blends'];
 const BENEFITS = ['All', 'Relaxation', 'Energy', 'Immunity', 'Digestion'];
@@ -45,8 +28,19 @@ export default function ShopPage() {
   const [priceValue, setPriceValue] = useState(1020); // Default to max
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [addedItems, setAddedItems] = useState<{[key: number]: boolean}>({});
+  const [addedItems, setAddedItems] = useState<{[key: string | number]: boolean}>({});
   const [notification, setNotification] = useState<string | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    async function loadProducts() {
+      const data = await getProducts();
+      setProducts(data);
+      setLoading(false);
+    }
+    loadProducts();
+  }, []);
 
   const { toggleItem, isInWishlist } = useWishlistStore();
   const { addItem } = useCartStore();
@@ -94,13 +88,13 @@ export default function ShopPage() {
     }
   }, [q]);
 
-  const handleProductClick = (id: number) => {
+  const handleProductClick = (id: string | number) => {
     sessionStorage.setItem('shopScrollPosition', window.scrollY.toString());
     router.push(`/shop/${id}`);
   };
 
   // Powerful Filtering Logic
-  const filteredProducts = PRODUCTS.filter(p => {
+  const filteredProducts = products.filter(p => {
     const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchCategory = selectedCategory === 'All' || p.category === selectedCategory;
     const matchBenefit = selectedBenefit === 'All' || p.benefit === selectedBenefit;
@@ -212,76 +206,94 @@ export default function ShopPage() {
               {/* Product Count & Sort */}
               <div className="flex items-center justify-between mt-2">
                 <span className="text-[13px] font-bold text-[#4a5d53]">{filteredProducts.length} Products Found</span>
-                <div className="flex items-center gap-1 bg-white border border-[#e8e5de] rounded-lg px-3 py-1.5 shadow-sm">
-                  <span className="text-[12px] text-[#8b9992]">Sort by:</span>
-                  <select className="bg-transparent text-[13px] font-bold text-[#0F3D2E] focus:outline-none">
-                    <option>Popular</option>
-                    <option>Price: Low to High</option>
-                    <option>Price: High to Low</option>
-                  </select>
-                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-              {filteredProducts.map(product => (
-                <motion.div 
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5 }}
-                  key={product.id} 
-                  onClick={() => handleProductClick(product.id)}
-                  className="flex flex-col group cursor-pointer bg-white rounded-2xl md:rounded-3xl border border-[#e8e5de] p-3 md:p-5 overflow-hidden shadow-sm transition-all duration-300"
-                >
+            {loading ? (
+              <div className="col-span-2 lg:col-span-3 flex justify-center py-20">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0F3D2E]"></div>
+              </div>
+            ) : filteredProducts.length === 0 ? (
+              <div className="col-span-2 lg:col-span-3 flex flex-col items-center justify-center py-16 text-center">
+                <Leaf className="w-12 h-12 text-[#c19236] mb-4 opacity-50" />
+                <h3 className="text-[20px] font-bold text-[#0F3D2E] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>No Teas Found</h3>
+                <p className="text-[14px] text-[#6b7b72]">We couldn't find any blends matching your exact criteria.</p>
+                <button onClick={() => {
+                  setSelectedCategory('All');
+                  setSelectedBenefit('All');
+                  setSelectedIngredient('All');
+                  setSelectedRating('All');
+                  setPriceValue(1020);
+                  setSearchQuery('');
+                }} className="mt-6 text-[#c19236] font-bold text-[14px] hover:underline">Clear all filters</button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+                {filteredProducts.map(product => (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    key={product.id} 
+                    onClick={() => handleProductClick(product.id)}
+                    className="flex flex-col group cursor-pointer bg-white rounded-[20px] md:rounded-3xl border border-[#e8e5de] p-3 md:p-5 overflow-hidden shadow-sm transition-all duration-300"
+                  >
                   {/* Product Image */}
-                  <div className="relative w-full h-[160px] md:h-[280px] mb-3 flex items-center justify-center rounded-t-2xl pt-2 px-1">
+                  <div className="relative w-full h-[160px] md:h-[280px] mb-4 flex items-center justify-center rounded-t-2xl pt-1 md:pt-2 px-1">
                     <button 
-                      className={`absolute top-0 right-0 p-1 transition-colors z-10 ${mounted && isInWishlist(product.id) ? 'text-[#D84B5B]' : 'text-[#8b9992] hover:text-[#D84B5B]'}`} 
-                      onClick={(e) => { e.stopPropagation(); toggleItem(product.id); }}
+                      className={`absolute top-0 right-0 p-1 transition-colors z-10 ${mounted && isInWishlist(Number(product.id)) ? 'text-[#D84B5B]' : 'text-[#8b9992] hover:text-[#D84B5B]'}`} 
+                      onClick={(e) => { e.stopPropagation(); toggleItem(Number(product.id)); }}
                     >
-                      <Heart className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} fill={mounted && isInWishlist(product.id) ? 'currentColor' : 'none'} />
+                      <Heart className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} fill={mounted && isInWishlist(Number(product.id)) ? 'currentColor' : 'none'} />
                     </button>
                     <img 
                       src={product.img} 
                       alt={product.name} 
-                      className="w-full h-full object-contain drop-shadow-sm transition-transform duration-700 ease-in-out" 
+                      className="w-full h-full object-contain mix-blend-multiply scale-[1.15] md:scale-110 transition-transform duration-700 ease-in-out" 
                     />
                   </div>
                   
                   {/* Product Details */}
                   <div className="flex flex-col flex-1">
-                    <h4 className="font-bold text-[#2c4a35] group-hover:text-[#0F3D2E] text-[14px] md:text-[18px] leading-tight mb-1.5 transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+
+
+                    <h4 className="font-extrabold text-[#0F3D2E] text-[14px] md:text-[18px] leading-tight mb-1 md:mb-2 transition-colors duration-300 line-clamp-2 md:line-clamp-none" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                       {product.name}
                     </h4>
 
                     {/* Rating (5 Stars) */}
-                    <div className="flex items-center gap-1.5 mb-3">
-                      <div className="flex items-center gap-[2px]">
+                    <div className="flex items-center gap-1 md:gap-1.5 mb-2 md:mb-3">
+                      <div className="flex items-center gap-[1px] md:gap-[2px]">
                         {[...Array(5)].map((_, i) => (
-                           <Star key={i} className={`w-3 h-3 md:w-3.5 md:h-3.5 ${i < Math.floor(product.rating) ? 'fill-[#ffc107] text-[#ffc107]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
+                           <Star key={i} className={`w-2.5 h-2.5 md:w-[14px] md:h-[14px] ${i < Math.floor(product.rating) ? 'fill-[#ffc107] text-[#ffc107]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
                         ))}
                       </div>
-                      <span className="text-[11px] md:text-[13px] font-bold text-[#4a5d53]">({product.rating.toFixed(1)})</span>
+                      <span className="text-[10px] md:text-[12px] font-bold text-[#6b7b72] ml-0.5">({product.rating.toFixed(1)})</span>
+                    </div>
+
+                    {/* Description */}
+                    <div className="mb-2 md:mb-3">
+                      <p className="text-[11px] md:text-[13px] text-[#6b7b72] leading-[1.4] md:leading-[1.5] line-clamp-2">
+                        {product.desc}
+                      </p>
                     </div>
                     
-                    <div className="flex items-center justify-between mt-auto gap-3 pt-1">
-                      <span className="font-bold text-[#0F3D2E] text-[15px] md:text-[20px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                    <div className="flex items-center justify-between mt-auto pt-1">
+                      <span className="font-bold text-[#0F3D2E] text-[14px] md:text-[18px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                         ₹{product.price}
                       </span>
                       
                       {/* Actions */}
                       <div className="flex items-center gap-2 relative">
-
-
                         <button 
                           onClick={(e) => handleAddToCart(product, e)}
-                          className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full text-white transition-colors shadow-sm shrink-0 relative z-10 hover:scale-105 active:scale-95 ${addedItems[product.id] ? 'bg-[#5b8c5a]' : 'bg-[#0F3D2E] hover:bg-[#1a5441]'}`}
+                          className={`flex items-center justify-center w-7 h-7 md:w-9 md:h-9 rounded-full text-white transition-colors shadow-sm shrink-0 relative z-10 hover:scale-105 active:scale-95 ${addedItems[product.id] ? 'bg-[#5b8c5a]' : 'bg-[#183a2d] hover:bg-[#0f281e]'}`}
                         >
                           {addedItems[product.id] ? (
-                            <Check className="w-4 h-4 md:w-[18px] md:h-[18px]" />
+                            <Check className="w-3.5 h-3.5 md:w-4 md:h-4" strokeWidth={2.5} />
                           ) : (
-                            <ShoppingCart className="w-4 h-4 md:w-[18px] md:h-[18px]" />
+                            <ShoppingCart className="w-3.5 h-3.5 md:w-4 md:h-4" strokeWidth={2} />
                           )}
                         </button>
                       </div>
@@ -289,13 +301,8 @@ export default function ShopPage() {
                   </div>
                 </motion.div>
               ))}
-              
-              {filteredProducts.length === 0 && (
-                <div className="col-span-full py-12 text-center text-[#6b7b72]">
-                  No products found matching your filters. Try adjusting the price or categories.
-                </div>
-              )}
             </div>
+            )}
           </div>
 
 
@@ -476,14 +483,20 @@ export default function ShopPage() {
               onClick={() => setIsMobileFiltersOpen(false)}
             />
             <motion.div 
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(e, info) => {
+                if (info.offset.y > 100) setIsMobileFiltersOpen(false);
+              }}
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl z-[101] flex flex-col max-h-[90vh] lg:hidden"
+              className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl z-[101] flex flex-col h-[75vh] max-h-[75vh] lg:hidden"
             >
               {/* Handle */}
-              <div className="w-full flex justify-center pt-3 pb-2">
+              <div className="w-full flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
                 <div className="w-12 h-1.5 bg-[#e8e5de] rounded-full"></div>
               </div>
 

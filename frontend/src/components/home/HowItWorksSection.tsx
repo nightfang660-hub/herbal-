@@ -45,7 +45,7 @@ export default function HowItWorksSection() {
   ];
 
   return (
-    <section className="bg-white pt-12 pb-8 relative overflow-hidden border-b border-border/10">
+    <section className="bg-white pt-12 pb-8 relative overflow-hidden">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}

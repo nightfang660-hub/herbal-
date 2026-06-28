@@ -487,7 +487,7 @@ export default function CheckoutPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#f4f2ee] font-sans relative" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+    <div className="min-h-screen bg-[#fcfbf9] font-sans relative" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
       
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between mb-8">

@@ -260,6 +260,7 @@ export default function BlogPage() {
   const [activeTopic, setActiveTopic] = useState('All Articles');
   const [currentFeaturedIdx, setCurrentFeaturedIdx] = useState(0);
   const [visibleCount, setVisibleCount] = useState(8);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     setVisibleCount(8);
@@ -274,9 +275,11 @@ export default function BlogPage() {
 
   const featured = FEATURED_ARTICLES[currentFeaturedIdx];
 
-  const filteredArticles = activeTopic === 'All Articles' 
-    ? ARTICLES 
-    : ARTICLES.filter(article => article.tag.toLowerCase().includes(activeTopic.toLowerCase()) || activeTopic.toLowerCase().includes(article.tag.toLowerCase()));
+  const filteredArticles = ARTICLES.filter(article => {
+    const matchTopic = activeTopic === 'All Articles' || article.tag.toLowerCase().includes(activeTopic.toLowerCase()) || activeTopic.toLowerCase().includes(article.tag.toLowerCase());
+    const matchSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) || article.desc.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchTopic && matchSearch;
+  });
 
   const visibleArticles = filteredArticles.slice(0, visibleCount);
 
@@ -284,7 +287,7 @@ export default function BlogPage() {
     <div className="flex flex-col w-full min-h-screen bg-[#fcfbf9] pb-10">
       
       {/* 1. Hero Section */}
-      <section className="relative w-full overflow-hidden bg-[#f5f0e6] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
+      <section className="relative w-full overflow-hidden bg-[#f5f0e6] border-b border-[#ece8dc] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
         <div 
           className="absolute inset-0 lg:left-auto lg:right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-[position:60%_center] lg:bg-[90%_center] z-0"
           style={{ backgroundImage: `url('/assets/Journalherosection.png')` }}
@@ -307,28 +310,42 @@ export default function BlogPage() {
 
             <h1 className="text-[38px] md:text-[48px] lg:text-[56px] font-bold text-white lg:text-[#0F3D2E] leading-[1.1] drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Playfair Display, serif' }}>
               Insights for a<br />
-              Healthier You
+              <span className="text-[#c19236]">Healthier You</span>
             </h1>
             
             <p className="text-[15px] md:text-[16px] text-white/95 lg:text-[#4a5d53] leading-[1.6] max-w-[450px] drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
               Explore expert tips, herbal guides, wellness rituals, and Ayurvedic wisdom to support your natural wellness journey.
             </p>
 
-            <div className="relative max-w-[450px] mt-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] rounded-full overflow-hidden bg-white flex border border-[#ece8dc] focus-within:border-[#c19236]/50 focus-within:shadow-[0_4px_24px_-4px_rgba(193,146,54,0.15)] transition-all duration-300">
-              <input type="text" placeholder="Search articles, topics, ingredients..." className="flex-1 px-6 py-4 outline-none text-[#4a5d53] text-[14px] bg-transparent" style={{ fontFamily: 'Nunito Sans, sans-serif' }} />
-              <button className="bg-[#0F3D2E] text-white px-8 py-4 hover:bg-[#1a5441] transition-colors flex items-center justify-center font-bold text-[14px] gap-2">
-                <Search className="w-4 h-4" />
-              </button>
-            </div>
+
           </motion.div>
         </div>
       </section>
 
-      {/* 2. Navigation Pills */}
-      <section className="bg-[#fcfbf9] py-6 sticky top-0 z-30">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8">
-          <div className="bg-white rounded-full border border-[#ece8dc] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] py-3 px-6 overflow-x-auto no-scrollbar">
-            <div className="flex items-center gap-3 w-max lg:mx-auto">
+      {/* 2. Search & Navigation (Unified Toolbar) */}
+      <section className="sticky top-4 lg:top-6 z-40 w-full max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 -mt-8 lg:-mt-10 mb-8 lg:mb-12">
+          
+          {/* Unified Container */}
+          <div className="bg-white/95 backdrop-blur-md rounded-[24px] lg:rounded-full border border-white/50 shadow-[0_8px_30px_rgba(0,0,0,0.08)] p-2.5 lg:p-2 flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-2">
+            
+            {/* Search Bar */}
+            <div className="relative w-full lg:w-[350px] flex items-center bg-white/60 lg:bg-transparent border border-[#ece8dc] lg:border-none rounded-xl lg:rounded-full px-4 py-3 lg:py-2.5 focus-within:border-[#c19236]/50 focus-within:ring-1 focus-within:ring-[#c19236]/20 transition-all shrink-0">
+              <Search className="h-[18px] w-[18px] text-[#8b9992] mr-3 shrink-0" />
+              <input 
+                type="text" 
+                placeholder="Search articles, topics..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-transparent text-[15px] text-[#0F3D2E] placeholder:text-[#8b9992] focus:outline-none w-full" 
+                style={{ fontFamily: 'Nunito Sans, sans-serif' }}
+              />
+            </div>
+
+            {/* Divider for Desktop */}
+            <div className="hidden lg:block w-[1px] h-8 bg-[#ece8dc] mx-2"></div>
+
+            {/* Navigation Pills (Desktop & Mobile) */}
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full pb-1 lg:pb-0 min-w-0">
               {TOPICS.map((topic, idx) => {
                 const Icon = topic.icon;
                 const isActive = topic.name === activeTopic;
@@ -336,25 +353,25 @@ export default function BlogPage() {
                   <button
                     key={idx}
                     onClick={() => setActiveTopic(topic.name)}
-                    className={`flex items-center gap-2 px-6 py-2.5 rounded-full border transition-all duration-300 ${
+                    className={`flex items-center gap-2 px-4 py-2.5 lg:py-2.5 rounded-xl lg:rounded-full border lg:border-transparent transition-all duration-300 whitespace-nowrap shrink-0 ${
                       isActive
                         ? 'bg-[#0F3D2E] border-[#0F3D2E] text-white shadow-md'
-                        : 'bg-white border-transparent text-[#4a5d53] hover:bg-[#fcfbf9] hover:border-[#ece8dc] hover:shadow-sm'
+                        : 'bg-white/60 lg:bg-transparent border-[#e8e5de] text-[#4a5d53] hover:bg-white hover:border-[#ece8dc]'
                     }`}
                   >
-                    <Icon className={`w-[18px] h-[18px] ${isActive ? 'text-white' : 'text-[#8a958f]'}`} strokeWidth={2} />
-                    <span className="text-[13px] font-bold" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{topic.name}</span>
+                    <Icon className={`w-[16px] h-[16px] ${isActive ? 'text-white' : 'text-[#8a958f]'}`} strokeWidth={2} />
+                    <span className="text-[14px] lg:text-[13px] font-bold" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{topic.name}</span>
                   </button>
                 );
               })}
             </div>
+
           </div>
-        </div>
       </section>
 
       {/* 3. Featured Article & Popular Topics */}
       {activeTopic === 'All Articles' && (
-        <section className="py-12 bg-[#fcfbf9]">
+        <section className="py-12 bg-[#fcfbf9] border-b border-[#ece8dc]">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8">
           <div className="flex flex-col lg:flex-row gap-8">
             
@@ -451,7 +468,7 @@ export default function BlogPage() {
       )}
 
       {/* 4. Latest Articles Grid */}
-      <section className="py-10 bg-[#fcfbf9]">
+      <section className="py-10 bg-white">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8">
           <div className="mb-8">
             <h2 className="text-[24px] md:text-[28px] font-bold text-[#0F3D2E] flex items-center gap-2" style={{ fontFamily: 'Playfair Display, serif' }}>
@@ -503,6 +520,8 @@ export default function BlogPage() {
           )}
         </div>
       </section>
+
+
 
 
     </div>

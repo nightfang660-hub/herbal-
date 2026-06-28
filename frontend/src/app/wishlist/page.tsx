@@ -28,14 +28,14 @@ export default function WishlistPage() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return <div className="min-h-screen bg-[#f4efe6]"></div>;
+  if (!mounted) return <div className="min-h-screen bg-[#fcfbf9]"></div>;
 
   const wishlistProducts = items
     .map(item => PRODUCTS.find(p => p.id === item.productId))
     .filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-[#f4efe6] py-8">
+    <div className="min-h-screen bg-[#fcfbf9] py-8">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Back Button */}

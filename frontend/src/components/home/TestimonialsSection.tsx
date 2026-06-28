@@ -129,7 +129,7 @@ export default function TestimonialsSection() {
   }, [scrollByOneCard]);
 
   return (
-    <section className="bg-[#fdfbf6] py-12 relative overflow-hidden border-b border-[#ece8dc]">
+    <section className="bg-[#fdfbf6] py-12 relative overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 relative z-10">
         
         {/* Header */}

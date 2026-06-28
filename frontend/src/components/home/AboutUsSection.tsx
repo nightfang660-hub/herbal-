@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 
 export default function AboutUsSection() {
   return (
-    <section className="bg-[#f4f1e6] py-12 relative overflow-hidden border-b border-border/20">
+    <section className="bg-[#f4f1e6] py-12 relative overflow-hidden">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         <div className="flex flex-col lg:flex-row gap-8 items-center mb-12">

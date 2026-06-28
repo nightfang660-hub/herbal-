@@ -64,7 +64,7 @@ export default function CartPage() {
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-[#f4f2ee] py-8 font-sans" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+    <div className="min-h-screen bg-[#fcfbf9] py-8 font-sans" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="flex items-center justify-between mb-6">

@@ -11,3 +11,4 @@ export default async function JournalPage() {
   
   return <JournalView posts={posts} />;
 }
+// Force recompile

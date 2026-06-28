@@ -23,7 +23,7 @@ export default function IngredientsPage() {
   return (
     <main className="min-h-screen bg-[#fcfbf9]">
       {/* Hero Section */}
-      <section className="relative w-full overflow-hidden bg-[#f5f0e6] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
+      <section className="relative w-full overflow-hidden bg-[#f5f0e6] border-b border-[#ece8dc] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
         {/* Right Side Background Image (Desktop) */}
         <div 
           className="absolute inset-0 lg:left-auto lg:right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-[position:60%_center] lg:bg-[90%_center] z-0"
@@ -66,7 +66,7 @@ export default function IngredientsPage() {
       </section>
 
       {/* Explore Our Botanical Collection */}
-      <section className="py-10 lg:py-12 bg-white relative">
+      <section className="py-10 lg:py-12 bg-[#fcfbf9] relative">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8">
           
           {/* Section Header */}
@@ -132,7 +132,7 @@ export default function IngredientsPage() {
       </section>
 
       {/* Signature Ingredients */}
-      <section className="py-10 lg:py-12 bg-[#fcfbf9]">
+      <section className="py-10 lg:py-12 bg-white border-t border-[#ece8dc]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center mb-8 md:mb-10">
@@ -252,7 +252,7 @@ export default function IngredientsPage() {
       </section>
 
       {/* Why These Ingredients Matter */}
-      <section className="py-10 lg:py-12 bg-white border-y border-[#ece8dc] relative z-[60]">
+      <section className="py-10 lg:py-12 bg-[#fcfbf9] border-t border-[#ece8dc] relative z-[60]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
@@ -321,7 +321,7 @@ export default function IngredientsPage() {
       </section>
 
       {/* FAQ Section */}
-      <div className="relative z-[60] bg-[#fcfbf9]">
+      <div className="relative z-[60] bg-white border-t border-[#ece8dc]">
         <FAQSection 
         title="Frequently Asked Questions" 
         subtitle="Everything you need to know about our herbal ingredients, sourcing, and benefits. Can't find your answer? Reach out to our herbalist team."

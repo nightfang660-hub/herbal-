@@ -43,7 +43,7 @@ export default function WellnessSolutionsSection() {
   ];
 
   return (
-    <section className="bg-[#fdfbf6] py-12 relative border-b border-[#ece8dc]">
+    <section className="bg-[#fdfbf6] py-12 relative">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Header */}
