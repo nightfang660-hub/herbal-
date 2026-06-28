@@ -323,7 +323,7 @@ export default function BlogPage() {
       </section>
 
       {/* 2. Search & Navigation (Unified Toolbar) */}
-      <section className="sticky top-4 lg:top-6 z-40 w-full max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 -mt-8 lg:-mt-10 mb-8 lg:mb-12">
+      <section className="sticky lg:relative top-4 lg:top-0 z-40 w-full max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 -mt-8 lg:-mt-10 mb-8 lg:mb-12">
           
           {/* Unified Container */}
           <div className="bg-white/95 backdrop-blur-md rounded-[24px] lg:rounded-full border border-white/50 shadow-[0_8px_30px_rgba(0,0,0,0.08)] p-2.5 lg:p-2 flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-2">
