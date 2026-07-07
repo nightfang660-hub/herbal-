@@ -116,12 +116,12 @@ const WELLNESS_CARDS = [
       {
         title: "Emotional Equilibrium",
         desc: "Specifically formulated to soothe stress and emotional fatigue.",
-        icon: <Leaf className="w-5 h-5 text-[#2c4a35]" />
+        icon: <Leaf className="w-5 h-5 text-[#0F3D2E]" />
       },
       {
         title: "Cellular Protection",
         desc: "Rich in organic antioxidants for long-term restorative health.",
-        icon: <Sparkles className="w-5 h-5 text-[#2c4a35]" />
+        icon: <Sparkles className="w-5 h-5 text-[#0F3D2E]" />
       }
     ],
     ingredients: [
@@ -143,12 +143,12 @@ const WELLNESS_CARDS = [
       {
         title: "Immune Boosting",
         desc: "Packed with vitamin C and antioxidants to support natural defenses.",
-        icon: <ShieldAlert className="w-5 h-5 text-[#2c4a35]" />
+        icon: <ShieldAlert className="w-5 h-5 text-[#0F3D2E]" />
       },
       {
         title: "Cellular Protection",
         desc: "Rich in organic antioxidants for long-term restorative health.",
-        icon: <Sparkles className="w-5 h-5 text-[#2c4a35]" />
+        icon: <Sparkles className="w-5 h-5 text-[#0F3D2E]" />
       }
     ],
     ingredients: [
@@ -170,12 +170,12 @@ const WELLNESS_CARDS = [
       {
         title: "Airway Clearing",
         desc: "Helps to clear congestion and soothe respiratory pathways.",
-        icon: <Wind className="w-5 h-5 text-[#2c4a35]" />
+        icon: <Wind className="w-5 h-5 text-[#0F3D2E]" />
       },
       {
         title: "Throat Soothing",
         desc: "Coats and comforts scratchy, irritated throats.",
-        icon: <Leaf className="w-5 h-5 text-[#2c4a35]" />
+        icon: <Leaf className="w-5 h-5 text-[#0F3D2E]" />
       }
     ],
     ingredients: [
@@ -197,12 +197,12 @@ const WELLNESS_CARDS = [
       {
         title: "Gut Soothing",
         desc: "Relieves bloating, gas, and occasional indigestion.",
-        icon: <Sprout className="w-5 h-5 text-[#2c4a35]" />
+        icon: <Sprout className="w-5 h-5 text-[#0F3D2E]" />
       },
       {
         title: "Microbiome Support",
         desc: "Promotes a healthy environment for beneficial gut flora.",
-        icon: <Sparkles className="w-5 h-5 text-[#2c4a35]" />
+        icon: <Sparkles className="w-5 h-5 text-[#0F3D2E]" />
       }
     ],
     ingredients: [
@@ -252,7 +252,7 @@ function FeaturedProductCard({ product, index }: { product: Product, index?: num
         {/* Best Seller Badge */}
         {product.bestSeller && (
           <div className="mb-1 md:mb-2 flex items-start">
-            <span className="bg-[#f0f4e3] text-[#2c4a35] px-1.5 md:px-2 py-0.5 rounded-[3px] md:rounded-[4px] text-[9px] md:text-[10px] font-bold tracking-widest uppercase">
+            <span className="bg-[#f0f4e3] text-[#0F3D2E] px-1.5 md:px-2 py-0.5 rounded-[3px] md:rounded-[4px] text-[9px] md:text-[10px] font-bold tracking-widest uppercase">
               BEST SELLER
             </span>
           </div>
@@ -266,7 +266,7 @@ function FeaturedProductCard({ product, index }: { product: Product, index?: num
         <div className="flex items-center gap-1 md:gap-1.5 mb-2 md:mb-3">
           <div className="flex items-center gap-[1px] md:gap-[2px]">
             {[...Array(5)].map((_, i) => (
-               <Star key={i} className={`w-2.5 h-2.5 md:w-[14px] md:h-[14px] ${i < Math.floor(product.rating) ? 'fill-[#ffc107] text-[#ffc107]' : (i === Math.floor(product.rating) && product.rating % 1 !== 0 ? 'fill-[#ffc107] text-[#ffc107] opacity-50' : 'fill-[#e8e5de] text-[#e8e5de]')}`} />
+               <Star key={i} className={`w-2.5 h-2.5 md:w-[14px] md:h-[14px] ${i < Math.floor(product.rating) ? 'fill-[#D4AF37] text-[#D4AF37]' : (i === Math.floor(product.rating) && product.rating % 1 !== 0 ? 'fill-[#D4AF37] text-[#D4AF37] opacity-50' : 'fill-[#e8e5de] text-[#e8e5de]')}`} />
             ))}
           </div>
           <span className="text-[10px] md:text-[12px] font-bold text-[#6b7b72] ml-0.5">({product.rating.toFixed(1)})</span>
@@ -283,14 +283,14 @@ function FeaturedProductCard({ product, index }: { product: Product, index?: num
         <div className="flex items-center justify-between mt-auto pt-1 relative">
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <span className="text-[14px] md:text-[18px] font-bold text-[#2c4a35]">₹{product.price}</span>
+              <span className="text-[14px] md:text-[18px] font-bold text-[#0F3D2E]">₹{product.price}</span>
               <span className="text-[11px] md:text-[13px] text-[#8b9992] line-through">₹{product.originalPrice}</span>
             </div>
           </div>
           
           <button 
             onClick={(e) => { e.stopPropagation(); handleAddToCart(); }}
-            className="flex items-center justify-center w-7 h-7 md:w-9 md:h-9 bg-[#183a2d] hover:bg-[#0f281e] rounded-full text-white transition-colors shadow-sm shrink-0 relative z-10 hover:scale-105 active:scale-95"
+            className="flex items-center justify-center w-7 h-7 md:w-9 md:h-9 bg-[#0F3D2E] hover:bg-[#0F3D2E] rounded-full text-white transition-colors shadow-sm shrink-0 relative z-10 hover:scale-105 active:scale-95"
           >
             <ShoppingCart className="w-3.5 h-3.5 md:w-4 md:h-4" strokeWidth={2} />
           </button>
@@ -309,18 +309,15 @@ function FAQSection() {
   };
 
   return (
-    <section className="w-full bg-[#fcfbf9] py-14 lg:py-16 relative">
+    <section className="w-full bg-[#F8F5EE] py-14 lg:py-16 relative">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-8">
         
         {/* Header */}
         <div className="text-center mb-10 lg:mb-12 max-w-2xl mx-auto">
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8cb73d] mb-4 block">Got Questions?</span>
-          <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <h2 className="text-[28px] md:text-[36px] font-bold text-[#0F3D2E] capitalize mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
             Frequently Asked Questions
           </h2>
-          <p className="text-[14px] text-[#6b7b72] leading-[1.8]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-            Everything you need to know about our herbal blends, sourcing, and brewing process. Can't find your answer? Reach out to our herbalist team.
-          </p>
         </div>
 
         {/* Accordion List */}
@@ -334,8 +331,8 @@ function FAQSection() {
                 onClick={() => toggleFAQ(index)}
                 className="w-full flex items-center justify-between p-5 text-left focus:outline-none group"
               >
-                <span className="text-[15px] md:text-[16px] font-semibold text-[#1c2e24] group-hover:text-[#2c4a35] transition-colors pr-6" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{faq.question}</span>
-                <div className={`flex items-center justify-center w-9 h-9 rounded-full shrink-0 transition-all duration-400 ease-in-out ${openIndex === index ? 'rotate-180 bg-[#1c2e24] text-[#c49d56]' : 'bg-[#f4f2ee] text-[#6b7b72] group-hover:bg-[#e8f2e1] group-hover:text-[#6b9933]'}`}>
+                <span className="text-[15px] md:text-[16px] font-semibold text-[#0F3D2E] group-hover:text-[#0F3D2E] transition-colors pr-6" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{faq.question}</span>
+                <div className={`flex items-center justify-center w-9 h-9 rounded-full shrink-0 transition-all duration-400 ease-in-out ${openIndex === index ? 'rotate-180 bg-[#0F3D2E] text-[#D4AF37]' : 'bg-[#f4f2ee] text-[#6b7b72] group-hover:bg-[#e8f2e1] group-hover:text-[#6b9933]'}`}>
                   <ChevronDown className="w-4 h-4 stroke-[2.5]" />
                 </div>
               </button>
@@ -410,7 +407,7 @@ function HowItWorksSection() {
         {/* Header */}
         <div className="text-center mb-16 space-y-4">
           <div className="flex items-center justify-center gap-4">
-            <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <h2 className="text-[28px] md:text-[36px] font-bold text-[#0F3D2E] capitalize" style={{ fontFamily: 'Playfair Display, serif' }}>
               How It Works
             </h2>
           </div>
@@ -432,10 +429,7 @@ function HowItWorksSection() {
                      <div className="absolute inset-2.5 rounded-full border border-black/5 opacity-50 group-hover:scale-110 transition-transform duration-700"></div>
                      <step.Icon className={`w-8 h-8 md:w-10 md:h-10 ${step.iconColor} group-hover:scale-110 transition-transform duration-500 z-10`} />
                   </div>
-                  {/* Number Badge */}
-                  <div className={`absolute -top-2 left-1/2 -translate-x-1/2 w-7 h-7 md:w-8 md:h-8 rounded-full ${step.badgeColor} text-white flex items-center justify-center text-[12px] md:text-[14px] font-bold shadow-md group-hover:-translate-y-1 group-hover:shadow-lg transition-all duration-500`} style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                    {step.num}
-                  </div>
+
                 </div>
                 <h3 className={`text-[13px] md:text-[14px] font-bold ${step.iconColor} uppercase tracking-wider mb-2 transition-colors duration-300`} style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                   {step.title}
@@ -445,12 +439,24 @@ function HowItWorksSection() {
                 </p>
               </div>
 
-              {/* Arrow */}
+              {/* Curved Arrow */}
               {index < steps.length - 1 && (
-                <div className="hidden md:flex items-center justify-center mt-12 md:mt-16">
-                  <ArrowRight className="w-4 h-4 text-[#a4aca7] opacity-60" />
+                <div 
+                  className="hidden md:flex shrink-0 items-center justify-center mt-12 lg:mt-16 px-1 lg:px-2"
+                >
+                  <svg 
+                    width="80" 
+                    height="40" 
+                    viewBox="0 0 80 40" 
+                    fill="none" 
+                    className={`text-[#8cb73d] opacity-80 transition-transform duration-500 ${index % 2 === 1 ? 'scale-y-[-1] translate-y-4' : '-translate-y-4'}`}
+                  >
+                    <path d="M0,30 C20,10 60,10 75,30" stroke="currentColor" strokeWidth="2.5" strokeDasharray="5 5" fill="none" strokeLinecap="round" />
+                    <path d="M68,22 L76,31 L66,33" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </div>
               )}
+
             </React.Fragment>
           ))}
         </div>
@@ -460,116 +466,6 @@ function HowItWorksSection() {
   );
 }
 
-function WellnessSolutionsSection() {
-  const [activeId, setActiveId] = useState<number | null>(null);
-
-  const solutions = [
-    {
-      id: 1,
-      title: "Digestive\nComfort",
-      desc: "Support your gut\nhealth naturally.",
-      bgColor: "bg-[#e8efe2]",
-      iconColor: "text-[#4a5c3f]",
-      icon: <img src="/home/diges.png" alt="Digestion" className="w-[100px] h-[100px] object-contain scale-110" />
-    },
-    {
-      id: 2,
-      title: "Deep\nRelaxation",
-      desc: "Calm your mind and\nrelax your body.",
-      bgColor: "bg-[#ece5fb]", // light purple
-      iconColor: "text-[#6543b5]", // purple
-      icon: <img src="/home/meditation.png" alt="Relaxation" className="w-[100px] h-[100px] object-contain scale-110" />
-    },
-    {
-      id: 3,
-      title: "Total Body\nDetox",
-      desc: "Cleanse and refresh\nyour body.",
-      bgColor: "bg-[#e8efe2]",
-      iconColor: "text-[#4a5c3f]",
-      icon: <img src="/home/jar.png" alt="Detox" className="w-[100px] h-[100px] object-contain scale-110" />
-    },
-    {
-      id: 4,
-      title: "Hormonal\nHarmony",
-      desc: "Support your natural\nbalance everyday.",
-      bgColor: "bg-[#fce9ec]", // light pink
-      iconColor: "text-[#d6556d]", // pink/red
-      icon: <img src="/home/red_flwr.png" alt="Hormonal Balance" className="w-[100px] h-[100px] object-contain scale-110" />
-    }
-  ];
-
-  return (
-    <section className="bg-[#fcfbf9] py-20 relative">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Header */}
-        <div className="text-center mb-16 space-y-4 max-w-2xl mx-auto">
-          <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize" style={{ fontFamily: 'Playfair Display, serif' }}>
-            Wellness Solutions
-          </h2>
-          <div className="flex items-center justify-center w-[250px] mx-auto mb-6">
-            <div className="h-[2px] w-full bg-[#cda434]"></div>
-            <Leaf className="w-5 h-5 text-[#cda434] mx-2 shrink-0 -rotate-[60deg]" fill="currentColor" />
-            <div className="h-[2px] w-full bg-[#cda434]"></div>
-          </div>
-          <p className="text-[15px] md:text-[16px] text-[#6b7b72] leading-relaxed" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-            Discover specialized herbal formulations crafted for your unique health needs. Find the perfect natural remedy to support your daily wellness journey.
-          </p>
-        </div>
-
-        {/* Columns Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-0 relative">
-          {solutions.map((sol) => {
-            const isActive = activeId === sol.id;
-            const isAnyActive = activeId !== null;
-
-            return (
-              <div 
-                key={sol.id} 
-                onClick={() => setActiveId(isActive ? null : sol.id)}
-                className={`flex flex-col items-center text-center px-6 py-6 relative group cursor-pointer rounded-[30px] transition-all duration-500 ease-out ${
-                  isActive ? 'bg-white shadow-[0_10px_40px_rgba(0,0,0,0.06)] scale-105 z-10' : 
-                  isAnyActive ? 'opacity-40 scale-95' : 'hover:bg-white/50'
-                }`}
-              >
-                
-                {/* Custom Shorter Divider (hidden on last item, and hidden if active state is engaged to prevent visual clutter) */}
-                {sol.id !== 4 && !isAnyActive && (
-                  <div className="hidden lg:block absolute right-0 top-[25%] bottom-[10%] w-[1px] bg-black/[0.06]" />
-                )}
-                
-                {/* Icon Circle */}
-                <motion.div 
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: sol.id * 0.3 }}
-                  className={`w-[90px] h-[90px] rounded-full flex items-center justify-center mb-7 shadow-sm transition-transform duration-300 ${isActive ? 'scale-110 shadow-md' : 'group-hover:scale-105'} ${sol.bgColor} ${sol.iconColor}`}
-                >
-                  {sol.icon}
-                </motion.div>
-
-                {/* Title */}
-                <h3 className="text-[18px] md:text-[20px] font-bold text-[#2c4a35] mb-4 whitespace-pre-line leading-[1.3] transition-colors" style={{ fontFamily: 'Playfair Display, serif' }}>
-                  {sol.title}
-                </h3>
-
-                {/* Desc */}
-                <p className="text-[14px] md:text-[15px] text-[#6b7b72] whitespace-pre-line leading-relaxed mb-6" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                  {sol.desc}
-                </p>
-
-                {/* Link */}
-                <Link href="#shop" onClick={(e) => { e.stopPropagation(); }} className={`text-[14px] font-semibold transition-all flex items-center gap-1.5 mt-auto ${isActive ? 'text-[#2c4a35] underline' : 'text-[#4a5c3f] hover:text-[#2c4a35] hover:underline'}`}>
-                  Explore Teas <span>&rarr;</span>
-                </Link>
-              </div>
-            );
-          })}
-        </div>
-
-      </div>
-    </section>
-  );
-}
 
 function IngredientStorySection() {
   const features = [
@@ -603,7 +499,7 @@ function IngredientStorySection() {
           
           {/* Left Content */}
           <div className="w-full lg:w-1/2 flex flex-col">
-            <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize mb-16 tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <h2 className="text-[28px] md:text-[36px] font-bold text-[#0F3D2E] capitalize mb-16 tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
               The Ingredient Story
             </h2>
 
@@ -712,7 +608,7 @@ function TestimonialsSection() {
   const prevPage = () => setCurrentIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
 
   return (
-    <section className="bg-[#fcfbf9] py-14 relative overflow-hidden">
+    <section className="bg-[#F8F5EE] py-14 relative overflow-hidden">
       {/* Decorative leaf motifs background (abstracted as subtle blobs) */}
       <div className="absolute top-0 left-0 w-48 h-48 bg-gradient-to-br from-[#e8f2e1]/40 to-transparent rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-48 h-48 bg-gradient-to-tl from-[#e8f2e1]/40 to-transparent rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
@@ -721,7 +617,7 @@ function TestimonialsSection() {
         
         {/* Header */}
         <div className="text-center mb-10 space-y-3">
-          <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <h2 className="text-[28px] md:text-[36px] font-bold text-[#0F3D2E] capitalize" style={{ fontFamily: 'Playfair Display, serif' }}>
             What Our Customers Say
           </h2>
           <p className="text-[14px] md:text-[15px] text-[#7a6c5b]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
@@ -771,7 +667,7 @@ function TestimonialsSection() {
                       <div className="flex items-center gap-3">
                         <img src={t.avatar} alt={t.name} className="w-11 h-11 rounded-full object-cover shadow-sm border-2 border-white" />
                         <div className="text-left">
-                          <h4 className="text-[14px] font-bold text-[#2c4a35]" style={{ fontFamily: 'Playfair Display, serif' }}>{t.name}</h4>
+                          <h4 className="text-[14px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>{t.name}</h4>
                           <p className="text-[12px] text-[#7a6c5b]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{t.role}</p>
                         </div>
                       </div>
@@ -883,7 +779,7 @@ export default function Home() {
               <div className="flex flex-wrap items-center gap-4 mt-2">
                 <Link
                   href="/shop"
-                  className="inline-flex items-center gap-2 bg-[#0F3D2E] hover:bg-[#1a5240] text-white px-7 py-4 rounded-xl text-[15px] font-bold transition-all duration-300 shadow-[0_8px_20px_-4px_rgba(15,61,46,0.35)] hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 bg-[#0F3D2E] hover:bg-[#0F3D2E] text-white px-7 py-4 rounded-xl text-[15px] font-bold transition-all duration-300 shadow-[0_8px_20px_-4px_rgba(15,61,46,0.35)] hover:-translate-y-0.5"
                   style={{ fontFamily: 'Nunito Sans, sans-serif' }}
                 >
                   Shop Collection <span>🌿</span>
@@ -949,7 +845,7 @@ export default function Home() {
       </section>
 
       {/* ── TRUST & WELLNESS BENEFITS STRIP ── */}
-      <section className="w-full relative bg-[#fcfbf9] py-20 lg:py-24 overflow-hidden border-y border-[#ece8dc]">
+      <section className="w-full relative bg-[#F8F5EE] py-20 lg:py-24 overflow-hidden border-y border-[#F8F5EE]">
         {/* Subtle Background Decor */}
         {/* Soft sage green gradients */}
         <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-br from-[#A8B5A2]/10 to-transparent rounded-full blur-[80px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
@@ -1002,7 +898,7 @@ export default function Home() {
             ].map((item, idx) => (
               <div 
                 key={idx} 
-                className="group bg-white rounded-[24px] p-8 md:p-6 xl:p-8 flex flex-col items-center text-center shadow-[0_12px_40px_rgba(0,0,0,0.04)] hover:shadow-[0_24px_50px_rgba(15,61,46,0.08)] hover:-translate-y-2 transition-all duration-500 relative border border-[#EFE7D7]/30"
+                className="group bg-white rounded-[24px] p-8 md:p-6 xl:p-8 flex flex-col items-center text-center shadow-[0_12px_40px_rgba(0,0,0,0.04)] hover:shadow-[0_24px_50px_rgba(255,182,193,0.4)] hover:-translate-y-2 transition-all duration-500 relative border border-[#EFE7D7]/30"
               >
                 {/* Icon Container */}
                 <div className="relative mb-6">
@@ -1044,21 +940,18 @@ export default function Home() {
 
 
 
+
+
       {/* Featured Products Collection */}
       <section className="bg-white py-20 relative overflow-hidden">
         <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
           {/* Header */}
           <div className="flex flex-col md:flex-row items-center justify-center relative mb-14 gap-6">
-            <div className="text-center max-w-3xl mx-auto flex flex-col items-center gap-3">
-              <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize" style={{ fontFamily: 'Playfair Display, serif' }}>
-                Our Herbal Tea Collection
-              </h2>
-              <p className="text-[14px] md:text-[15px] text-[#6b7b72] leading-[1.7] max-w-2xl" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                Discover our carefully crafted herbal tea blends designed to support your daily wellness journey naturally.
-              </p>
-            </div>
-            <Link href="#shop" className="md:absolute md:right-0 md:bottom-2 text-[13px] font-bold tracking-[0.15em] text-[#e2b755] hover:text-[#f2c765] transition-colors uppercase shrink-0">
-              Shop All &rarr;
+            <h2 className="text-[32px] md:text-[42px] font-bold text-[#0F3D2E] capitalize tracking-tight text-center" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Our Herbal Blends
+            </h2>
+            <Link href="/shop" className="hidden md:flex items-center gap-2 text-[14px] font-bold text-[#8cb73d] hover:text-[#5e8b42] transition-colors absolute right-0">
+              View All <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
@@ -1067,11 +960,18 @@ export default function Home() {
               <FeaturedProductCard key={product.id} product={product} index={idx} />
             ))}
           </div>
+          
+          <div className="flex justify-center mt-10 md:hidden">
+            <Link href="/shop" className="inline-flex items-center gap-2 text-[15px] font-bold text-[#0F3D2E] border-b-2 border-[#0F3D2E] pb-1">
+              View All Blends <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
       </section>
 
-      <WellnessSolutionsSection />
       <IngredientStorySection />
+
+      <HowItWorksSection />
 
       <TestimonialsSection />
 
@@ -1081,39 +981,23 @@ export default function Home() {
       <section className="bg-white py-24 relative overflow-hidden">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           
-          <div className="flex flex-col lg:flex-row gap-16 items-center mb-24">
-            {/* Left Image */}
-            <div className="w-full lg:w-1/2 relative flex justify-center items-start">
-              <div 
-                className="relative w-full max-w-[550px] rounded-[30px] overflow-hidden bg-[#f4f1e6]" 
-                style={{ aspectRatio: '1.15' }}
-              >
-                <img 
-                  src="/home/about_us.png" 
-                  alt="Herbal Wellness Tea" 
-                  className="absolute top-0 left-0 w-full h-auto" 
-                />
-              </div>
-            </div>
-
-            {/* Right Content */}
-            <div className="w-full lg:w-1/2 space-y-4">
-              <div className="space-y-2">
-                <span className="text-[13px] font-bold uppercase tracking-[0.25em] text-[#4a6b3d] block">About Us</span>
-                <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <div className="flex flex-col items-center mb-24">
+            {/* Content */}
+            <div className="w-full max-w-4xl mx-auto space-y-4 text-center">
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <h2 className="text-[36px] md:text-[46px] font-bold text-[#1c3524] capitalize" style={{ fontFamily: 'Playfair Display, serif' }}>
                   Rooted in Nature.<br />Inspired by Wellness.
                 </h2>
               </div>
               
-              <p className="text-[15px] md:text-[17px] text-[#4a5c51] leading-[1.8]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                At Herbal Wellness Tea, we believe that true wellness begins with nature. Our herbal teas are carefully crafted using handpicked, 100% natural ingredients to support your body, calm your mind, and uplift your everyday life.
+              <p className="text-[15px] md:text-[17px] text-[#4a5c51] leading-[1.8] text-justify" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                It all started at home when I saw my parents struggling with their health, including <strong className="font-bold text-[#0F3D2E]">sugar levels and weight issues</strong>. I wanted to help them naturally, so I spent <strong className="font-bold text-[#0F3D2E]">18 months researching Ayurvedic herbs</strong> and testing over 50 different blends. When I finally found <strong className="font-bold text-[#0F3D2E]">natural solutions that worked</strong> for them, I knew I had to share this with others. That is how R-Herbal Tea was born. We only use <strong className="font-bold text-[#0F3D2E]">100% real, pure herbs with zero artificial additives</strong>. <strong className="font-bold text-[#0F3D2E]">I didn't create this just to start a business. I created it out of genuine care.</strong> Every cup of R-Herbal Tea is my personal promise that your health matters to me as much as my family's health does.
               </p>
               
-              <p className="text-[15px] md:text-[17px] text-[#4a5c51] leading-[1.8]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                From calming blends to immunity boosters, every cup is made with love, purity and a promise of better well-being.
-              </p>
-              
-              <div>
+              <div className="pt-6">
+                <p className="text-[18px] text-[#1c3524] font-medium italic mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
+                  Curious to read the full story?
+                </p>
                 <Link href="#about" className="inline-flex items-center gap-2 bg-[#4a6b3d] hover:bg-[#3b5930] text-white px-8 py-4 rounded-xl font-semibold text-[15px] transition-all shadow-[0_8px_20px_-6px_rgba(74,107,61,0.4)] hover:-translate-y-1">
                   Learn More About Us <ArrowRight className="w-4 h-4" />
                 </Link>
@@ -1135,7 +1019,7 @@ export default function Home() {
                   <div className="w-14 h-14 bg-[#e8eedd] rounded-full flex items-center justify-center text-[#4a6b3d] mb-5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.1)] group-hover:scale-110 group-hover:-translate-y-2 group-hover:bg-[#8cb73d] group-hover:text-white transition-all duration-300 ease-out">
                     {f.icon}
                   </div>
-                  <h4 className="font-bold text-[#1c2e24] mb-3 text-[16px] group-hover:text-[#4a6b3d] transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{f.title}</h4>
+                  <h4 className="font-bold text-[#0F3D2E] mb-3 text-[16px] group-hover:text-[#4a6b3d] transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{f.title}</h4>
                   <p className="text-[13px] text-[#6b7b72] leading-relaxed max-w-[200px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{f.desc}</p>
                 </div>
               ))}
@@ -1165,17 +1049,17 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-lg bg-[#fcfbf9] rounded-3xl shadow-2xl overflow-hidden z-10 max-h-[90vh] flex flex-col"
+              className="relative w-full max-w-lg bg-[#F8F5EE] rounded-3xl shadow-2xl overflow-hidden z-10 max-h-[90vh] flex flex-col"
             >
               <div className="overflow-y-auto no-scrollbar pb-8">
                 {/* Header Image Area */}
-                <div className="relative aspect-[4/3] w-full bg-[#1c2e24]">
+                <div className="relative aspect-[4/3] w-full bg-[#0F3D2E]">
                   <img src={selectedWellness.modalImage} alt={selectedWellness.title} className="w-full h-full object-cover opacity-80" />
                   
                   {/* Close button */}
                   <button 
                     onClick={() => setSelectedWellness(null)}
-                    className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-md rounded-full text-[#1c2e24] hover:bg-white/40 transition-colors z-20"
+                    className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-md rounded-full text-[#0F3D2E] hover:bg-white/40 transition-colors z-20"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -1183,8 +1067,8 @@ export default function Home() {
 
 
                   {/* Title */}
-                  <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-[#fcfbf9] via-[#fcfbf9]/90 to-transparent pt-20">
-                    <h3 className="text-2xl font-bold text-[#1c2e24] leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+                  <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-[#F8F5EE] via-[#F8F5EE]/90 to-transparent pt-20">
+                    <h3 className="text-2xl font-bold text-[#0F3D2E] leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
                       {selectedWellness.title}
                     </h3>
                   </div>
@@ -1205,7 +1089,7 @@ export default function Home() {
                         <div key={idx} className="bg-[#f4f2ee] p-4 rounded-xl flex items-start gap-4">
                           <div className="mt-0.5">{benefit.icon}</div>
                           <div>
-                            <h5 className="text-[14px] font-bold text-[#1c2e24] mb-1">{benefit.title}</h5>
+                            <h5 className="text-[14px] font-bold text-[#0F3D2E] mb-1">{benefit.title}</h5>
                             <p className="text-[12.5px] text-[#6b7b72] leading-relaxed">{benefit.desc}</p>
                           </div>
                         </div>
@@ -1220,7 +1104,7 @@ export default function Home() {
                       {selectedWellness.ingredients.map((ing: any, idx: number) => (
                         <div key={idx} className="bg-[#f4f2ee] p-4 rounded-xl flex flex-col items-center justify-center text-center gap-1.5 border border-transparent hover:border-[#8cb73d]/20 transition-colors">
                           <span className="text-[9px] font-bold uppercase tracking-widest text-[#6b7b72]">{ing.type}</span>
-                          <span className="text-[15px] font-semibold text-[#1c2e24]" style={{ fontFamily: 'Playfair Display, serif' }}>{ing.name}</span>
+                          <span className="text-[15px] font-semibold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>{ing.name}</span>
                         </div>
                       ))}
                     </div>
@@ -1232,7 +1116,7 @@ export default function Home() {
                       <Clock className="w-24 h-24" />
                     </div>
                     <div className="relative z-10">
-                      <div className="flex items-center gap-2 text-[#2c4a35] font-semibold text-[13px] tracking-widest uppercase mb-3">
+                      <div className="flex items-center gap-2 text-[#0F3D2E] font-semibold text-[13px] tracking-widest uppercase mb-3">
                         <Clock className="w-4 h-4" /> The Ritual
                       </div>
                       <p className="text-[14px] text-[#6b7b72] leading-[1.8]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
@@ -1242,7 +1126,7 @@ export default function Home() {
                   </div>
 
                   {/* Action */}
-                  <Link href="/shop" className="w-full py-4 bg-[#0a1811] hover:bg-[#1c2e24] text-white rounded-full font-bold text-[13px] tracking-[0.15em] uppercase transition-colors flex items-center justify-center gap-2 group shadow-xl">
+                  <Link href="/shop" className="w-full py-4 bg-[#0a1811] hover:bg-[#0F3D2E] text-white rounded-full font-bold text-[13px] tracking-[0.15em] uppercase transition-colors flex items-center justify-center gap-2 group shadow-xl">
                     Explore Collection
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Link>

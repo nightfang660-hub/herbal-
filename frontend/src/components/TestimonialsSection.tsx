@@ -100,7 +100,7 @@ export function TestimonialsSection({ title = "What Our Customers Say", subtitle
   }, [currentIndex]);
 
   return (
-    <section className="bg-[#fdfbf6] py-16 relative overflow-hidden border-b border-[#ece8dc]">
+    <section className="bg-[#fdfbf6] py-16 relative overflow-hidden border-b border-[#F8F5EE]">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 relative z-10">
         
         {/* Header */}
@@ -109,9 +109,9 @@ export function TestimonialsSection({ title = "What Our Customers Say", subtitle
             {title}
           </h2>
           <div className="flex items-center justify-center w-[250px]">
-            <div className="h-[2px] w-full bg-[#cda434]"></div>
-            <Leaf className="w-5 h-5 text-[#cda434] mx-2 shrink-0 -rotate-[60deg]" fill="currentColor" />
-            <div className="h-[2px] w-full bg-[#cda434]"></div>
+            <div className="h-[2px] w-full bg-[#D4AF37]"></div>
+            <Leaf className="w-5 h-5 text-[#D4AF37] mx-2 shrink-0 -rotate-[60deg]" fill="currentColor" />
+            <div className="h-[2px] w-full bg-[#D4AF37]"></div>
           </div>
           {subtitle && (
             <p className="mt-6 text-[15px] md:text-[16px] text-[#556358] max-w-2xl mx-auto" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
@@ -124,7 +124,7 @@ export function TestimonialsSection({ title = "What Our Customers Say", subtitle
         <div className="flex items-center justify-between w-full gap-2 md:gap-6 mt-4">
           
           {/* Left Button */}
-          <button onClick={prevPage} className="shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#dccb96] text-[#cda434] bg-white flex items-center justify-center hover:bg-[#cda434] hover:text-white transition-colors duration-300 shadow-sm hover:shadow-md group z-10">
+          <button onClick={prevPage} className="shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#dccb96] text-[#D4AF37] bg-white flex items-center justify-center hover:bg-[#D4AF37] hover:text-white transition-colors duration-300 shadow-sm hover:shadow-md group z-10">
             <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 group-hover:-translate-x-0.5 transition-transform" />
           </button>
 
@@ -136,7 +136,7 @@ export function TestimonialsSection({ title = "What Our Customers Say", subtitle
             {testimonials.map((t) => (
               <div 
                  key={t.id} 
-                 className="w-full md:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 snap-center bg-white rounded-[16px] p-8 text-left border border-[#ece8dc] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col h-auto min-h-[320px] hover:-translate-y-2 hover:shadow-lg transition-all duration-300 group"
+                 className="w-full md:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 snap-center bg-white rounded-[16px] p-8 text-left border border-[#F8F5EE] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col h-auto min-h-[320px] hover:-translate-y-2 hover:shadow-lg transition-all duration-300 group"
               >
                 {/* Quote Text */}
                 <p className="text-[#556358] text-[14px] leading-relaxed mb-8 flex-grow" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
@@ -148,7 +148,7 @@ export function TestimonialsSection({ title = "What Our Customers Say", subtitle
                 <div className="flex items-center gap-3">
                   <img src={t.avatar} alt={t.name} className="w-11 h-11 rounded-full object-cover border-2 border-[#fdfbf6] shadow-sm" />
                   <div>
-                    <h5 className="text-[14px] font-bold text-[#1c2e24]">{t.name}</h5>
+                    <h5 className="text-[14px] font-bold text-[#0F3D2E]">{t.name}</h5>
                     <p className="text-[12px] text-[#6b7b72]">{t.role}</p>
                   </div>
                 </div>
@@ -157,7 +157,7 @@ export function TestimonialsSection({ title = "What Our Customers Say", subtitle
           </div>
 
           {/* Right Button */}
-          <button onClick={nextPage} className="shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#dccb96] text-[#cda434] bg-white flex items-center justify-center hover:bg-[#cda434] hover:text-white transition-colors duration-300 shadow-sm hover:shadow-md group z-10">
+          <button onClick={nextPage} className="shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#dccb96] text-[#D4AF37] bg-white flex items-center justify-center hover:bg-[#D4AF37] hover:text-white transition-colors duration-300 shadow-sm hover:shadow-md group z-10">
             <ChevronRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-0.5 transition-transform" />
           </button>
 

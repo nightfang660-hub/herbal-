@@ -174,14 +174,14 @@ export default function JournalView({ posts }: JournalViewProps) {
       
       {/* Hero Section Wrapper for Mobile Padding */}
       <div className="w-full overflow-hidden">
-        <section className="relative w-full overflow-hidden bg-[#f5f0e6] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
+        <section className="relative w-full overflow-hidden bg-[#F8F5EE] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
           {/* Background Image covering the section */}
           <div 
             className="absolute inset-0 lg:left-auto lg:right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-[position:60%_center] lg:bg-[90%_center] z-0"
             style={{ backgroundImage: `url('/assets/contactherosection.png')` }}
           >
             {/* Desktop gradient overlay to blend left edge */}
-            <div className="hidden lg:block absolute inset-y-0 left-0 w-[150px] bg-gradient-to-r from-[#f5f0e6] via-[#f5f0e6]/60 to-transparent" style={{ zIndex: 1 }}></div>
+            <div className="hidden lg:block absolute inset-y-0 left-0 w-[150px] bg-gradient-to-r from-[#F8F5EE] via-[#F8F5EE]/60 to-transparent" style={{ zIndex: 1 }}></div>
           </div>
 
           <div className="flex-1 max-w-[1400px] w-full flex flex-col justify-start pt-32 lg:justify-center lg:py-20 mx-auto px-6 sm:px-8 xl:px-12 relative z-10">
@@ -196,17 +196,17 @@ export default function JournalView({ posts }: JournalViewProps) {
               <div className="lg:hidden absolute -inset-6 md:-inset-10 bg-white/70 blur-2xl rounded-full -z-10 pointer-events-none"></div>
               {/* Subtitle */}
               <div className="hidden lg:flex items-center gap-4">
-                <div className="hidden lg:block w-12 h-[2px] bg-[#c19236]"></div>
-                <span className="text-[#c19236] font-bold text-[11px] lg:text-[13px] tracking-widest uppercase">
+                <div className="hidden lg:block w-12 h-[2px] bg-[#D4AF37]"></div>
+                <span className="text-[#D4AF37] font-bold text-[11px] lg:text-[13px] tracking-widest uppercase">
                   <span className="hidden lg:inline">Wellness Journal</span>
                 </span>
-                <div className="hidden lg:block w-12 h-[2px] bg-[#c19236]"></div>
+                <div className="hidden lg:block w-12 h-[2px] bg-[#D4AF37]"></div>
               </div>
 
               {/* Title */}
               <h1 className="text-[32px] md:text-[52px] lg:text-[56px] xl:text-[64px] font-bold text-[#0F3D2E] leading-[1.1] tracking-tight drop-shadow-sm lg:drop-shadow-none" style={{ fontFamily: 'Playfair Display, serif' }}>
                 Your Guide To <br />
-                <span className="text-[#c19236]">Holistic Health</span>
+                <span className="text-[#D4AF37]">Holistic Health</span>
               </h1>
               
               {/* Description */}
@@ -217,9 +217,9 @@ export default function JournalView({ posts }: JournalViewProps) {
 
               {/* Button */}
               <div className="pt-2 lg:pt-0">
-                <Link href="/shop" className="inline-flex items-center gap-3 bg-[#0F3D2E] text-white px-5 lg:px-8 py-2.5 lg:py-3.5 rounded-[8px] lg:rounded-full hover:bg-[#1a5441] transition-colors shadow-md text-[13px] lg:text-[15px] font-bold lg:font-semibold">
+                <Link href="/shop" className="inline-flex items-center gap-3 bg-[#0F3D2E] text-white px-5 lg:px-8 py-2.5 lg:py-3.5 rounded-[8px] lg:rounded-full hover:bg-[#0F3D2E] transition-colors shadow-md text-[13px] lg:text-[15px] font-bold lg:font-semibold">
                   <span className="tracking-wide">Explore Our Teas</span>
-                  <ArrowRight className="w-4 h-4 text-white lg:text-[#e2b755]" />
+                  <ArrowRight className="w-4 h-4 text-white lg:text-[#D4AF37]" />
                 </Link>
               </div>
             </motion.div>
@@ -230,8 +230,8 @@ export default function JournalView({ posts }: JournalViewProps) {
       </div>
 
       {/* 2. Wellness Goals */}
-      <section className="w-full bg-[#fcfbf9] border-y border-[#ece8dc]">
-        <div className="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+      <section className="w-full bg-[#F8F5EE] border-y border-[#F8F5EE]">
+        <div className="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 pt-10 pb-12 lg:pb-20">
         <div className="mb-10 text-center flex flex-col items-center">
           <div className="flex items-center gap-2 mb-3 text-[#5e8b42] uppercase tracking-[0.2em] text-[11px] font-bold">
             <Leaf className="w-3.5 h-3.5" fill="currentColor" />
@@ -239,7 +239,7 @@ export default function JournalView({ posts }: JournalViewProps) {
             <Leaf className="w-3.5 h-3.5" fill="currentColor" />
           </div>
           <h2 className="text-[32px] md:text-[40px] lg:text-[48px] font-bold text-[#0F3D2E] mb-4 leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
-            Choose Your <span className="text-[#c19236]">Wellness Goal</span>
+            Choose Your <span className="text-[#D4AF37]">Wellness Goal</span>
           </h2>
           <p className="text-[15px] text-[#4a5d53] max-w-lg leading-relaxed font-medium">
             Every cup brings you closer to a better you. <br className="hidden sm:block" />
@@ -263,7 +263,7 @@ export default function JournalView({ posts }: JournalViewProps) {
             { icon: CustomIcons.Lightning, iconBg: 'bg-[#fdf4ed]', iconColor: 'text-[#b97a3a]', title: "Energy Boost", desc: "Feel refreshed and\nstay active all day.", link: "#" },
             { icon: CustomIcons.BrainProfile, iconBg: 'bg-[#f2f6f8]', iconColor: 'text-[#4c7c8c]', title: "Mental Clarity", desc: "Improve focus, memory\nand mental clarity.", link: "#" },
           ].map((goal, i) => (
-            <div key={i} className="bg-white border-2 border-[#ece8dc] hover:border-[#c19236] active:border-[#c19236] shadow-[0_8px_24px_rgba(0,0,0,0.08)] rounded-[24px] p-6 lg:p-8 flex flex-col hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-300 relative group cursor-pointer overflow-hidden">
+            <div key={i} className="bg-white border-2 border-[#F8F5EE] hover:border-[#D4AF37] active:border-[#D4AF37] shadow-[0_8px_24px_rgba(0,0,0,0.08)] rounded-[24px] p-6 lg:p-8 flex flex-col hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-300 relative group cursor-pointer overflow-hidden">
 
                
                <div className="flex-1 flex flex-col items-center text-center relative z-10">
@@ -306,7 +306,7 @@ export default function JournalView({ posts }: JournalViewProps) {
             <p className="text-[13px] lg:text-[15px] text-[#4a5d53] mb-5 lg:mb-6 leading-relaxed max-w-[300px] lg:max-w-[350px]">
               Our carefully crafted herbal blends are designed to support your holistic wellness journey.
             </p>
-            <Link href="/blog" className="inline-flex items-center justify-center gap-2 bg-[#0F3D2E] text-white px-6 lg:px-7 py-2.5 lg:py-3 rounded-md hover:bg-[#1a5441] transition-colors font-semibold text-[12px] lg:text-[13px]">
+            <Link href="/blog" className="inline-flex items-center justify-center gap-2 bg-[#0F3D2E] text-white px-6 lg:px-7 py-2.5 lg:py-3 rounded-md hover:bg-[#0F3D2E] transition-colors font-semibold text-[12px] lg:text-[13px]">
               Explore All Benefits <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -323,13 +323,13 @@ export default function JournalView({ posts }: JournalViewProps) {
                  {/* The Arc and Nodes Container */}
                  <div className="absolute inset-0 z-20">
                 {/* The dashed border arc */}
-                <div className="absolute inset-0 border-t-[1.5px] border-l-[1.5px] border-r-[1.5px] border-dashed border-[#c19236] opacity-50 rounded-t-full pointer-events-none"></div>
+                <div className="absolute inset-0 border-t-[1.5px] border-l-[1.5px] border-r-[1.5px] border-dashed border-[#D4AF37] opacity-50 rounded-t-full pointer-events-none"></div>
 
                 {/* The 4 Golden Dots perfectly positioned on the dashed arc line */}
-                <div className="absolute top-[70%] left-[2.35%] -translate-x-1/2 -translate-y-1/2 w-[5px] h-[5px] lg:w-[6px] lg:h-[6px] rounded-full bg-[#c19236]"></div>
-                <div className="absolute top-[11.3%] left-[26.95%] -translate-x-1/2 -translate-y-1/2 w-[5px] h-[5px] lg:w-[6px] lg:h-[6px] rounded-full bg-[#c19236]"></div>
-                <div className="absolute top-[11.3%] left-[73.05%] -translate-x-1/2 -translate-y-1/2 w-[5px] h-[5px] lg:w-[6px] lg:h-[6px] rounded-full bg-[#c19236]"></div>
-                <div className="absolute top-[70%] left-[97.65%] -translate-x-1/2 -translate-y-1/2 w-[5px] h-[5px] lg:w-[6px] lg:h-[6px] rounded-full bg-[#c19236]"></div>
+                <div className="absolute top-[70%] left-[2.35%] -translate-x-1/2 -translate-y-1/2 w-[5px] h-[5px] lg:w-[6px] lg:h-[6px] rounded-full bg-[#D4AF37]"></div>
+                <div className="absolute top-[11.3%] left-[26.95%] -translate-x-1/2 -translate-y-1/2 w-[5px] h-[5px] lg:w-[6px] lg:h-[6px] rounded-full bg-[#D4AF37]"></div>
+                <div className="absolute top-[11.3%] left-[73.05%] -translate-x-1/2 -translate-y-1/2 w-[5px] h-[5px] lg:w-[6px] lg:h-[6px] rounded-full bg-[#D4AF37]"></div>
+                <div className="absolute top-[70%] left-[97.65%] -translate-x-1/2 -translate-y-1/2 w-[5px] h-[5px] lg:w-[6px] lg:h-[6px] rounded-full bg-[#D4AF37]"></div>
 
                 {/* Nodes with their icons perfectly centered on the arc line */}
                 
@@ -340,7 +340,7 @@ export default function JournalView({ posts }: JournalViewProps) {
                        <span className="text-[12px] lg:text-[13px] font-bold text-[#0F3D2E] whitespace-nowrap">Better Sleep</span>
                        <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight mt-1">Calms the mind and promotes deep rest</span>
                      </div>
-                     <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] relative z-10">
+                     <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#F8F5EE] relative z-10">
                        <Moon className="w-4 h-4 sm:w-6 sm:h-6" />
                      </div>
                   </div>
@@ -353,7 +353,7 @@ export default function JournalView({ posts }: JournalViewProps) {
                        <span className="text-[12px] lg:text-[13px] font-bold text-[#0F3D2E] whitespace-nowrap">Stress Relief</span>
                        <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight mt-1">Helps reduce anxiety and uplift mood</span>
                     </div>
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 translate-x-1/2 relative z-10">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#F8F5EE] shrink-0 translate-x-1/2 relative z-10">
                        <Leaf className="w-4 h-4 sm:w-6 sm:h-6" />
                      </div>
                   </div>
@@ -366,7 +366,7 @@ export default function JournalView({ posts }: JournalViewProps) {
                        <span className="text-[12px] lg:text-[13px] font-bold text-[#0F3D2E] whitespace-nowrap">Immunity Boost</span>
                        <span className="text-[11px] text-[#6b7b72] hidden md:block w-32 leading-tight mt-1">Rich in antioxidants and natural nutrients</span>
                     </div>
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 translate-x-1/2 relative z-10">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#F8F5EE] shrink-0 translate-x-1/2 relative z-10">
                        <Shield className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
                   </div>
@@ -375,7 +375,7 @@ export default function JournalView({ posts }: JournalViewProps) {
                 {/* 4. Digestion Support (35 deg - right mid) */}
                 <div className="absolute w-0 h-0" style={{ left: '91%', top: '42.7%' }}>
                   <div className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 -translate-x-1/2 relative z-10">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#F8F5EE] shrink-0 -translate-x-1/2 relative z-10">
                        <Zap className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
                     <div className="flex flex-col text-center sm:text-left absolute top-full sm:static sm:top-auto left-1/2 -translate-x-1/2 sm:translate-x-0 mt-2 sm:mt-0 sm:ml-2">
@@ -388,7 +388,7 @@ export default function JournalView({ posts }: JournalViewProps) {
                 {/* 5. Women's Wellness (0 deg - bottom right) */}
                 <div className="absolute w-0 h-0" style={{ left: '100%', top: '100%' }}>
                   <div className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#ece8dc] shrink-0 -translate-x-1/2 relative z-10">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#5e8b42] shadow-sm border border-[#F8F5EE] shrink-0 -translate-x-1/2 relative z-10">
                        <User className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
                     <div className="flex flex-col text-center sm:text-left absolute top-full sm:static sm:top-auto left-1/2 -translate-x-1/2 sm:translate-x-0 mt-2 sm:mt-0 sm:ml-2">
@@ -409,13 +409,13 @@ export default function JournalView({ posts }: JournalViewProps) {
 
 
       {/* 5. Benefits Explained */}
-      <section className="w-full bg-[#fcfbf9] border-t border-[#ece8dc]">
+      <section className="w-full bg-[#F8F5EE] border-t border-[#F8F5EE]">
         <div className="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative">
         <div className="flex flex-col md:flex-row items-center justify-between mb-6 lg:mb-8">
           <div className="text-center md:text-left mb-4 md:mb-0">
             <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
               <h2 className="text-[28px] lg:text-[32px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>Benefits Explained</h2>
-              <Leaf className="w-5 h-5 text-[#c19236]" fill="currentColor" />
+              <Leaf className="w-5 h-5 text-[#D4AF37]" fill="currentColor" />
             </div>
             <p className="text-[15px] text-[#6b7b72]">Dive deeper into the benefits and ingredients that make our blends so effective.</p>
           </div>
@@ -430,13 +430,13 @@ export default function JournalView({ posts }: JournalViewProps) {
           {/* Left Arrow */}
           <button 
             onClick={handlePrevBenefit}
-            className="absolute top-[150px] md:top-[225px] lg:top-1/2 -translate-y-1/2 left-[-15px] md:left-[-24px] z-20 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_2px_15px_rgba(0,0,0,0.08)] border border-[#ece8dc] text-[#c19236] hover:bg-[#fcfbf9] transition-colors"
+            className="absolute top-[150px] md:top-[225px] lg:top-1/2 -translate-y-1/2 left-[-15px] md:left-[-24px] z-20 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_2px_15px_rgba(0,0,0,0.08)] border border-[#F8F5EE] text-[#D4AF37] hover:bg-[#F8F5EE] transition-colors"
           >
             <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
           </button>
 
           {/* Main Card */}
-          <div className="w-full bg-white rounded-[24px] overflow-hidden border border-[#ece8dc] shadow-[0_4px_24px_rgba(0,0,0,0.04)] grid">
+          <div className="w-full bg-white rounded-[24px] overflow-hidden border border-[#F8F5EE] shadow-[0_4px_24px_rgba(0,0,0,0.04)] grid">
             
             <AnimatePresence>
               <motion.div 
@@ -454,7 +454,7 @@ export default function JournalView({ posts }: JournalViewProps) {
 
                 {/* Right Content */}
                 <div className="w-full lg:w-[55%] xl:w-[50%] p-6 md:p-8 flex flex-col justify-center bg-white">
-                  <span className="text-[#c19236] font-bold text-[12px] tracking-[0.2em] uppercase mb-2">
+                  <span className="text-[#D4AF37] font-bold text-[12px] tracking-[0.2em] uppercase mb-2">
                     {currentBenefit.tag}
                   </span>
                   <h3 className="text-[28px] md:text-[34px] font-bold text-[#0F3D2E] leading-[1.2] mb-2 whitespace-pre-line" style={{ fontFamily: 'Playfair Display, serif' }}>
@@ -472,7 +472,7 @@ export default function JournalView({ posts }: JournalViewProps) {
                       <ul className="space-y-4">
                         {currentBenefit.keyBenefits.map((benefit, idx) => (
                           <li key={idx} className="flex items-center gap-3">
-                            <CheckCircle2 className="w-[18px] h-[18px] text-[#c19236] shrink-0" />
+                            <CheckCircle2 className="w-[18px] h-[18px] text-[#D4AF37] shrink-0" />
                             <span className="text-[14px] text-[#4a5d53]">{benefit}</span>
                           </li>
                         ))}
@@ -487,7 +487,7 @@ export default function JournalView({ posts }: JournalViewProps) {
                           const IconComp = ingredient.Icon;
                           return (
                             <div key={idx} className="flex items-center gap-3 group cursor-pointer">
-                              <div className="w-8 h-8 rounded-full bg-[#fcfbf9] border border-[#ece8dc] flex items-center justify-center shrink-0 group-hover:border-[#c19236] transition-colors">
+                              <div className="w-8 h-8 rounded-full bg-[#F8F5EE] border border-[#F8F5EE] flex items-center justify-center shrink-0 group-hover:border-[#D4AF37] transition-colors">
                                 <IconComp className={`w-4 h-4 ${ingredient.color || 'text-[#5e8b42]'}`} />
                               </div>
                               <span className="text-[14px] font-bold text-[#0F3D2E]">{ingredient.name}</span>
@@ -507,7 +507,7 @@ export default function JournalView({ posts }: JournalViewProps) {
           {/* Right Arrow */}
           <button 
             onClick={handleNextBenefit}
-            className="absolute top-[150px] md:top-[225px] lg:top-1/2 -translate-y-1/2 right-[-15px] md:right-[-24px] z-20 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_2px_15px_rgba(0,0,0,0.08)] border border-[#ece8dc] text-[#c19236] hover:bg-[#fcfbf9] transition-colors"
+            className="absolute top-[150px] md:top-[225px] lg:top-1/2 -translate-y-1/2 right-[-15px] md:right-[-24px] z-20 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_2px_15px_rgba(0,0,0,0.08)] border border-[#F8F5EE] text-[#D4AF37] hover:bg-[#F8F5EE] transition-colors"
           >
             <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
           </button>

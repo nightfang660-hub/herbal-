@@ -31,7 +31,7 @@ export default function NotFound() {
         style={{
           fontSize: '1.75rem',
           fontWeight: 700,
-          color: '#1c2e24',
+          color: '#0F3D2E',
           fontFamily: 'Playfair Display, serif',
           marginBottom: '0.75rem',
         }}
@@ -44,8 +44,8 @@ export default function NotFound() {
       <Link
         href="/"
         style={{
-          background: '#e2b755',
-          color: '#1c2e24',
+          background: '#D4AF37',
+          color: '#0F3D2E',
           padding: '0.75rem 2rem',
           borderRadius: '0.75rem',
           fontWeight: 700,

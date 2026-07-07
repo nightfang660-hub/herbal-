@@ -64,13 +64,13 @@ export default function CartPage() {
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-[#fcfbf9] py-8 font-sans" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+    <div className="min-h-screen bg-[#F8F5EE] py-8 font-sans" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() => router.back()}
-            className="w-10 h-10 rounded-full border border-[#d1c8ba] flex items-center justify-center text-[#1c2e24] hover:bg-[#e8e5de] transition-colors"
+            className="w-10 h-10 rounded-full border border-[#d1c8ba] flex items-center justify-center text-[#0F3D2E] hover:bg-[#e8e5de] transition-colors"
             aria-label="Go back"
           >
             <ArrowLeft className="w-5 h-5" strokeWidth={1.5} />
@@ -93,7 +93,7 @@ export default function CartPage() {
             <p className="text-[#666] mb-6">Looks like you haven't added anything to your cart yet.</p>
             <button 
               onClick={() => router.push('/shop')}
-              className="bg-[#1c2e24] text-white px-8 py-3 rounded-md font-semibold hover:bg-[#2a4536] transition-colors"
+              className="bg-[#0F3D2E] text-white px-8 py-3 rounded-md font-semibold hover:bg-[#2a4536] transition-colors"
             >
               Start Shopping
             </button>
@@ -110,10 +110,10 @@ export default function CartPage() {
                 onClick={() => router.push('/wishlist')}
               >
                 <div className="flex items-center gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#1c2e24]">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#0F3D2E]">
                     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                   </svg>
-                  <span className="text-[14px] font-bold text-[#1c2e24]">Add More From Wishlist</span>
+                  <span className="text-[14px] font-bold text-[#0F3D2E]">Add More From Wishlist</span>
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#333]">
                   <polyline points="9 18 15 12 9 6"></polyline>
@@ -163,7 +163,7 @@ export default function CartPage() {
                           <div className="flex items-center gap-4 mt-3 pt-3 border-t border-[#f0f0f0] text-[13px] font-bold text-[#555]">
                             <button 
                               onClick={() => removeItem(item.sku)}
-                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#fff0f2] text-[#d84b5b] hover:bg-[#ffe4e8] hover:text-[#c43848] transition-colors border border-[#ffd1d7]"
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#fff0f2] text-[#D84B5B] hover:bg-[#ffe4e8] hover:text-[#c43848] transition-colors border border-[#ffd1d7]"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                               <span className="tracking-wide">REMOVE</span>
@@ -279,7 +279,7 @@ export default function CartPage() {
                           router.push('/login?redirect=/checkout');
                         }
                       }}
-                      className="w-full bg-[#1c2e24] text-white font-bold text-[16px] py-3 rounded hover:bg-[#2a4536] transition-colors"
+                      className="w-full bg-[#0F3D2E] text-white font-bold text-[16px] py-3 rounded hover:bg-[#2a4536] transition-colors"
                     >
                       Continue
                     </button>

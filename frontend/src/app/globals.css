@@ -2,12 +2,12 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #1c2e24;
-  --primary: #2c4a35;
+  --foreground: #0F3D2E;
+  --primary: #0F3D2E;
   --primary-foreground: #fbfaf7;
   --secondary: #e8e2d7;
-  --secondary-foreground: #2c4a35;
-  --accent: #c49d56;
+  --secondary-foreground: #0F3D2E;
+  --accent: #D4AF37;
   --accent-foreground: #fbfaf7;
   --muted: #8ca394;
   --border: #e2dbcd;

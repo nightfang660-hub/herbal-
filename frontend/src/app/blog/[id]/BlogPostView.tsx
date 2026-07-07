@@ -85,7 +85,7 @@ export default function BlogPostPage() {
             />
             {/* Floating Card */}
             <div className="absolute -bottom-10 left-4 sm:left-6 md:left-8 bg-white rounded-xl p-5 md:p-6 shadow-[0_8px_30px_rgba(0,0,0,0.2)] max-w-[260px] sm:max-w-[280px] md:max-w-[320px] border border-[#e8e5de]">
-               <span className="text-[#dcae3d] text-[10px] font-bold uppercase tracking-widest block mb-2" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+               <span className="text-[#D4AF37] text-[10px] font-bold uppercase tracking-widest block mb-2" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                  WELLNESS
                </span>
                <h3 className="text-[18px] font-bold text-[#0F3D2E] mb-2 leading-snug" style={{ fontFamily: 'Playfair Display, serif' }}>
@@ -109,14 +109,14 @@ export default function BlogPostPage() {
             <div className="lg:w-[70%] text-[#4a554e] font-sans">
                <div id="introduction" className="mb-12 scroll-mt-24">
                  <p className="text-[15px] leading-relaxed mb-6 text-[#0F3D2E]">
-                   <span className="float-left text-[64px] leading-[0.8] pr-2 pt-2 text-[#2c4a35] font-serif">I</span>
+                   <span className="float-left text-[64px] leading-[0.8] pr-2 pt-2 text-[#0F3D2E] font-serif">I</span>
                    n today's fast-paced world, more people are turning to nature for balance, clarity, and healing. Herbal teas—rooted in ancient traditions and backed by modern research—offer a simple yet powerful way to support your body and mind.
                  </p>
                  <p className="text-[15px] leading-relaxed text-[#4a554e] mb-6">
                    From calming stress to boosting immunity, each cup is a step toward a healthier, more mindful you.
                  </p>
                  {article.id === 4 && (
-                   <p className="text-[15px] leading-relaxed text-[#0F3D2E] font-medium bg-[#f8f6f0] p-5 rounded-xl border-l-[3px] border-[#dcae3d]">
+                   <p className="text-[15px] leading-relaxed text-[#0F3D2E] font-medium bg-[#f8f6f0] p-5 rounded-xl border-l-[3px] border-[#D4AF37]">
                      <strong>Moringa Focus:</strong> Often referred to as the "Miracle Tree," Moringa is packed with essential vitamins, minerals, and amino acids. Regular consumption deeply nourishes your body at a cellular level, naturally boosting your daily energy and supporting healthy immunity.
                    </p>
                  )}
@@ -137,10 +137,10 @@ export default function BlogPostPage() {
                   <h2 className="text-[24px] md:text-[26px] font-bold font-serif mb-4 text-[#0F3D2E]">What Research Says</h2>
                   <p className="text-[15px] leading-relaxed mb-6">Numerous studies have highlighted the positive effects of herbal ingredients:</p>
                   <ul className="list-disc pl-5 space-y-3 text-[15px] text-[#4a554e]">
-                    <li><strong className="text-[#dcae3d]">Hibiscus</strong> may help support healthy blood pressure and heart function.</li>
-                    <li><strong className="text-[#dcae3d]">Ashwagandha</strong> is known to help the body adapt to stress and promote mental clarity.</li>
-                    <li><strong className="text-[#dcae3d]">Chamomile</strong> supports relaxation and better sleep quality.</li>
-                    <li><strong className="text-[#dcae3d]">Rosehip</strong> is rich in Vitamin C and antioxidants that support immunity.</li>
+                    <li><strong className="text-[#D4AF37]">Hibiscus</strong> may help support healthy blood pressure and heart function.</li>
+                    <li><strong className="text-[#D4AF37]">Ashwagandha</strong> is known to help the body adapt to stress and promote mental clarity.</li>
+                    <li><strong className="text-[#D4AF37]">Chamomile</strong> supports relaxation and better sleep quality.</li>
+                    <li><strong className="text-[#D4AF37]">Rosehip</strong> is rich in Vitamin C and antioxidants that support immunity.</li>
                   </ul>
                </section>
 
@@ -157,25 +157,25 @@ export default function BlogPostPage() {
                <section id="daily-wellness-tips" className="mb-12 scroll-mt-24">
                   <h2 className="text-[24px] md:text-[26px] font-bold font-serif mb-8 text-[#0F3D2E]">Daily Wellness Tips</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-8">
-                     <div className="pl-5 border-l-[3px] border-[#dcae3d]">
+                     <div className="pl-5 border-l-[3px] border-[#D4AF37]">
                         <h4 className="font-bold text-[16px] text-[#0F3D2E] mb-2 flex items-center gap-2">
                            <Coffee className="w-4 h-4 text-[#6e8b3d]" /> Hydrate Mindfully
                         </h4>
                         <p className="text-[14px] text-[#6b7b72] leading-relaxed">Sip warm herbal tea throughout the day to keep your body balanced and refreshed naturally.</p>
                      </div>
-                     <div className="pl-5 border-l-[3px] border-[#dcae3d]">
+                     <div className="pl-5 border-l-[3px] border-[#D4AF37]">
                         <h4 className="font-bold text-[16px] text-[#0F3D2E] mb-2 flex items-center gap-2">
                            <Leaf className="w-4 h-4 text-[#6e8b3d]" /> Choose Natural
                         </h4>
                         <p className="text-[14px] text-[#6b7b72] leading-relaxed">Pick blends with real herbs and absolutely no artificial flavors to maximize health benefits.</p>
                      </div>
-                     <div className="pl-5 border-l-[3px] border-[#dcae3d]">
+                     <div className="pl-5 border-l-[3px] border-[#D4AF37]">
                         <h4 className="font-bold text-[16px] text-[#0F3D2E] mb-2 flex items-center gap-2">
                            <Heart className="w-4 h-4 text-[#6e8b3d]" /> Listen To Your Body
                         </h4>
                         <p className="text-[14px] text-[#6b7b72] leading-relaxed">Choose what your body truly needs each day and adjust your herbal blends accordingly.</p>
                      </div>
-                     <div className="pl-5 border-l-[3px] border-[#dcae3d]">
+                     <div className="pl-5 border-l-[3px] border-[#D4AF37]">
                         <h4 className="font-bold text-[16px] text-[#0F3D2E] mb-2 flex items-center gap-2">
                            <Shield className="w-4 h-4 text-[#6e8b3d]" /> Make It A Ritual
                         </h4>
@@ -281,7 +281,7 @@ export default function BlogPostPage() {
                 </div>
               </div>
 
-              <Link href="/shop" className="bg-[#2c4a35] hover:bg-[#1c2e24] text-white px-8 py-3.5 rounded flex items-center gap-2 font-bold text-[14px] transition-colors shadow-sm">
+              <Link href="/shop" className="bg-[#0F3D2E] hover:bg-[#0F3D2E] text-white px-8 py-3.5 rounded flex items-center gap-2 font-bold text-[14px] transition-colors shadow-sm">
                 Shop Ruby Calm Tea
                 <ArrowRight className="w-4 h-4" />
               </Link>
@@ -301,7 +301,7 @@ export default function BlogPostPage() {
             </div>
             
             <div className="md:absolute md:right-0 md:bottom-1 mt-6 md:mt-0 flex justify-center md:justify-end">
-              <Link href="/blog#browse-by-topic" className="text-[15px] font-bold text-[#2c4a35] flex items-center gap-2 hover:text-[#5e8b42] transition-colors">
+              <Link href="/blog#browse-by-topic" className="text-[15px] font-bold text-[#0F3D2E] flex items-center gap-2 hover:text-[#5e8b42] transition-colors">
                 View All <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -312,7 +312,7 @@ export default function BlogPostPage() {
               <motion.article 
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: false }}
                 transition={{ duration: 0.6 }}
                 key={relArticle.id}
                 className="group flex flex-col bg-white rounded-[12px] overflow-hidden shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_24px_-8px_rgba(44,74,53,0.1)] border border-[#f0eee9] transition-all duration-300 h-full"
@@ -331,13 +331,13 @@ export default function BlogPostPage() {
                   
                   {/* Tag Overlay */}
                   <div className="absolute -top-[14px] left-5 bg-white px-3 py-[4px] shadow-[0_2px_8px_rgba(0,0,0,0.08)] z-10 rounded-[2px]">
-                    <span className="text-[10px] font-bold text-[#dcae3d] uppercase tracking-wider" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                    <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-wider" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                       {relArticle.tag}
                     </span>
                   </div>
 
                   <h3 
-                    className="text-[17px] md:text-[19px] font-bold text-[#0F3D2E] leading-[1.3] mt-2 mb-2 group-hover:text-[#2c4a35] transition-colors line-clamp-2 min-h-[48px]"
+                    className="text-[17px] md:text-[19px] font-bold text-[#0F3D2E] leading-[1.3] mt-2 mb-2 group-hover:text-[#0F3D2E] transition-colors line-clamp-2 min-h-[48px]"
                     style={{ fontFamily: 'Playfair Display, serif' }}
                   >
                     {relArticle.title}
@@ -359,7 +359,7 @@ export default function BlogPostPage() {
                   </div>
 
                   {/* Read Article Link */}
-                  <Link href={`/blog/${relArticle.id}`} className="mt-auto pt-4 border-t border-[#f0eee9] text-[13px] font-bold text-[#2c4a35] flex items-center gap-1.5 hover:text-[#5e8b42] transition-colors">
+                  <Link href={`/blog/${relArticle.id}`} className="mt-auto pt-4 border-t border-[#f0eee9] text-[13px] font-bold text-[#0F3D2E] flex items-center gap-1.5 hover:text-[#5e8b42] transition-colors">
                     Read Article <ArrowRight className="w-4 h-4" />
                   </Link>
 
@@ -394,7 +394,7 @@ export default function BlogPostPage() {
                     className="flex-grow px-4 py-3 md:py-3.5 text-[#0F3D2E] bg-white outline-none text-[14px] font-medium placeholder-[#8a958f]"
                     style={{ fontFamily: 'Nunito Sans, sans-serif' }}
                   />
-                  <button type="submit" className="bg-[#dcae3d] hover:bg-[#c99f36] text-white px-6 md:px-8 py-3 md:py-3.5 font-bold text-[14px] transition-colors whitespace-nowrap" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                  <button type="submit" className="bg-[#D4AF37] hover:bg-[#c99f36] text-white px-6 md:px-8 py-3 md:py-3.5 font-bold text-[14px] transition-colors whitespace-nowrap" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                     Subscribe
                   </button>
                 </div>

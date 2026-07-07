@@ -28,20 +28,20 @@ export default function WishlistPage() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return <div className="min-h-screen bg-[#fcfbf9]"></div>;
+  if (!mounted) return <div className="min-h-screen bg-[#F8F5EE]"></div>;
 
   const wishlistProducts = items
     .map(item => PRODUCTS.find(p => p.id === item.productId))
     .filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-[#fcfbf9] py-8">
+    <div className="min-h-screen bg-[#F8F5EE] py-8">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Back Button */}
         <button
           onClick={() => router.back()}
-          className="w-10 h-10 rounded-full border border-[#d1c8ba] flex items-center justify-center text-[#1c2e24] hover:bg-[#e8e5de] transition-colors mb-6"
+          className="w-10 h-10 rounded-full border border-[#d1c8ba] flex items-center justify-center text-[#0F3D2E] hover:bg-[#e8e5de] transition-colors mb-6"
           aria-label="Go back"
         >
           <ArrowLeft className="w-5 h-5 stroke-[1.5]" />
@@ -49,7 +49,7 @@ export default function WishlistPage() {
 
         <div className="flex justify-between items-end mb-8">
           <div>
-            <h1 className="text-[28px] md:text-[36px] font-bold text-[#1c2e24]" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <h1 className="text-[28px] md:text-[36px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>
               My Wishlist
             </h1>
             <p className="text-[#6b7b72] mt-2">
@@ -60,7 +60,7 @@ export default function WishlistPage() {
           {wishlistProducts.length > 0 && (
             <button 
               onClick={() => clearWishlist()}
-              className="text-[#e2b755] hover:text-[#d4a844] font-medium text-sm flex items-center gap-2"
+              className="text-[#D4AF37] hover:text-[#d4a844] font-medium text-sm flex items-center gap-2"
             >
               <Trash2 className="w-4 h-4" /> Clear All
             </button>
@@ -72,11 +72,11 @@ export default function WishlistPage() {
             <div className="w-16 h-16 bg-[#f9f8f6] rounded-full flex items-center justify-center mx-auto mb-4">
               <Heart className="w-8 h-8 text-[#d1c8ba]" />
             </div>
-            <h2 className="text-xl font-bold text-[#1c2e24] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Your wishlist is empty</h2>
+            <h2 className="text-xl font-bold text-[#0F3D2E] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Your wishlist is empty</h2>
             <p className="text-[#6b7b72] mb-6 max-w-md mx-auto">Looks like you haven't added any products to your wishlist yet. Explore our shop to find your perfect blend.</p>
             <button
               onClick={() => router.push('/shop')}
-              className="bg-[#1c2e24] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#2a4536] transition-colors"
+              className="bg-[#0F3D2E] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#2a4536] transition-colors"
             >
               Explore Shop
             </button>
@@ -117,11 +117,11 @@ export default function WishlistPage() {
                   {/* Rating (5 Stars) */}
                   <div className="flex items-center gap-1 mb-2">
                     {[...Array(5)].map((_, i) => (
-                       <Star key={i} className={`w-3.5 h-3.5 ${i < Math.floor(product.rating) ? 'fill-[#ffc107] text-[#ffc107]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
+                       <Star key={i} className={`w-3.5 h-3.5 ${i < Math.floor(product.rating) ? 'fill-[#D4AF37] text-[#D4AF37]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
                     ))}
                   </div>
 
-                  <h4 className="font-bold text-[#1c2e24] group-hover:text-[#4caf50] text-[18px] leading-tight mb-2 transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                  <h4 className="font-bold text-[#0F3D2E] group-hover:text-[#4caf50] text-[18px] leading-tight mb-2 transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                     {product.name}
                   </h4>
                   
@@ -131,7 +131,7 @@ export default function WishlistPage() {
                   
                   <div className="flex items-center justify-between mt-auto gap-3">
                     <div className="flex flex-col shrink-0">
-                      <span className="font-bold text-[#1c2e24] text-[20px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                      <span className="font-bold text-[#0F3D2E] text-[20px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                         ₹{product.price}
                       </span>
                     </div>
@@ -141,7 +141,7 @@ export default function WishlistPage() {
                           e.stopPropagation(); 
                           router.push(`/shop/${product.id}`);
                         }}
-                        className="flex items-center justify-center w-10 h-10 rounded-full bg-[#0F3D2E] text-white hover:bg-[#1a5441] transition-colors shadow-sm shrink-0 relative z-10"
+                        className="flex items-center justify-center w-10 h-10 rounded-full bg-[#0F3D2E] text-white hover:bg-[#0F3D2E] transition-colors shadow-sm shrink-0 relative z-10"
                       >
                         <ShoppingCart className="w-5 h-5" />
                       </button>

@@ -324,11 +324,11 @@ export default function CheckoutPage() {
               type="text"
               value={fullName}
               onChange={handleInputChange(setFullName, 'fullName')}
-              className={`w-full rounded-sm border ${firstErrorField === 'fullName' ? 'border-[#ff3f6c]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
+              className={`w-full rounded-sm border ${firstErrorField === 'fullName' ? 'border-[#D84B5B]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
               placeholder="Name*"
             />
             {firstErrorField === 'fullName' && (
-              <p className="text-[#ff3f6c] text-[11px] mt-1">This is a mandatory field</p>
+              <p className="text-[#D84B5B] text-[11px] mt-1">This is a mandatory field</p>
             )}
           </div>
           <div>
@@ -336,11 +336,11 @@ export default function CheckoutPage() {
               type="tel"
               value={mobileNo}
               onChange={handleInputChange(setMobileNo, 'mobileNo')}
-              className={`w-full rounded-sm border ${firstErrorField === 'mobileNo' ? 'border-[#ff3f6c]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
+              className={`w-full rounded-sm border ${firstErrorField === 'mobileNo' ? 'border-[#D84B5B]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
               placeholder="Mobile No*"
             />
             {firstErrorField === 'mobileNo' && (
-              <p className="text-[#ff3f6c] text-[11px] mt-1">This is a mandatory field</p>
+              <p className="text-[#D84B5B] text-[11px] mt-1">This is a mandatory field</p>
             )}
           </div>
         </div>
@@ -354,11 +354,11 @@ export default function CheckoutPage() {
               type="text"
               value={postalCode}
               onChange={handleInputChange(setPostalCode, 'postalCode')}
-              className={`w-full rounded-sm border ${firstErrorField === 'postalCode' ? 'border-[#ff3f6c]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
+              className={`w-full rounded-sm border ${firstErrorField === 'postalCode' ? 'border-[#D84B5B]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
               placeholder="Pin Code*"
             />
             {firstErrorField === 'postalCode' && (
-              <p className="text-[#ff3f6c] text-[11px] mt-1">This is a mandatory field</p>
+              <p className="text-[#D84B5B] text-[11px] mt-1">This is a mandatory field</p>
             )}
           </div>
           <div>
@@ -366,11 +366,11 @@ export default function CheckoutPage() {
               type="text"
               value={houseNumber}
               onChange={handleInputChange(setHouseNumber, 'houseNumber')}
-              className={`w-full rounded-sm border ${firstErrorField === 'houseNumber' ? 'border-[#ff3f6c]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
+              className={`w-full rounded-sm border ${firstErrorField === 'houseNumber' ? 'border-[#D84B5B]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
               placeholder="House Number/Tower/Block*"
             />
             {firstErrorField === 'houseNumber' ? (
-              <p className="text-[#ff3f6c] text-[11px] mt-1">This is a mandatory field</p>
+              <p className="text-[#D84B5B] text-[11px] mt-1">This is a mandatory field</p>
             ) : (
               <p className="text-[#eab308] text-[11px] mt-1">*House Number will allow a doorstep delivery</p>
             )}
@@ -380,11 +380,11 @@ export default function CheckoutPage() {
               type="text"
               value={address}
               onChange={handleInputChange(setAddress, 'address')}
-              className={`w-full rounded-sm border ${firstErrorField === 'address' ? 'border-[#ff3f6c]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
+              className={`w-full rounded-sm border ${firstErrorField === 'address' ? 'border-[#D84B5B]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
               placeholder="Address (locality,building,street)*"
             />
             {firstErrorField === 'address' ? (
-              <p className="text-[#ff3f6c] text-[11px] mt-1">This is a mandatory field</p>
+              <p className="text-[#D84B5B] text-[11px] mt-1">This is a mandatory field</p>
             ) : (
               <p className="text-[#eab308] text-[11px] mt-1">*Please update society/apartment details</p>
             )}
@@ -394,11 +394,11 @@ export default function CheckoutPage() {
               type="text"
               value={locality}
               onChange={handleInputChange(setLocality, 'locality')}
-              className={`w-full rounded-sm border ${firstErrorField === 'locality' ? 'border-[#ff3f6c]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
+              className={`w-full rounded-sm border ${firstErrorField === 'locality' ? 'border-[#D84B5B]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
               placeholder="Locality / Town*"
             />
             {firstErrorField === 'locality' && (
-              <p className="text-[#ff3f6c] text-[11px] mt-1">This is a mandatory field</p>
+              <p className="text-[#D84B5B] text-[11px] mt-1">This is a mandatory field</p>
             )}
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -407,11 +407,11 @@ export default function CheckoutPage() {
                 type="text"
                 value={city}
                 onChange={handleInputChange(setCity, 'city')}
-                className={`w-full rounded-sm border ${firstErrorField === 'city' ? 'border-[#ff3f6c]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
+                className={`w-full rounded-sm border ${firstErrorField === 'city' ? 'border-[#D84B5B]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
                 placeholder="City / District*"
               />
               {firstErrorField === 'city' && (
-                <p className="text-[#ff3f6c] text-[11px] mt-1">This is a mandatory field</p>
+                <p className="text-[#D84B5B] text-[11px] mt-1">This is a mandatory field</p>
               )}
             </div>
             <div>
@@ -419,11 +419,11 @@ export default function CheckoutPage() {
                 type="text"
                 value={stateName}
                 onChange={handleInputChange(setStateName, 'stateName')}
-                className={`w-full rounded-sm border ${firstErrorField === 'stateName' ? 'border-[#ff3f6c]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
+                className={`w-full rounded-sm border ${firstErrorField === 'stateName' ? 'border-[#D84B5B]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}
                 placeholder="State*"
               />
               {firstErrorField === 'stateName' && (
-                <p className="text-[#ff3f6c] text-[11px] mt-1">This is a mandatory field</p>
+                <p className="text-[#D84B5B] text-[11px] mt-1">This is a mandatory field</p>
               )}
             </div>
           </div>
@@ -457,7 +457,7 @@ export default function CheckoutPage() {
         
         {addressType === 'OFFICE' && (
           <div className="mt-6 space-y-4">
-            <p className="text-[14px] text-[#878787]">Is your office open on weekends?<span className="text-[#ff3f6c]">*</span></p>
+            <p className="text-[14px] text-[#878787]">Is your office open on weekends?<span className="text-[#D84B5B]">*</span></p>
             <div className="flex flex-col gap-3">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" className="w-5 h-5 rounded-sm border-[#d5d5d5] accent-[#0F3D2E]" />
@@ -487,13 +487,13 @@ export default function CheckoutPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#fcfbf9] font-sans relative" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+    <div className="min-h-screen bg-[#F8F5EE] font-sans relative" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
       
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between mb-8">
         <button
           onClick={() => checkoutStep === 'payment' ? setCheckoutStep('address-list') : router.back()}
-          className="w-10 h-10 rounded-full border border-[#d1c8ba] flex items-center justify-center text-[#1c2e24] hover:bg-[#e8e5de] transition-colors"
+          className="w-10 h-10 rounded-full border border-[#d1c8ba] flex items-center justify-center text-[#0F3D2E] hover:bg-[#e8e5de] transition-colors"
           aria-label="Go back"
         >
           <ArrowLeft className="w-5 h-5" strokeWidth={1.5} />
@@ -543,7 +543,7 @@ export default function CheckoutPage() {
                       )}
                       <button
                         type="submit"
-                        className="flex-1 rounded-sm bg-[#0F3D2E] py-3.5 text-[14px] font-bold text-white hover:bg-[#1a5240] transition-all uppercase tracking-widest"
+                        className="flex-1 rounded-sm bg-[#0F3D2E] py-3.5 text-[14px] font-bold text-white hover:bg-[#0F3D2E] transition-all uppercase tracking-widest"
                       >
                         Save Address
                       </button>
@@ -624,7 +624,7 @@ export default function CheckoutPage() {
               <button
                 type="submit"
                 disabled={isSubmitting || items.length === 0}
-                className="w-full rounded-sm bg-[#0F3D2E] py-3.5 text-[14px] font-bold uppercase tracking-widest text-white hover:bg-[#1a5240] transition-all shadow mt-6 disabled:bg-[#f0f0f0] disabled:text-[#878787] disabled:cursor-not-allowed cursor-pointer"
+                className="w-full rounded-sm bg-[#0F3D2E] py-3.5 text-[14px] font-bold uppercase tracking-widest text-white hover:bg-[#0F3D2E] transition-all shadow mt-6 disabled:bg-[#f0f0f0] disabled:text-[#878787] disabled:cursor-not-allowed cursor-pointer"
               >
                 {isSubmitting ? 'Processing Order...' : 'Place Order'}
               </button>
@@ -709,7 +709,7 @@ export default function CheckoutPage() {
             {checkoutStep === 'address-list' && savedAddresses.length > 0 && selectedAddressId && (
               <button
                 onClick={() => setCheckoutStep('payment')}
-                className="w-full rounded-sm bg-[#0F3D2E] py-3.5 text-[14px] font-bold tracking-widest text-white hover:bg-[#1a5240] transition-all uppercase"
+                className="w-full rounded-sm bg-[#0F3D2E] py-3.5 text-[14px] font-bold tracking-widest text-white hover:bg-[#0F3D2E] transition-all uppercase"
               >
                 Continue
               </button>

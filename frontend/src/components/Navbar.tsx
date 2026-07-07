@@ -73,8 +73,6 @@ export default function Navbar() {
   const NAV_LINKS = [
     { label: 'Home', href: '/' },
     { label: 'Shop', href: '/shop' },
-    { label: 'Journal', href: '/journal' },
-    { label: 'Ingredients', href: '/ingredients' },
     { label: 'About', href: '/about' },
     { label: 'Blog', href: '/blog' },
     { label: 'Contact', href: '/contact' },
@@ -91,16 +89,9 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ── Announcement Bar ── */}
-      <div
-        className="w-full bg-[#0F3D2E] text-white text-center py-[10px] px-4 text-[13px] font-medium tracking-wide"
-        style={{ fontFamily: 'Nunito Sans, sans-serif' }}
-      >
-        🚚&nbsp;&nbsp;Free Shipping On Orders Above ₹499
-      </div>
 
       {/* ── Sticky Navigation ── */}
-      <header className="sticky top-0 z-40 w-full bg-[#F8F5EE]/95 backdrop-blur-md border-b border-[#e8e4d9] shadow-sm">
+      <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-[#e8e4d9] shadow-sm">
         <div className="mx-auto flex h-[70px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 relative">
 
           {/* Animated Search Overlay */}
@@ -111,7 +102,7 @@ export default function Navbar() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="absolute inset-0 bg-[#F8F5EE] z-50 flex items-center justify-center px-4 sm:px-6 lg:px-8 shadow-sm"
+                className="absolute inset-0 bg-white z-50 flex items-center justify-center px-4 sm:px-6 lg:px-8 shadow-sm"
               >
                 <form onSubmit={handleSearchSubmit} className="w-full max-w-2xl flex items-center border-b-2 border-[#0F3D2E] pb-2">
                   <Search className="w-5 h-5 md:w-6 md:h-6 text-[#0F3D2E] mr-3" />
@@ -121,7 +112,7 @@ export default function Navbar() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search teas, ingredients, benefits..."
-                    className="flex-1 bg-transparent border-none outline-none text-[#0F3D2E] text-[18px] md:text-[22px] placeholder:text-[#2c4a35]/50"
+                    className="flex-1 bg-transparent border-none outline-none text-[#0F3D2E] text-[18px] md:text-[22px] placeholder:text-[#0F3D2E]/50"
                     style={{ fontFamily: 'Playfair Display, serif' }}
                   />
                   <button type="button" onClick={() => setIsSearchOpen(false)} className="p-2 text-[#0F3D2E] hover:bg-[#e8f2e1] rounded-full transition-colors cursor-pointer ml-3">
@@ -145,7 +136,7 @@ export default function Navbar() {
 
           {/* Center Nav Links */}
           <nav
-            className="hidden lg:flex items-center gap-6 text-[15px] font-semibold text-[#2c4a35]"
+            className="hidden lg:flex items-center gap-6 text-[15px] font-semibold text-[#0F3D2E]"
             style={{ fontFamily: 'Nunito Sans, sans-serif' }}
           >
             {NAV_LINKS.map(({ label, href }) => {
@@ -162,18 +153,18 @@ export default function Navbar() {
           {/* Right Icons */}
           <div className="flex items-center gap-1">
             {/* Search */}
-            <button id="search-toggle-btn" onClick={() => setIsSearchOpen(true)} className="p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors cursor-pointer" aria-label="Search">
+            <button id="search-toggle-btn" onClick={() => setIsSearchOpen(true)} className="p-2 rounded-full text-[#0F3D2E] hover:bg-[#e8f2e1] transition-colors cursor-pointer" aria-label="Search">
               <Search className="h-5 w-5" />
             </button>
 
             {/* Account */}
             {mounted && (
               user ? (
-                <Link href="/profile" className="hidden lg:flex p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors cursor-pointer" title="My Profile">
+                <Link href="/profile" className="hidden lg:flex p-2 rounded-full text-[#0F3D2E] hover:bg-[#e8f2e1] transition-colors cursor-pointer" title="My Profile">
                   <UserIcon className="h-5 w-5" />
                 </Link>
               ) : (
-                <Link href="/login" className="hidden lg:flex p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors" aria-label="Account">
+                <Link href="/login" className="hidden lg:flex p-2 rounded-full text-[#0F3D2E] hover:bg-[#e8f2e1] transition-colors" aria-label="Account">
                   <UserIcon className="h-5 w-5" />
                 </Link>
               )
@@ -182,7 +173,7 @@ export default function Navbar() {
             {/* Wishlist */}
             <button
               onClick={() => router.push('/wishlist')}
-              className="hidden lg:flex relative p-2 rounded-full text-[#2c4a35] hover:bg-[#e8f2e1] transition-colors cursor-pointer"
+              className="hidden lg:flex relative p-2 rounded-full text-[#0F3D2E] hover:bg-[#e8f2e1] transition-colors cursor-pointer"
               aria-label="Wishlist"
             >
               <Heart className="h-5 w-5" />
@@ -196,7 +187,7 @@ export default function Navbar() {
             {/* Cart */}
             <button
               onClick={() => router.push('/cart')}
-              className="hidden lg:flex relative items-center gap-1.5 bg-[#0F3D2E] hover:bg-[#1a5240] text-white px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer shadow-sm ml-1"
+              className="hidden lg:flex relative items-center gap-1.5 bg-[#0F3D2E] hover:bg-[#0F3D2E] text-white px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer shadow-sm ml-1"
               aria-label="Cart"
             >
               <ShoppingCart className="h-4 w-4" />
@@ -211,7 +202,7 @@ export default function Navbar() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden relative p-2 rounded-full text-[#2c4a35] hover:bg-[#e8e5de] transition-colors ml-1 cursor-pointer"
+              className="lg:hidden relative p-2 rounded-full text-[#0F3D2E] hover:bg-[#e8e5de] transition-colors ml-1 cursor-pointer"
             >
               <Menu className="h-6 w-6" />
               {mounted && totalItems > 0 && (
@@ -294,14 +285,14 @@ export default function Navbar() {
             <motion.div
               initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col bg-[#F8F5EE] shadow-2xl border-r border-[#e8e5de] lg:hidden"
+              className="fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col bg-white shadow-2xl border-r border-[#e8e5de] lg:hidden"
             >
               <div className="flex items-center justify-between border-b border-[#e8e5de] p-5">
                 <div className="flex items-center gap-2">
                   <img src="/home/herbal_logo.png" alt="Logo" className="h-7 w-7 object-contain" />
                   <span className="text-lg font-bold tracking-tight text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>R-HerbalTea</span>
                 </div>
-                <button onClick={() => setIsMobileMenuOpen(false)} className="rounded-full p-1.5 text-[#2c4a35] hover:bg-[#e8e5de] transition-colors cursor-pointer">
+                <button onClick={() => setIsMobileMenuOpen(false)} className="rounded-full p-1.5 text-[#0F3D2E] hover:bg-[#e8e5de] transition-colors cursor-pointer">
                   <X className="h-5 w-5" />
                 </button>
               </div>

@@ -2,19 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Leaf, Search, LayoutGrid, Coffee, Heart, Sprout, Utensils, Sun, Smile, ArrowRight, RefreshCw, Mail } from 'lucide-react';
+import { Leaf, ArrowRight, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const TOPICS = [
-  { name: 'All Articles', icon: LayoutGrid },
-  { name: 'Herbal Tea', icon: Coffee },
-  { name: 'Ayurveda', icon: Leaf },
-  { name: 'Wellness', icon: Heart },
-  { name: 'Ingredients', icon: Sprout },
-  { name: 'Recipes', icon: Utensils },
-  { name: 'Lifestyle', icon: Sun },
-  { name: 'Self Care', icon: Smile }
-];
 
 const POPULAR_TOPICS = [
   { name: 'Immunity Boost', count: '14' },
@@ -257,14 +246,9 @@ const ARTICLES = [
 ];
 
 export default function BlogPage() {
-  const [activeTopic, setActiveTopic] = useState('All Articles');
   const [currentFeaturedIdx, setCurrentFeaturedIdx] = useState(0);
   const [visibleCount, setVisibleCount] = useState(8);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  useEffect(() => {
-    setVisibleCount(8);
-  }, [activeTopic]);
+  const [activeTopic, setActiveTopic] = useState<string | null>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -275,205 +259,93 @@ export default function BlogPage() {
 
   const featured = FEATURED_ARTICLES[currentFeaturedIdx];
 
-  const filteredArticles = ARTICLES.filter(article => {
-    const matchTopic = activeTopic === 'All Articles' || article.tag.toLowerCase().includes(activeTopic.toLowerCase()) || activeTopic.toLowerCase().includes(article.tag.toLowerCase());
-    const matchSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) || article.desc.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchTopic && matchSearch;
-  });
+  const filteredArticles = activeTopic
+    ? ARTICLES.filter((article) => {
+        const query = activeTopic.toLowerCase();
+        const keywords = query.replace(/&/g, '').split(/\s+/).filter(w => w.length > 3);
+        const textToSearch = `${article.title} ${article.desc} ${article.tag}`.toLowerCase();
+        
+        if (textToSearch.includes(query)) return true;
+        return keywords.some(kw => textToSearch.includes(kw));
+      })
+    : ARTICLES;
 
   const visibleArticles = filteredArticles.slice(0, visibleCount);
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-[#fcfbf9] pb-10">
+    <div className="flex flex-col w-full min-h-screen bg-white pb-10">
       
-      {/* 1. Hero Section */}
-      <section className="relative w-full overflow-hidden bg-[#f5f0e6] border-b border-[#ece8dc] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
+      {/* Hero Section (Matching About/Contact) */}
+      <section className="relative w-full overflow-hidden bg-white min-h-[50vh] lg:min-h-[70vh] flex flex-col">
+        {/* Right Side Background Image (Desktop) */}
         <div 
           className="absolute inset-0 lg:left-auto lg:right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-[position:60%_center] lg:bg-[90%_center] z-0"
           style={{ backgroundImage: `url('/assets/Journalherosection.png')` }}
         >
            {/* Dark gradient on mobile so the white text at the bottom is highly legible */}
            <div className="lg:hidden absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" style={{ zIndex: 1 }}></div>
-           <div className="hidden lg:block absolute inset-y-0 left-0 w-[150px] bg-gradient-to-r from-[#f5f0e6] via-[#f5f0e6]/60 to-transparent"></div>
+           <div className="hidden lg:block absolute inset-y-0 -left-[2px] w-[200px] bg-gradient-to-r from-white via-white/70 to-white/0" style={{ zIndex: 1 }}></div>
         </div>
 
-        <div className="flex-1 max-w-[1400px] w-full flex flex-col justify-end pb-10 pt-20 lg:justify-center lg:py-20 mx-auto px-6 sm:px-8 xl:px-12 relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="w-full lg:w-[45%] xl:w-[48%] space-y-6"
-          >
-            <h4 className="hidden lg:flex text-[10px] font-bold tracking-[0.15em] text-[#b38529] uppercase items-center gap-2">
-              HERBAL JOURNAL <Leaf className="w-3 h-3" />
-            </h4>
-
-            <h1 className="text-[38px] md:text-[48px] lg:text-[56px] font-bold text-white lg:text-[#0F3D2E] leading-[1.1] drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Playfair Display, serif' }}>
-              Insights for a<br />
-              <span className="text-[#c19236]">Healthier You</span>
-            </h1>
-            
-            <p className="text-[15px] md:text-[16px] text-white/95 lg:text-[#4a5d53] leading-[1.6] max-w-[450px] drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-              Explore expert tips, herbal guides, wellness rituals, and Ayurvedic wisdom to support your natural wellness journey.
-            </p>
-
-
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 2. Search & Navigation (Unified Toolbar) */}
-      <section className="sticky lg:relative top-4 lg:top-0 z-40 w-full max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8 -mt-8 lg:-mt-10 mb-8 lg:mb-12">
-          
-          {/* Unified Container */}
-          <div className="bg-white/95 backdrop-blur-md rounded-[24px] lg:rounded-full border border-white/50 shadow-[0_8px_30px_rgba(0,0,0,0.08)] p-2.5 lg:p-2 flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-2">
-            
-            {/* Search Bar */}
-            <div className="relative w-full lg:w-[350px] flex items-center bg-white/60 lg:bg-transparent border border-[#ece8dc] lg:border-none rounded-xl lg:rounded-full px-4 py-3 lg:py-2.5 focus-within:border-[#c19236]/50 focus-within:ring-1 focus-within:ring-[#c19236]/20 transition-all shrink-0">
-              <Search className="h-[18px] w-[18px] text-[#8b9992] mr-3 shrink-0" />
-              <input 
-                type="text" 
-                placeholder="Search articles, topics..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-transparent text-[15px] text-[#0F3D2E] placeholder:text-[#8b9992] focus:outline-none w-full" 
-                style={{ fontFamily: 'Nunito Sans, sans-serif' }}
-              />
-            </div>
-
-            {/* Divider for Desktop */}
-            <div className="hidden lg:block w-[1px] h-8 bg-[#ece8dc] mx-2"></div>
-
-            {/* Navigation Pills (Desktop & Mobile) */}
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full pb-1 lg:pb-0 min-w-0">
-              {TOPICS.map((topic, idx) => {
-                const Icon = topic.icon;
-                const isActive = topic.name === activeTopic;
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveTopic(topic.name)}
-                    className={`flex items-center gap-2 px-4 py-2.5 lg:py-2.5 rounded-xl lg:rounded-full border lg:border-transparent transition-all duration-300 whitespace-nowrap shrink-0 ${
-                      isActive
-                        ? 'bg-[#0F3D2E] border-[#0F3D2E] text-white shadow-md'
-                        : 'bg-white/60 lg:bg-transparent border-[#e8e5de] text-[#4a5d53] hover:bg-white hover:border-[#ece8dc]'
-                    }`}
-                  >
-                    <Icon className={`w-[16px] h-[16px] ${isActive ? 'text-white' : 'text-[#8a958f]'}`} strokeWidth={2} />
-                    <span className="text-[14px] lg:text-[13px] font-bold" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{topic.name}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-          </div>
-      </section>
-
-      {/* 3. Featured Article & Popular Topics */}
-      {activeTopic === 'All Articles' && (
-        <section className="py-12 bg-[#fcfbf9] border-b border-[#ece8dc]">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8">
-          <div className="flex flex-col lg:flex-row gap-8">
-            
-            {/* Featured Article */}
-            {/* Featured Article */}
-            <div className="flex-1 bg-white rounded-[16px] border border-[#ece8dc] overflow-hidden shadow-sm hover:shadow-md transition-shadow relative">
+        <div className="flex-1 max-w-[1400px] w-full flex flex-col justify-end pb-10 pt-20 lg:justify-center lg:py-20 mx-auto px-4 sm:px-6 xl:px-8 relative z-10">
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="w-full lg:w-[45%] xl:w-[48%] space-y-8"
+            >
+              {/* Subtitle */}
+              <div className="hidden lg:flex items-center gap-4">
+                <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
+                <span className="text-[#D4AF37] font-bold text-[13px] tracking-widest uppercase">
+                  OUR JOURNAL
+                </span>
+                <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
+              </div>
+  
+              {/* Title */}
+              <h1 className="text-[26px] sm:text-[30px] md:text-[34px] lg:text-[38px] xl:text-[42px] 2xl:text-[46px] whitespace-nowrap font-bold text-white lg:text-[#0F3D2E] leading-[1.2] tracking-tight drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Herbal Wisdom & <span className="text-[#D4AF37]">Insights</span>
+              </h1>
               
-              {/* Ghost Element for Layout Height */}
-              <div className="flex flex-col md:flex-row opacity-0 pointer-events-none invisible">
-                <div className="w-full md:w-[45%] h-[240px] md:h-auto shrink-0"></div>
-                <div className="w-full md:w-[55%] p-5 lg:p-6 flex flex-col justify-center">
-                  <span className="text-[10px] font-bold uppercase mb-1.5" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{FEATURED_ARTICLES[0].tag}</span>
-                  <h3 className="text-[22px] lg:text-[24px] font-bold mb-2.5 leading-[1.2] whitespace-pre-line" style={{ fontFamily: 'Playfair Display, serif' }}>{FEATURED_ARTICLES[0].title}</h3>
-                  <p className="text-[13px] mb-4 leading-[1.6]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{FEATURED_ARTICLES[0].desc}</p>
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-8 h-8 rounded-full" />
-                    <div className="text-[11px] lg:text-[12px] flex items-center gap-2" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                      <span className="font-bold">{FEATURED_ARTICLES[0].author}</span> &bull; <span>{FEATURED_ARTICLES[0].date}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="inline-flex items-center gap-2 px-5 py-2 rounded-[8px] text-[12px] font-bold">Read Full Article</div>
-                  </div>
-                </div>
-              </div>
-
-              <AnimatePresence>
-                <motion.div 
-                  key={currentFeaturedIdx}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.6, ease: "easeInOut" }}
-                  className="absolute inset-0 flex flex-col md:flex-row group"
-                >
-                  <div className="w-full md:w-[45%] h-[240px] md:h-auto relative overflow-hidden bg-[#f5f0e6] shrink-0">
-                    <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-[6px] z-10 border border-[#ece8dc]/50 shadow-sm">
-                       <span className="text-[10px] font-bold text-[#0F3D2E] tracking-wider" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>FEATURED ARTICLE</span>
-                    </div>
-                    <img src={featured.img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                  </div>
-                  <div className="w-full md:w-[55%] p-5 lg:p-6 flex flex-col justify-center">
-                    <span className="text-[#c19236] text-[10px] font-bold tracking-[0.15em] uppercase mb-1.5" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{featured.tag}</span>
-                    <h3 className="text-[22px] lg:text-[24px] font-bold text-[#0F3D2E] mb-2.5 leading-[1.2] group-hover:text-[#2c4a35] transition-colors whitespace-pre-line" style={{ fontFamily: 'Playfair Display, serif' }}>{featured.title}</h3>
-                    <p className="text-[13px] text-[#4a5d53] mb-4 leading-[1.6]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{featured.desc}</p>
-                    <div className="flex items-center gap-3 mb-5">
-                      <img src={featured.authorImg} className="w-8 h-8 rounded-full border border-[#ece8dc]" />
-                      <div className="text-[11px] lg:text-[12px] text-[#6b7b72] flex items-center gap-2" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                        <span className="font-bold text-[#0F3D2E]">{featured.author}</span> &bull; <span>{featured.date}</span> &bull; <span>{featured.readTime}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <Link href={featured.link} className="inline-flex items-center gap-2 bg-[#0F3D2E] text-white px-5 py-2 rounded-[8px] hover:bg-[#1a5441] transition-colors text-[12px] font-bold">
-                        Read Full Article <ArrowRight className="w-4 h-4" />
-                      </Link>
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Navigation Dots */}
-              <div className="absolute bottom-4 right-6 flex items-center gap-2 z-20">
-                {FEATURED_ARTICLES.map((_, idx) => (
-                  <button 
-                    key={idx}
-                    onClick={() => setCurrentFeaturedIdx(idx)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${idx === currentFeaturedIdx ? 'bg-[#0F3D2E] w-4' : 'bg-[#0F3D2E]/20 hover:bg-[#0F3D2E]/50'}`}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Popular Topics Sidebar */}
-            <div className="w-full lg:w-[300px] shrink-0 bg-[#fdfcf9] border border-[#ece8dc] rounded-[16px] p-5 lg:p-6 flex flex-col shadow-sm">
-              <h3 className="text-[18px] font-bold text-[#0F3D2E] mb-4 flex items-center gap-2" style={{ fontFamily: 'Playfair Display, serif' }}>
-                Popular Topics <Leaf className="w-4 h-4 text-[#c19236]" fill="currentColor" />
-              </h3>
-              <div className="flex flex-col gap-3 flex-1">
-                {POPULAR_TOPICS.map((pt, i) => (
-                  <div key={i} className="flex items-center justify-between group cursor-pointer border-b border-[#ece8dc]/80 pb-2 last:border-0 hover:border-[#c19236]/30 transition-colors">
-                    <span className="text-[13px] text-[#4a5d53] group-hover:text-[#c19236] font-bold transition-colors" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{pt.name}</span>
-                    <span className="text-[11px] text-[#8a958f] font-medium" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>({pt.count})</span>
-                  </div>
-                ))}
-              </div>
-              <Link href="/topics" className="mt-4 text-[12px] font-bold text-[#0F3D2E] flex items-center gap-1.5 hover:text-[#c19236] transition-colors" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                View All Topics <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-
-          </div>
+              {/* Description */}
+              <p className="text-[16px] md:text-[18px] text-white/95 lg:text-[#4a5d53] font-medium leading-[1.8] max-w-[500px] drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                Discover simple tips, natural remedies, and easy ways to stay healthy every day.
+              </p>
+  
+            </motion.div>
         </div>
       </section>
-      )}
+
+      {/* Main Content Area Removed */}
 
       {/* 4. Latest Articles Grid */}
       <section className="py-10 bg-white">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8">
-          <div className="mb-8">
-            <h2 className="text-[24px] md:text-[28px] font-bold text-[#0F3D2E] flex items-center gap-2" style={{ fontFamily: 'Playfair Display, serif' }}>
-              Latest Articles <Leaf className="w-5 h-5 text-[#c19236]" fill="currentColor" />
+          <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <h2 className="text-[24px] md:text-[28px] font-bold text-[#0F3D2E] flex items-center gap-2 shrink-0" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Latest Articles <Leaf className="w-5 h-5 text-[#D4AF37]" fill="currentColor" />
             </h2>
+            
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+              <button 
+                onClick={() => setActiveTopic(null)}
+                className={`shrink-0 px-6 py-2.5 rounded-full text-[13px] font-bold transition-all duration-300 ${!activeTopic ? 'bg-[#D4AF37] text-white shadow-md shadow-[#D4AF37]/30 border border-[#D4AF37]' : 'bg-white text-[#6b7b72] hover:text-[#D4AF37] border border-[#F8F5EE] hover:border-[#D4AF37]/50'}`}
+                style={{ fontFamily: 'Nunito Sans, sans-serif' }}
+              >
+                All Articles
+              </button>
+              {POPULAR_TOPICS.map((pt, i) => (
+                <button 
+                  key={i}
+                  onClick={() => setActiveTopic(pt.name)}
+                  className={`shrink-0 px-6 py-2.5 rounded-full text-[13px] font-bold transition-all duration-300 ${activeTopic === pt.name ? 'bg-[#D4AF37] text-white shadow-md shadow-[#D4AF37]/30 border border-[#D4AF37]' : 'bg-white text-[#6b7b72] hover:text-[#D4AF37] border border-[#F8F5EE] hover:border-[#D4AF37]/50'}`}
+                  style={{ fontFamily: 'Nunito Sans, sans-serif' }}
+                >
+                  {pt.name}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -482,19 +354,19 @@ export default function BlogPage() {
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: false }}
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  className="bg-white rounded-[12px] border border-[#ece8dc] overflow-hidden flex flex-col group cursor-pointer hover:shadow-lg transition-all duration-300 h-full"
+                  className="bg-white rounded-[12px] border border-[#F8F5EE] overflow-hidden flex flex-col group cursor-pointer hover:shadow-lg transition-all duration-300 h-full"
                 >
-                  <div className="h-[200px] relative overflow-hidden bg-[#f5f0e6]">
+                  <div className="h-[200px] relative overflow-hidden bg-[#F8F5EE]">
                     <img src={article.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   </div>
                   <div className="p-5 flex flex-col flex-1">
-                    <span className="text-[#c19236] text-[10px] font-bold uppercase tracking-widest mb-2" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{article.tag}</span>
-                    <h4 className="text-[17px] font-bold text-[#0F3D2E] mb-2 leading-[1.3] group-hover:text-[#2c4a35] transition-colors min-h-[44px]" style={{ fontFamily: 'Playfair Display, serif' }}>{article.title}</h4>
+                    <span className="text-[#D4AF37] text-[10px] font-bold uppercase tracking-widest mb-2" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{article.tag}</span>
+                    <h4 className="text-[17px] font-bold text-[#0F3D2E] mb-2 leading-[1.3] group-hover:text-[#0F3D2E] transition-colors min-h-[44px]" style={{ fontFamily: 'Playfair Display, serif' }}>{article.title}</h4>
                     <p className="text-[13px] text-[#6b7b72] mb-5 leading-[1.5] line-clamp-2" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{article.desc}</p>
-                    <div className="mt-auto flex items-center gap-2 pt-4 border-t border-[#fcfbf9]">
-                      <img src={article.authorImg} className="w-6 h-6 rounded-full border border-[#ece8dc]" />
+                    <div className="mt-auto flex items-center gap-2 pt-4 border-t border-[#F8F5EE]/50">
+                      <img src={article.authorImg} className="w-6 h-6 rounded-full border border-[#F8F5EE]" />
                       <span className="text-[11px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{article.author}</span>
                       <span className="text-[10px] text-[#8a958f] ml-auto font-medium" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{article.date}</span>
                     </div>

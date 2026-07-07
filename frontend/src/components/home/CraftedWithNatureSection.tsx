@@ -43,19 +43,19 @@ export default function CraftedWithNatureSection() {
       {/* ── Solid dark forest green bottom band (cards sit on this) ── */}
       <div className="absolute bottom-0 left-0 w-full pointer-events-none" style={{ 
         height: '35%', 
-        background: '#395c47', 
+        background: '#349337', 
         borderTopLeftRadius: '24px', 
         borderTopRightRadius: '24px' 
       }} />
 
       {/* ── Content ── */}
-      <div className="relative z-10 max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-10 pt-16 pb-24">
+      <div className="relative z-10 max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-10 py-8">
         
         <motion.div 
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 1, y: 0 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
         >
           {/* Eyebrow — "🍃 ROOTED IN NATURE 🍃" in muted gold */}
           <div className="flex items-center justify-center gap-2 mb-5">
@@ -68,7 +68,7 @@ export default function CraftedWithNatureSection() {
               color: '#c9a55a',
               textTransform: 'uppercase',
             }}>
-              Rooted In Nature
+              Where Real herbs Begins
             </span>
             <Leaf className="w-3 h-3 rotate-180" style={{ color: '#c9a55a' }} strokeWidth={1.8} />
           </div>
@@ -98,8 +98,7 @@ export default function CraftedWithNatureSection() {
             maxWidth: 480,
             margin: '0 auto 56px',
           }}>
-            Our products are thoughtfully crafted with natural ingredients<br className="hidden sm:block" />
-            to support your body, mind, and everyday balance.
+            Experience the power of nature in every sip. Our herbal teas are crafted with love, inspired by family, and made with 100% natural ingredients
           </p>
         </motion.div>
 
@@ -120,7 +119,7 @@ export default function CraftedWithNatureSection() {
               transition={{ type: "spring", bounce: 0.4 }}
               whileHover={{ 
                 y: -10, 
-                boxShadow: '0 15px 35px rgba(0,0,0,0.15), 0 5px 15px rgba(0,0,0,0.1)' 
+                boxShadow: '0 15px 35px rgba(255,182,193,0.5), 0 5px 15px rgba(255,182,193,0.3)' 
               }}
               style={{
                 display: 'flex',

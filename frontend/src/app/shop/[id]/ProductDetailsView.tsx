@@ -59,6 +59,51 @@ export default function ProductDetailsPage() {
   const [selectedPackIndex, setSelectedPackIndex] = useState(0);
   const [isAdded, setIsAdded] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showCustomModal, setShowCustomModal] = useState(false);
+  const [customMix, setCustomMix] = useState<{[key: string]: number}>({});
+
+  const customTotal = Object.values(customMix).reduce((a, b) => a + b, 0);
+
+  const handleCustomMixChange = (prodId: string | number, increment: number) => {
+    setCustomMix(prev => {
+      const current = prev[prodId] || 0;
+      const newVal = Math.max(0, current + increment);
+      const currentTotal = Object.values(prev).reduce((a, b) => a + b, 0);
+      if (increment > 0 && currentTotal + increment > 20) return prev;
+      return { ...prev, [prodId]: newVal };
+    });
+  };
+
+  // Zoom feature state
+  const [isHoveringImage, setIsHoveringImage] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  const images = product?.images && product.images.length > 0 ? product.images : (product ? [product.img] : []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName)) return;
+      if (images.length === 0) return;
+      
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setMainImageIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        setMainImageIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [images.length]);
+
+  const handleImageMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+    setMousePos({ x, y });
+  };
 
   // Review Form States
   const [rating, setRating] = useState(0);
@@ -136,7 +181,7 @@ export default function ProductDetailsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f8f5ee] flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0F3D2E]"></div>
       </div>
     );
@@ -144,20 +189,26 @@ export default function ProductDetailsPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-[#f8f5ee] flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
         <h1 className="text-3xl font-bold text-[#0F3D2E] mb-4">Product Not Found</h1>
-        <button onClick={() => router.push('/shop')} className="text-[#c19236] hover:underline font-bold">
+        <button onClick={() => router.push('/shop')} className="text-[#D4AF37] hover:underline font-bold">
           Return to Shop
         </button>
       </div>
     );
   }
 
-  const images = product.images && product.images.length > 0 ? product.images : [product.img];
+  // images array is defined at the top level to support the keyboard navigation hook
 
   const packSizes = [
     {
       weight: product.weight || '20 Packets',
+      price: product.price,
+      originalPrice: product.originalPrice,
+      discount: product.discount || Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    },
+    {
+      weight: 'Custom Mix (20 Packets)',
       price: product.price,
       originalPrice: product.originalPrice,
       discount: product.discount || Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -171,10 +222,24 @@ export default function ProductDetailsPage() {
   const currentQuantity = cartItem?.quantity || 0;
 
   const handleAddToCart = () => {
+    if (selectedPackIndex === 1 && customTotal !== 20) {
+      setShowCustomModal(true);
+      return;
+    }
+
+    let mixDescription = "";
+    if (selectedPackIndex === 1) {
+       const mixDetails = Object.entries(customMix).filter(([_, q]) => q > 0).map(([id, q]) => {
+         const p = products.find(prod => prod.id.toString() === id);
+         return `${q}x ${p?.name}`;
+       }).join(', ');
+       mixDescription = ` [${mixDetails}]`;
+    }
+
     if (!cartItem) {
       addItem({
         sku,
-        name: `${product.name} (${currentPack.weight})`,
+        name: `${product.name} (${currentPack.weight})${mixDescription}`,
         priceCents: currentPack.price * 100,
         image: images[0]
       });
@@ -228,7 +293,7 @@ export default function ProductDetailsPage() {
   };
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-[#f5f0e6] relative">
+    <div className="flex flex-col w-full min-h-screen bg-white relative">
       {/* Share Modal Overlay */}
       <AnimatePresence>
         {showShareModal && (
@@ -308,7 +373,7 @@ export default function ProductDetailsPage() {
                 </button>
               </div>
               
-              <div className="bg-[#f5f0e6] p-3 rounded-xl border border-[#e8e5de] flex items-center gap-3">
+              <div className="bg-[#F8F5EE] p-3 rounded-xl border border-[#e8e5de] flex items-center gap-3">
                 <div className="flex-1 overflow-hidden">
                   <p className="text-[13px] text-[#6b7b72] truncate font-medium">{typeof window !== 'undefined' ? window.location.href : ''}</p>
                 </div>
@@ -321,18 +386,90 @@ export default function ProductDetailsPage() {
         )}
       </AnimatePresence>
 
+      {/* Custom Mix Modal Overlay */}
+      <AnimatePresence>
+        {showCustomModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
+            onClick={() => setShowCustomModal(false)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-3xl p-6 md:p-8 w-full max-w-lg shadow-2xl relative max-h-[80vh] flex flex-col"
+            >
+              <button 
+                onClick={() => setShowCustomModal(false)}
+                className="absolute top-4 right-4 p-2 bg-gray-100 rounded-full text-gray-500 hover:text-black hover:bg-gray-200 transition-colors z-10"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              
+              <h3 className="text-[24px] font-bold text-[#0F3D2E] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Customize Your Box</h3>
+              <p className="text-[#6b7b72] text-[15px] mb-4 font-medium">Mix and match different teas. Total: {customTotal}/20 Packets (Select 5 for each)</p>
+              
+              {/* Progress bar */}
+              <div className="w-full bg-gray-200 h-2 rounded-full mb-6 overflow-hidden">
+                <div className="bg-[#8cb73d] h-full transition-all duration-300" style={{ width: `${(customTotal/20)*100}%` }}></div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto pr-2 flex flex-col gap-4 min-h-[300px]">
+                {products.map(p => (
+                  <div key={p.id} className="flex items-center gap-4 bg-white p-3 md:p-4 rounded-2xl border border-[#e8e5de] shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)] transition-all duration-300 group relative overflow-hidden">
+                    {/* Selected state accent */}
+                    {customMix[p.id] > 0 && <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0F3D2E] transition-all" />}
+                    
+                    <div className="bg-[#fcfbf9] border border-[#f0eee6] rounded-xl p-2 w-[60px] h-[60px] md:w-[72px] md:h-[72px] flex items-center justify-center shrink-0">
+                      <img src={p.img} alt={p.name} className="w-full h-full object-contain drop-shadow-sm group-hover:scale-110 transition-transform duration-300" />
+                    </div>
+                    
+                    <div className="flex-1">
+                      <h4 className="font-bold text-[#0F3D2E] text-[15px] md:text-[16px] mb-1">{p.name}</h4>
+                      <span className="inline-block text-[#8cb73d] bg-[#f2f7e9] px-2 py-0.5 rounded text-[10px] md:text-[11px] font-bold uppercase tracking-wider">{p.category}</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-1 bg-[#fcfbf9] border border-[#e8e5de] rounded-xl p-1 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] shrink-0">
+                      <button 
+                        onClick={() => handleCustomMixChange(p.id, -5)}
+                        disabled={!customMix[p.id]}
+                        className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-[#0F3D2E] font-medium hover:bg-white hover:shadow-sm rounded-lg disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                      >-</button>
+                      <span className="w-6 md:w-8 text-center font-bold text-[#0F3D2E] text-[14px] md:text-[15px]">{customMix[p.id] || 0}</span>
+                      <button 
+                        onClick={() => handleCustomMixChange(p.id, 5)}
+                        disabled={customTotal >= 20}
+                        className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-[#0F3D2E] font-medium hover:bg-white hover:shadow-sm rounded-lg disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                      >+</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-[#e8e5de] flex justify-between items-center">
+                <div className="flex flex-col">
+                  <span className="font-bold text-[#0F3D2E] text-[20px]">₹{product.price}</span>
+                  <span className="text-[#6b7b72] text-[13px]">for 20 Packets</span>
+                </div>
+                <button 
+                  onClick={() => setShowCustomModal(false)}
+                  disabled={customTotal !== 20}
+                  className="bg-[#0F3D2E] text-white px-6 py-3 rounded-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1a5743] transition-colors"
+                >
+                  {customTotal === 20 ? 'Confirm Mix' : `Add ${20 - customTotal} More`}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="max-w-[1200px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         
-        {/* Simple Text Header / Breadcrumbs */}
-        <div className="mb-6 md:mb-10 flex flex-wrap items-center gap-1 md:gap-2 text-[12px] md:text-[14px] text-[#6b7b72] font-medium" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-          <span className="hover:text-[#0F3D2E] cursor-pointer whitespace-nowrap" onClick={() => router.push('/')}>Home</span>
-          <ChevronRight className="w-3 h-3 md:w-4 md:h-4 text-[#d1c8ba] shrink-0" />
-          <span className="hover:text-[#0F3D2E] cursor-pointer whitespace-nowrap" onClick={() => router.push('/shop')}>Shop</span>
-          <ChevronRight className="w-3 h-3 md:w-4 md:h-4 text-[#d1c8ba] shrink-0" />
-          <span className="hover:text-[#0F3D2E] cursor-pointer whitespace-nowrap">Herbal Tea</span>
-          <ChevronRight className="w-3 h-3 md:w-4 md:h-4 text-[#d1c8ba] shrink-0" />
-          <span className="text-[#0F3D2E] whitespace-nowrap">{product.name}</span>
-        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
@@ -341,7 +478,7 @@ export default function ProductDetailsPage() {
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="flex flex-col-reverse md:flex-row gap-4 md:gap-6"
+            className="flex flex-col-reverse md:flex-row gap-4 md:gap-6 relative lg:z-30 z-10"
           >
             {/* Thumbnails */}
             <div className="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-x-hidden md:overflow-y-auto scrollbar-hide p-1 shrink-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -357,8 +494,29 @@ export default function ProductDetailsPage() {
             </div>
 
             {/* Main Large Image */}
-            <div className="relative w-full h-[250px] md:h-auto md:flex-1 md:aspect-square bg-transparent flex items-center justify-center shrink-0">
-               <img src={currentImage} alt={product.name} className="w-full h-full object-contain mix-blend-multiply" />
+            <div 
+              className="relative w-full h-[250px] md:h-auto md:flex-1 md:aspect-square bg-transparent flex items-center justify-center shrink-0 lg:cursor-crosshair group"
+              onMouseEnter={() => setIsHoveringImage(true)}
+              onMouseLeave={() => setIsHoveringImage(false)}
+              onMouseMove={handleImageMouseMove}
+            >
+               <img src={currentImage} alt={product.name} className="w-full h-full object-contain mix-blend-multiply transition-opacity duration-300" style={{ opacity: isHoveringImage ? 0.9 : 1 }} />
+               
+               {/* Zoom Portal for Desktop (shows at the right side) */}
+               {isHoveringImage && (
+                 <div className="hidden lg:block absolute top-0 left-full ml-16 w-full h-full bg-white z-[60] border border-[#e8e5de] shadow-2xl rounded-2xl overflow-hidden pointer-events-none">
+                   <div 
+                     className="w-full h-full"
+                     style={{
+                       backgroundImage: `url(${currentImage})`,
+                       backgroundPosition: `${mousePos.x}% ${mousePos.y}%`,
+                       backgroundSize: '250%',
+                       backgroundRepeat: 'no-repeat',
+                       backgroundColor: '#fff'
+                     }}
+                   />
+                 </div>
+               )}
             </div>
           </motion.div>
 
@@ -388,7 +546,7 @@ export default function ProductDetailsPage() {
                   </div>
                   <button 
                     onClick={() => router.push('/cart')}
-                    className="text-xs font-bold bg-[#e2b755] text-[#0F3D2E] px-3 py-1.5 rounded-lg hover:bg-[#d4a844] transition-colors"
+                    className="text-xs font-bold bg-[#D4AF37] text-[#0F3D2E] px-3 py-1.5 rounded-lg hover:bg-[#d4a844] transition-colors"
                   >
                     View Cart
                   </button>
@@ -400,16 +558,16 @@ export default function ProductDetailsPage() {
             <div className="mb-3 relative">
               <div className="flex justify-between items-start gap-4 mb-1">
                 <div className="flex flex-col">
-                  <span className="text-[#c19236] text-[12px] font-bold uppercase tracking-widest mb-1">{product.category} BLEND</span>
+                  <span className="text-[#D4AF37] text-[12px] font-bold uppercase tracking-widest mb-1">{product.category} BLEND</span>
                   <h1 className="text-[28px] md:text-[42px] font-bold text-[#0F3D2E] leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
                     {product.name}
                   </h1>
                 </div>
                 <div className="flex items-center gap-3 shrink-0 pt-2">
-                  <button onClick={() => toggleItem(Number(product.id))} className="w-10 h-10 rounded-full bg-[#fdfbf6] flex items-center justify-center text-[#c19236] hover:bg-[#f5f0e6] transition-colors">
+                  <button onClick={() => toggleItem(Number(product.id))} className="w-10 h-10 rounded-full bg-[#fdfbf6] flex items-center justify-center text-[#D4AF37] hover:bg-[#F8F5EE] transition-colors">
                     <Heart className={`w-5 h-5 ${isInWishlist(Number(product.id)) ? 'fill-current' : 'fill-transparent'}`} strokeWidth={2} />
                   </button>
-                  <button onClick={handleShare} className="w-10 h-10 rounded-full bg-[#fdfbf6] flex items-center justify-center text-[#c19236] hover:bg-[#f5f0e6] transition-colors">
+                  <button onClick={handleShare} className="w-10 h-10 rounded-full bg-[#fdfbf6] flex items-center justify-center text-[#D4AF37] hover:bg-[#F8F5EE] transition-colors">
                     <Share2 className="w-4 h-4" strokeWidth={2} />
                   </button>
                 </div>
@@ -422,12 +580,17 @@ export default function ProductDetailsPage() {
             {/* Rating */}
             <div className="flex items-center gap-2 mb-4">
               <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map(star => (
-                  <Star
-                    key={star}
-                    className={`w-4 h-4 ${star <= Math.floor(product.rating) ? 'fill-[#e2b755] text-[#e2b755]' : 'fill-transparent text-[#d1c8ba]'}`}
-                  />
-                ))}
+                {[1, 2, 3, 4, 5].map(star => {
+                  const fillPercentage = Math.max(0, Math.min(100, (product.rating - star + 1) * 100));
+                  return (
+                    <div key={star} className="relative w-4 h-4">
+                      <Star className="absolute top-0 left-0 w-4 h-4 text-[#d1c8ba] fill-transparent" />
+                      <div className="absolute top-0 left-0 h-full overflow-hidden" style={{ width: `${fillPercentage}%` }}>
+                        <Star className="w-4 h-4 text-[#D4AF37] fill-[#D4AF37]" />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
               <span className="text-[#6b7b72] text-[14px] font-medium ml-1">
                 {product.rating} ({product.reviews} Reviews)
@@ -438,7 +601,7 @@ export default function ProductDetailsPage() {
             <div className="flex items-center gap-3 mb-6">
               <span className="font-bold text-[#0F3D2E] text-[32px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>₹{currentPack.price}</span>
               {currentPack.originalPrice && (
-                <span className="text-[#a0aab2] line-through text-[18px]">₹{currentPack.originalPrice}</span>
+                <span className="text-red-500 font-bold line-through text-[18px]">₹{currentPack.originalPrice}</span>
               )}
               {currentPack.discount && (
                 <span className="text-[#4caf50] bg-[#edf7ed] text-[12px] font-bold px-2.5 py-1 rounded-md ml-2 tracking-wide">
@@ -448,20 +611,20 @@ export default function ProductDetailsPage() {
             </div>
 
             {/* Tags / Pills */}
-            <div className="flex items-center justify-between border-y border-[#e8e5de] py-4 mb-6">
+            <div className="flex items-center justify-between bg-[#eaf4d5] rounded-xl px-4 py-3 mb-6 border border-[#8cb73d]/30">
               <div className="flex items-center gap-2">
-                <Leaf className="w-4 h-4 text-[#a0aab2]" />
-                <span className="text-[#6b7b72] text-[13px] font-medium">{product.type === 'Decaf' || product.type === 'Herbal' ? 'Caffeine Free' : 'Caffeinated'}</span>
+                <Leaf className="w-4 h-4 text-[#4a6b3d]" />
+                <span className="text-[#0F3D2E] text-[13px] font-bold">{product.type === 'Decaf' || product.type === 'Herbal' ? 'Caffeine Free' : 'Caffeinated'}</span>
               </div>
-              <div className="w-[1px] h-4 bg-[#e8e5de]"></div>
+              <div className="w-[1px] h-4 bg-[#8cb73d]/30"></div>
               <div className="flex items-center gap-2">
-                <Leaf className="w-4 h-4 text-[#a0aab2]" />
-                <span className="text-[#6b7b72] text-[13px] font-medium">100% Natural</span>
+                <Leaf className="w-4 h-4 text-[#4a6b3d]" />
+                <span className="text-[#0F3D2E] text-[13px] font-bold">100% Natural</span>
               </div>
-              <div className="w-[1px] h-4 bg-[#e8e5de]"></div>
+              <div className="w-[1px] h-4 bg-[#8cb73d]/30"></div>
               <div className="flex items-center gap-2">
-                <Package className="w-4 h-4 text-[#a0aab2]" />
-                <span className="text-[#6b7b72] text-[13px] font-medium">No Preservatives</span>
+                <Package className="w-4 h-4 text-[#4a6b3d]" />
+                <span className="text-[#0F3D2E] text-[13px] font-bold">No Preservatives</span>
               </div>
             </div>
 
@@ -480,6 +643,21 @@ export default function ProductDetailsPage() {
                     <span className="text-[#4caf50] bg-[#edf7ed] text-[9px] md:text-[10px] font-bold px-1 md:px-1.5 py-0 md:py-0.5 rounded whitespace-nowrap">Save 18%</span>
                   </div>
                 </div>
+
+                {/* Customize */}
+                <div 
+                  onClick={() => {
+                    setSelectedPackIndex(1);
+                    setShowCustomModal(true);
+                  }}
+                  className={`border-[1.5px] rounded-xl p-2 md:p-3 flex flex-col items-center justify-center cursor-pointer transition-colors bg-white ${selectedPackIndex === 1 ? 'border-[#0F3D2E]' : 'border-[#e8e5de] hover:border-[#0F3D2E]'}`}
+                >
+                  <span className={`font-bold text-[12px] md:text-[14px] ${selectedPackIndex === 1 ? 'text-[#0F3D2E]' : 'text-[#6b7b72]'}`}>Customize Mix</span>
+                  <div className="flex flex-col xl:flex-row items-center gap-1 xl:gap-1.5 mt-0.5">
+                    <span className="text-[#6b7b72] text-[11px] md:text-[13px]">20 Packets</span>
+                    <span className="text-[#4caf50] bg-[#edf7ed] text-[9px] md:text-[10px] font-bold px-1 md:px-1.5 py-0 md:py-0.5 rounded whitespace-nowrap">Any Tea</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -494,7 +672,7 @@ export default function ProductDetailsPage() {
               {/* Add to Cart */}
               <button 
                 onClick={handleAddToCart}
-                className="flex-[1.5] bg-[#e2b755] text-[#0F3D2E] hover:bg-[#d4a844] font-bold text-[12px] md:text-[15px] rounded-[10px] transition-colors flex items-center justify-center gap-1 md:gap-2 px-2 md:px-4"
+                className="flex-[1.5] bg-[#D4AF37] text-[#0F3D2E] hover:bg-[#d4a844] font-bold text-[12px] md:text-[15px] rounded-[10px] transition-colors flex items-center justify-center gap-1 md:gap-2 px-2 md:px-4"
               >
                 <ShoppingBasket className="w-3.5 h-3.5 md:w-5 md:h-5" />
                 Add to Cart
@@ -506,7 +684,7 @@ export default function ProductDetailsPage() {
                   if (currentQuantity === 0) handleAddToCart();
                   router.push('/checkout');
                 }}
-                className="flex-1 bg-[#0F3D2E] text-white hover:bg-[#1a5441] font-bold text-[12px] md:text-[15px] rounded-[10px] transition-colors px-2 md:px-4 whitespace-nowrap"
+                className="flex-1 bg-[#0F3D2E] text-white hover:bg-[#0F3D2E] font-bold text-[12px] md:text-[15px] rounded-[10px] transition-colors px-2 md:px-4 whitespace-nowrap"
               >
                 Buy Now
               </button>
@@ -521,11 +699,11 @@ export default function ProductDetailsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-16 relative">
             
             {/* Left: Product Benefits Card */}
-            <div className="bg-white rounded-[24px] border border-[#ece8dc] p-6 md:p-12 shadow-sm relative overflow-hidden flex flex-col">
+            <div className="bg-white rounded-[24px] border border-[#F8F5EE] p-6 md:p-12 shadow-sm relative overflow-hidden flex flex-col">
               {/* Decorative Leaves Bottom Left */}
               <Leaf className="absolute -bottom-10 -left-10 w-48 h-48 text-[#4a6b3d] opacity-[0.03] pointer-events-none -rotate-45" />
               
-              <h3 className="font-bold text-[#1c2e24] text-[24px] md:text-[28px] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Why You'll Love It</h3>
+              <h3 className="font-bold text-[#0F3D2E] text-[24px] md:text-[28px] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Why You'll Love It</h3>
               <div className="w-12 h-[3px] bg-[#4a6b3d] mb-6 md:mb-10 rounded-full"></div>
               
               <div className="flex flex-col gap-5 md:gap-8 relative z-10">
@@ -536,7 +714,7 @@ export default function ProductDetailsPage() {
                      <Leaf className="w-4 h-4 md:w-5 md:h-5 text-[#4a6b3d]" />
                   </div>
                   <div className="flex flex-col">
-                    <h4 className="font-bold text-[#1c2e24] text-[15px] md:text-[16px] mb-1">Sustained Energy & Focus</h4>
+                    <h4 className="font-bold text-[#0F3D2E] text-[15px] md:text-[16px] mb-1">Sustained Energy & Focus</h4>
                     <p className="text-[13px] md:text-[14px] text-[#6b7b72] leading-relaxed">
                       Provides clean, calm energy without the jitters or crashes.
                     </p>
@@ -549,7 +727,7 @@ export default function ProductDetailsPage() {
                      <ShieldCheck className="w-4 h-4 md:w-5 md:h-5 text-[#4a6b3d]" />
                   </div>
                   <div className="flex flex-col">
-                    <h4 className="font-bold text-[#1c2e24] text-[15px] md:text-[16px] mb-1">Antioxidant Rich</h4>
+                    <h4 className="font-bold text-[#0F3D2E] text-[15px] md:text-[16px] mb-1">Antioxidant Rich</h4>
                     <p className="text-[13px] md:text-[14px] text-[#6b7b72] leading-relaxed">
                       Packed with catechins that help fight free radicals and support immunity.
                     </p>
@@ -562,7 +740,7 @@ export default function ProductDetailsPage() {
                      <Droplet className="w-4 h-4 md:w-5 md:h-5 text-[#4a6b3d]" />
                   </div>
                   <div className="flex flex-col">
-                    <h4 className="font-bold text-[#1c2e24] text-[15px] md:text-[16px] mb-1">Detox & Cleanse</h4>
+                    <h4 className="font-bold text-[#0F3D2E] text-[15px] md:text-[16px] mb-1">Detox & Cleanse</h4>
                     <p className="text-[13px] md:text-[14px] text-[#6b7b72] leading-relaxed">
                       Supports natural detoxification and helps your body feel lighter.
                     </p>
@@ -575,7 +753,7 @@ export default function ProductDetailsPage() {
                      <Activity className="w-4 h-4 md:w-5 md:h-5 text-[#4a6b3d]" />
                   </div>
                   <div className="flex flex-col">
-                    <h4 className="font-bold text-[#1c2e24] text-[15px] md:text-[16px] mb-1">Metabolism Support</h4>
+                    <h4 className="font-bold text-[#0F3D2E] text-[15px] md:text-[16px] mb-1">Metabolism Support</h4>
                     <p className="text-[13px] md:text-[14px] text-[#6b7b72] leading-relaxed">
                       May help boost metabolism and support healthy weight management.
                     </p>
@@ -586,50 +764,50 @@ export default function ProductDetailsPage() {
             </div>
 
             {/* Right: Ingredients Breakdown Card */}
-            <div className="bg-white rounded-[24px] border border-[#ece8dc] p-6 md:p-12 shadow-sm relative overflow-hidden flex flex-col">
+            <div className="bg-white rounded-[24px] border border-[#F8F5EE] p-6 md:p-12 shadow-sm relative overflow-hidden flex flex-col">
 
-              <h3 className="font-bold text-[#1c2e24] text-[24px] md:text-[28px] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>What's Inside</h3>
+              <h3 className="font-bold text-[#0F3D2E] text-[24px] md:text-[28px] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>What's Inside</h3>
               <p className="text-[13px] md:text-[14px] text-[#6b7b72] mb-5 md:mb-8 font-medium">100% natural ingredients, nothing else.</p>
               
               <div className="grid grid-cols-2 gap-3 md:gap-4 relative z-10">
                 
                 {/* Ingredient 1 */}
-                <div className="rounded-[16px] overflow-hidden border border-[#ece8dc] flex flex-col bg-white">
+                <div className="rounded-[16px] overflow-hidden border border-[#F8F5EE] flex flex-col bg-white">
                   <div className="w-full h-24 md:h-32 relative overflow-hidden">
                     <img src="/home/beetroot-v2.png" alt="Beetroot" className="w-full h-full object-cover" />
                   </div>
-                  <div className="py-2 md:py-3 px-2 text-center border-t border-[#ece8dc]">
-                    <span className="font-bold text-[#1c2e24] text-[13px] md:text-[14px]">Beetroot</span>
+                  <div className="py-2 md:py-3 px-2 text-center border-t border-[#F8F5EE]">
+                    <span className="font-bold text-[#0F3D2E] text-[13px] md:text-[14px]">Beetroot</span>
                   </div>
                 </div>
 
                 {/* Ingredient 2 */}
-                <div className="rounded-[16px] overflow-hidden border border-[#ece8dc] flex flex-col bg-white">
+                <div className="rounded-[16px] overflow-hidden border border-[#F8F5EE] flex flex-col bg-white">
                   <div className="w-full h-24 md:h-32 relative overflow-hidden">
                     <img src="/shop/petals.png" alt="Hibiscus" className="w-full h-full object-cover" />
                   </div>
-                  <div className="py-2 md:py-3 px-2 text-center border-t border-[#ece8dc]">
-                    <span className="font-bold text-[#1c2e24] text-[13px] md:text-[14px]">Hibiscus</span>
+                  <div className="py-2 md:py-3 px-2 text-center border-t border-[#F8F5EE]">
+                    <span className="font-bold text-[#0F3D2E] text-[13px] md:text-[14px]">Hibiscus</span>
                   </div>
                 </div>
 
                 {/* Ingredient 3 */}
-                <div className="rounded-[16px] overflow-hidden border border-[#ece8dc] flex flex-col bg-white">
+                <div className="rounded-[16px] overflow-hidden border border-[#F8F5EE] flex flex-col bg-white">
                   <div className="w-full h-24 md:h-32 relative overflow-hidden">
                     <img src="/home/mulethi-v2.png" alt="Licorice" className="w-full h-full object-cover" />
                   </div>
-                  <div className="py-2 md:py-3 px-2 text-center border-t border-[#ece8dc]">
-                    <span className="font-bold text-[#1c2e24] text-[13px] md:text-[14px]">Licorice</span>
+                  <div className="py-2 md:py-3 px-2 text-center border-t border-[#F8F5EE]">
+                    <span className="font-bold text-[#0F3D2E] text-[13px] md:text-[14px]">Licorice</span>
                   </div>
                 </div>
 
                 {/* Ingredient 4 */}
-                <div className="rounded-[16px] overflow-hidden border border-[#ece8dc] flex flex-col bg-white">
+                <div className="rounded-[16px] overflow-hidden border border-[#F8F5EE] flex flex-col bg-white">
                   <div className="w-full h-24 md:h-32 relative overflow-hidden">
                     <img src="/home/moringa-v2.png" alt="Moringa" className="w-full h-full object-cover" />
                   </div>
-                  <div className="py-2 md:py-3 px-2 text-center border-t border-[#ece8dc]">
-                    <span className="font-bold text-[#1c2e24] text-[13px] md:text-[14px]">Moringa</span>
+                  <div className="py-2 md:py-3 px-2 text-center border-t border-[#F8F5EE]">
+                    <span className="font-bold text-[#0F3D2E] text-[13px] md:text-[14px]">Moringa</span>
                   </div>
                 </div>
 
@@ -653,7 +831,7 @@ export default function ProductDetailsPage() {
                 
                 {/* Step 1 */}
                 <div className="flex flex-col items-center text-center group">
-                  <div className="w-[90px] h-[90px] rounded-full bg-[#f5f0e6] border border-[#e8e5de] flex items-center justify-center mb-6 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.05)] group-hover:border-[#fdbb0a] group-hover:bg-white transition-all duration-300 relative z-10">
+                  <div className="w-[90px] h-[90px] rounded-full bg-[#F8F5EE] border border-[#e8e5de] flex items-center justify-center mb-6 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.05)] group-hover:border-[#fdbb0a] group-hover:bg-white transition-all duration-300 relative z-10">
                      <div className="w-[70px] h-[70px] rounded-full bg-[#0F3D2E] text-[#fdbb0a] flex items-center justify-center text-[32px] font-bold group-hover:bg-[#fdbb0a] group-hover:text-[#0F3D2E] group-hover:scale-110 transition-all duration-300 shadow-inner" style={{ fontFamily: 'Playfair Display, serif' }}>
                        1
                      </div>
@@ -666,7 +844,7 @@ export default function ProductDetailsPage() {
 
                 {/* Step 2 */}
                 <div className="flex flex-col items-center text-center group">
-                  <div className="w-[90px] h-[90px] rounded-full bg-[#f5f0e6] border border-[#e8e5de] flex items-center justify-center mb-6 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.05)] group-hover:border-[#fdbb0a] group-hover:bg-white transition-all duration-300 relative z-10">
+                  <div className="w-[90px] h-[90px] rounded-full bg-[#F8F5EE] border border-[#e8e5de] flex items-center justify-center mb-6 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.05)] group-hover:border-[#fdbb0a] group-hover:bg-white transition-all duration-300 relative z-10">
                      <div className="w-[70px] h-[70px] rounded-full bg-[#0F3D2E] text-[#fdbb0a] flex items-center justify-center text-[32px] font-bold group-hover:bg-[#fdbb0a] group-hover:text-[#0F3D2E] group-hover:scale-110 transition-all duration-300 shadow-inner" style={{ fontFamily: 'Playfair Display, serif' }}>
                        2
                      </div>
@@ -679,7 +857,7 @@ export default function ProductDetailsPage() {
 
                 {/* Step 3 */}
                 <div className="flex flex-col items-center text-center group">
-                  <div className="w-[90px] h-[90px] rounded-full bg-[#f5f0e6] border border-[#e8e5de] flex items-center justify-center mb-6 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.05)] group-hover:border-[#fdbb0a] group-hover:bg-white transition-all duration-300 relative z-10">
+                  <div className="w-[90px] h-[90px] rounded-full bg-[#F8F5EE] border border-[#e8e5de] flex items-center justify-center mb-6 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.05)] group-hover:border-[#fdbb0a] group-hover:bg-white transition-all duration-300 relative z-10">
                      <div className="w-[70px] h-[70px] rounded-full bg-[#0F3D2E] text-[#fdbb0a] flex items-center justify-center text-[32px] font-bold group-hover:bg-[#fdbb0a] group-hover:text-[#0F3D2E] group-hover:scale-110 transition-all duration-300 shadow-inner" style={{ fontFamily: 'Playfair Display, serif' }}>
                        3
                      </div>
@@ -692,7 +870,7 @@ export default function ProductDetailsPage() {
 
                 {/* Step 4 */}
                 <div className="flex flex-col items-center text-center group">
-                  <div className="w-[90px] h-[90px] rounded-full bg-[#f5f0e6] border border-[#e8e5de] flex items-center justify-center mb-6 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.05)] group-hover:border-[#fdbb0a] group-hover:bg-white transition-all duration-300 relative z-10">
+                  <div className="w-[90px] h-[90px] rounded-full bg-[#F8F5EE] border border-[#e8e5de] flex items-center justify-center mb-6 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.05)] group-hover:border-[#fdbb0a] group-hover:bg-white transition-all duration-300 relative z-10">
                      <div className="w-[70px] h-[70px] rounded-full bg-[#0F3D2E] text-[#fdbb0a] flex items-center justify-center text-[32px] font-bold group-hover:bg-[#fdbb0a] group-hover:text-[#0F3D2E] group-hover:scale-110 transition-all duration-300 shadow-inner" style={{ fontFamily: 'Playfair Display, serif' }}>
                        4
                      </div>
@@ -729,12 +907,12 @@ export default function ProductDetailsPage() {
                 {[...reviewsList, ...reviewsList, ...reviewsList, ...reviewsList].map((review, idx) => (
                   <div 
                     key={`${review.id}-${idx}`} 
-                    className="w-[280px] md:w-[350px] shrink-0 bg-white rounded-[16px] p-5 md:p-8 text-left border border-[#ece8dc] shadow-sm flex flex-col hover:-translate-y-2 hover:shadow-md transition-all duration-300 group"
+                    className="w-[280px] md:w-[350px] shrink-0 bg-white rounded-[16px] p-5 md:p-8 text-left border border-[#F8F5EE] shadow-sm flex flex-col hover:-translate-y-2 hover:shadow-md transition-all duration-300 group"
                   >
                     {/* Stars & Text */}
                     <div className="flex gap-1 mb-3 md:mb-4">
                       {[1,2,3,4,5].map(s=>(
-                        <Star key={s} className={`w-3.5 h-3.5 md:w-4 md:h-4 ${s <= review.rating ? 'fill-[#e2b755] text-[#e2b755]' : 'text-gray-300'}`}/>
+                        <Star key={s} className={`w-3.5 h-3.5 md:w-4 md:h-4 ${s <= review.rating ? 'fill-[#D4AF37] text-[#D4AF37]' : 'text-gray-300'}`}/>
                       ))}
                     </div>
                     <p className="text-[#556358] text-[13px] md:text-[14px] leading-relaxed mb-4 md:mb-6 flex-grow" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
@@ -744,11 +922,11 @@ export default function ProductDetailsPage() {
                     {/* Profile Row */}
                     <div className="w-full h-[1px] bg-[#dccb96] opacity-60 mb-5"></div>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[#1c2e24] text-[16px] bg-[#f5f0e6] border border-[#ece8dc]">
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-[#0F3D2E] text-[16px] bg-[#F8F5EE] border border-[#F8F5EE]">
                         {review.name.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <h5 className="text-[14px] font-bold text-[#1c2e24]">{review.name}</h5>
+                        <h5 className="text-[14px] font-bold text-[#0F3D2E]">{review.name}</h5>
                         <p className="text-[12px] text-[#6b7b72]">{review.date}</p>
                       </div>
                     </div>
@@ -759,7 +937,7 @@ export default function ProductDetailsPage() {
           </div>
 
           {/* Add Review Form */}
-          <div className="bg-white p-6 md:p-10 rounded-[24px] border-2 border-[#ece8dc] shadow-sm mb-16">
+          <div className="bg-white p-6 md:p-10 rounded-[24px] border-2 border-[#F8F5EE] shadow-sm mb-16">
              <div className="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4 sm:gap-0">
                <div>
                  <h2 className="text-[20px] md:text-[24px] font-bold text-[#0F3D2E] mb-1 md:mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Add Reviews</h2>
@@ -774,7 +952,7 @@ export default function ProductDetailsPage() {
                         <Star 
                           key={s} 
                           onClick={() => { setRating(s); if(errors.rating) setErrors({...errors, rating: undefined}) }}
-                          className={`w-4 h-4 md:w-5 md:h-5 cursor-pointer transition-colors ${rating >= s ? 'fill-[#cda434] text-[#cda434]' : 'text-gray-300 hover:text-[#cda434]'}`}
+                          className={`w-4 h-4 md:w-5 md:h-5 cursor-pointer transition-colors ${rating >= s ? 'fill-[#D4AF37] text-[#D4AF37]' : 'text-gray-300 hover:text-[#D4AF37]'}`}
                         />
                       ))}
                    </div>
@@ -784,20 +962,20 @@ export default function ProductDetailsPage() {
              
              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
                 <div className="flex flex-col">
-                  <input type="text" placeholder="Full Name *" value={name} onChange={(e) => {const val = e.target.value.replace(/[^a-zA-Z\s]/g, ''); setName(val); if(errors.name) setErrors({...errors, name: undefined})}} className={`p-3 md:p-4 rounded-xl border-2 ${errors.name ? 'border-red-500' : 'border-[#ece8dc]'} bg-[#fdfcf9] focus:outline-none focus:border-[#cda434] text-[13px] md:text-[15px] text-[#1c2e24] placeholder:text-[#7a887f] placeholder:font-semibold font-medium transition-colors`} />
+                  <input type="text" placeholder="Full Name *" value={name} onChange={(e) => {const val = e.target.value.replace(/[^a-zA-Z\s]/g, ''); setName(val); if(errors.name) setErrors({...errors, name: undefined})}} className={`p-3 md:p-4 rounded-xl border-2 ${errors.name ? 'border-red-500' : 'border-[#F8F5EE]'} bg-[#fdfcf9] focus:outline-none focus:border-[#D4AF37] text-[13px] md:text-[15px] text-[#0F3D2E] placeholder:text-[#7a887f] placeholder:font-semibold font-medium transition-colors`} />
                   {errors.name && <span className="text-red-500 text-[11px] md:text-[12px] mt-1 ml-2 font-medium">{errors.name}</span>}
                 </div>
                 <div className="flex flex-col">
-                  <input type="email" placeholder="Email Address *" value={email} onChange={(e) => {setEmail(e.target.value); if(errors.email) setErrors({...errors, email: undefined})}} className={`p-3 md:p-4 rounded-xl border-2 ${errors.email ? 'border-red-500' : 'border-[#ece8dc]'} bg-[#fdfcf9] focus:outline-none focus:border-[#cda434] text-[13px] md:text-[15px] text-[#1c2e24] placeholder:text-[#7a887f] placeholder:font-semibold font-medium transition-colors`} />
+                  <input type="email" placeholder="Email Address *" value={email} onChange={(e) => {setEmail(e.target.value); if(errors.email) setErrors({...errors, email: undefined})}} className={`p-3 md:p-4 rounded-xl border-2 ${errors.email ? 'border-red-500' : 'border-[#F8F5EE]'} bg-[#fdfcf9] focus:outline-none focus:border-[#D4AF37] text-[13px] md:text-[15px] text-[#0F3D2E] placeholder:text-[#7a887f] placeholder:font-semibold font-medium transition-colors`} />
                   {errors.email && <span className="text-red-500 text-[11px] md:text-[12px] mt-1 ml-2 font-medium">{errors.email}</span>}
                 </div>
              </div>
              <div className="flex flex-col mb-4 md:mb-6">
-               <textarea placeholder="Your Review (Optional for 4-5 stars, Required for 1-3 stars)" value={reason} onChange={(e) => {setReason(e.target.value); if(errors.reason) setErrors({...errors, reason: undefined})}} className={`w-full p-3 md:p-4 rounded-xl border-2 ${errors.reason ? 'border-red-500' : 'border-[#ece8dc]'} bg-[#fdfcf9] h-24 md:h-32 focus:outline-none focus:border-[#cda434] text-[13px] md:text-[15px] text-[#1c2e24] placeholder:text-[#7a887f] placeholder:font-semibold font-medium resize-none transition-colors`} />
+               <textarea placeholder="Your Review (Optional for 4-5 stars, Required for 1-3 stars)" value={reason} onChange={(e) => {setReason(e.target.value); if(errors.reason) setErrors({...errors, reason: undefined})}} className={`w-full p-3 md:p-4 rounded-xl border-2 ${errors.reason ? 'border-red-500' : 'border-[#F8F5EE]'} bg-[#fdfcf9] h-24 md:h-32 focus:outline-none focus:border-[#D4AF37] text-[13px] md:text-[15px] text-[#0F3D2E] placeholder:text-[#7a887f] placeholder:font-semibold font-medium resize-none transition-colors`} />
                {errors.reason && <span className="text-red-500 text-[11px] md:text-[12px] mt-1 ml-2">{errors.reason}</span>}
              </div>
              <div className="flex items-center gap-4">
-               <button onClick={handlePostReview} className="bg-[#0F3D2E] text-white hover:bg-[#1a5240] transition-colors px-6 py-3 md:px-8 md:py-3.5 rounded-[12px] md:rounded-[14px] font-bold text-[13px] md:text-[15px] shadow-sm w-full md:w-auto">
+               <button onClick={handlePostReview} className="bg-[#0F3D2E] text-white hover:bg-[#0F3D2E] transition-colors px-6 py-3 md:px-8 md:py-3.5 rounded-[12px] md:rounded-[14px] font-bold text-[13px] md:text-[15px] shadow-sm w-full md:w-auto">
                  Post Review
                </button>
                {isReviewSuccess && <span className="text-[#0F3D2E] text-[13px] md:text-[14px] font-bold">Review posted successfully!</span>}
@@ -818,7 +996,7 @@ export default function ProductDetailsPage() {
                 <motion.div 
                   initial={{ opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: false }}
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
                   key={similar.id} 
                   onClick={() => router.push(`/shop/${similar.id}`)}
@@ -841,16 +1019,25 @@ export default function ProductDetailsPage() {
                   
                   {/* Product Details */}
                   <div className="flex flex-col flex-1">
-                    <h4 className="font-bold text-[#2c4a35] group-hover:text-[#0F3D2E] text-[14px] md:text-[18px] leading-tight mb-1.5 transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                    <h4 className="font-bold text-[#0F3D2E] group-hover:text-[#0F3D2E] text-[14px] md:text-[18px] leading-tight mb-1.5 transition-colors duration-300" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                       {similar.name}
                     </h4>
 
                     {/* Rating (5 Stars) */}
                     <div className="flex items-center gap-1.5 mb-3">
                       <div className="flex items-center gap-[2px]">
-                        {[...Array(5)].map((_, i) => (
-                           <Star key={i} className={`w-3 h-3 md:w-3.5 md:h-3.5 ${i < Math.floor(similar.rating || 5) ? 'fill-[#ffc107] text-[#ffc107]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
-                        ))}
+                        {[1, 2, 3, 4, 5].map((star) => {
+                          const rating = similar.rating || 5;
+                          const fillPercentage = Math.max(0, Math.min(100, (rating - star + 1) * 100));
+                          return (
+                            <div key={star} className="relative w-3 h-3 md:w-3.5 md:h-3.5">
+                              <Star className="absolute top-0 left-0 w-3 h-3 md:w-3.5 md:h-3.5 text-[#e8e5de] fill-[#e8e5de]" />
+                              <div className="absolute top-0 left-0 h-full overflow-hidden" style={{ width: `${fillPercentage}%` }}>
+                                <Star className="w-3 h-3 md:w-3.5 md:h-3.5 text-[#D4AF37] fill-[#D4AF37]" />
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                       <span className="text-[11px] md:text-[13px] font-bold text-[#4a5d53]">({(similar.rating || 5).toFixed(1)})</span>
                     </div>
@@ -864,7 +1051,7 @@ export default function ProductDetailsPage() {
                       <div className="flex items-center gap-2 relative">
                         <button 
                           onClick={(e) => { e.stopPropagation(); router.push(`/shop/${similar.id}`); }}
-                          className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#0F3D2E] text-white hover:bg-[#1a5441] transition-colors shadow-sm shrink-0 relative z-10"
+                          className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#0F3D2E] text-white hover:bg-[#0F3D2E] transition-colors shadow-sm shrink-0 relative z-10"
                         >
                           <ShoppingCart className="w-4 h-4 md:w-[18px] md:h-[18px]" />
                         </button>

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import FAQSection from '@/components/home/FAQSection';
+
 import { Mail, Phone, MapPin, Clock, ArrowRight, Leaf } from 'lucide-react';
 
 
@@ -12,7 +12,7 @@ export default function ContactPage() {
     <main className="min-h-screen bg-white">
       
       {/* Hero Section (Matching Shop/Journal) */}
-      <section className="relative w-full overflow-hidden bg-[#f5f0e6] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
+      <section className="relative w-full overflow-hidden bg-white min-h-[50vh] lg:min-h-[70vh] flex flex-col">
         {/* Right Side Background Image (Desktop) */}
         <div 
           className="absolute inset-0 lg:left-auto lg:right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-[position:60%_center] lg:bg-[90%_center] z-0"
@@ -20,7 +20,7 @@ export default function ContactPage() {
         >
            {/* Dark gradient on mobile so the white text at the bottom is highly legible */}
            <div className="lg:hidden absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" style={{ zIndex: 1 }}></div>
-           <div className="hidden lg:block absolute inset-y-0 left-0 w-[150px] bg-gradient-to-r from-[#f5f0e6] via-[#f5f0e6]/60 to-transparent"></div>
+           <div className="hidden lg:block absolute inset-y-0 -left-[2px] w-[200px] bg-gradient-to-r from-white via-white/70 to-white/0" style={{ zIndex: 1 }}></div>
         </div>
 
         <div className="flex-1 max-w-[1400px] w-full flex flex-col justify-end pb-10 pt-20 lg:justify-center lg:py-20 mx-auto px-6 sm:px-8 xl:px-12 relative z-10">
@@ -32,17 +32,17 @@ export default function ContactPage() {
             >
               {/* Subtitle */}
               <div className="hidden lg:flex items-center gap-4">
-                <div className="w-12 h-[2px] bg-[#c19236]"></div>
-                <span className="text-[#c19236] font-bold text-[13px] tracking-widest uppercase">
+                <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
+                <span className="text-[#D4AF37] font-bold text-[13px] tracking-widest uppercase">
                   CONTACT US
                 </span>
-                <div className="w-12 h-[2px] bg-[#c19236]"></div>
+                <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
               </div>
   
               {/* Title */}
               <h1 className="text-[44px] md:text-[52px] lg:text-[56px] xl:text-[64px] font-bold text-white lg:text-[#0F3D2E] leading-[1.1] tracking-tight drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Playfair Display, serif' }}>
                 We'd Love To <br />
-                <span className="text-[#c19236]">Hear From You</span>
+                <span className="text-[#D4AF37]">Hear From You</span>
               </h1>
               
               {/* Description */}
@@ -55,7 +55,7 @@ export default function ContactPage() {
       </section>
 
       {/* Main Content Area */}
-      <section className="pt-20 lg:pt-24 pb-10 lg:pb-16 bg-white relative">
+      <section className="pt-10 pb-10 lg:pb-16 bg-white relative">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Top Row: Form & Contact Info */}
@@ -65,11 +65,11 @@ export default function ContactPage() {
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ duration: 0.6 }}
               className="w-full lg:w-[50%] relative"
             >
-              <div className="bg-[#fcfbf9] border border-[#ece8dc] rounded-[32px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.02)] relative h-full flex flex-col justify-center">
+              <div className="bg-[#F8F5EE] border border-[#F8F5EE] rounded-[32px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.02)] relative h-full flex flex-col justify-center">
                 
                 {/* Background Image */}
                 <div 
@@ -81,14 +81,14 @@ export default function ContactPage() {
                 <div className="relative z-10 p-8 md:p-10 flex flex-col w-full sm:w-[85%] lg:w-[90%]">
                   <div className="flex items-center gap-3 mb-4">
                     <h2 className="text-[28px] md:text-[32px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>We're Here For You</h2>
-                    <Leaf className="w-5 h-5 text-[#c19236]" fill="currentColor" />
+                    <Leaf className="w-5 h-5 text-[#D4AF37]" fill="currentColor" />
                   </div>
                   
                   {/* Divider */}
                   <div className="flex items-center gap-4 mb-8">
-                    <div className="w-10 h-[2px] bg-[#c19236]"></div>
-                    <Leaf className="w-4 h-4 text-[#c19236]" fill="currentColor" />
-                    <div className="w-10 h-[2px] bg-[#c19236]"></div>
+                    <div className="w-10 h-[2px] bg-[#D4AF37]"></div>
+                    <Leaf className="w-4 h-4 text-[#D4AF37]" fill="currentColor" />
+                    <div className="w-10 h-[2px] bg-[#D4AF37]"></div>
                   </div>
 
                   <div className="flex flex-col gap-6">
@@ -100,7 +100,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <h4 className="font-bold text-[#0F3D2E] text-[16px] mb-1" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>Email Us</h4>
-                        <p className="text-[#1c2e24] text-[15px] font-medium" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>hello@rherbaltea.com</p>
+                        <p className="text-[#0F3D2E] text-[15px] font-medium" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>hello@rherbaltea.com</p>
                       </div>
                     </div>
 
@@ -111,7 +111,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <h4 className="font-bold text-[#0F3D2E] text-[16px] mb-1" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>Call Us</h4>
-                        <p className="text-[#1c2e24] text-[15px] font-medium" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>+1 (888) 123-4567</p>
+                        <p className="text-[#0F3D2E] text-[15px] font-medium" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>+1 (888) 123-4567</p>
                         <p className="text-[#4a5d53] text-[14px] mt-0.5" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>Mon – Fri: 9:00 AM – 6:00 PM (EST)</p>
                       </div>
                     </div>
@@ -123,7 +123,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <h4 className="font-bold text-[#0F3D2E] text-[16px] mb-1" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>Visit Us</h4>
-                        <p className="text-[#1c2e24] text-[15px] font-medium leading-relaxed max-w-[200px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>123 Herbal Way, Nature City,<br/>Wellness State, 12345, USA</p>
+                        <p className="text-[#0F3D2E] text-[15px] font-medium leading-relaxed max-w-[200px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>123 Herbal Way, Nature City,<br/>Wellness State, 12345, USA</p>
                       </div>
                     </div>
 
@@ -134,7 +134,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <h4 className="font-bold text-[#0F3D2E] text-[16px] mb-1" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>Response Time</h4>
-                        <p className="text-[#1c2e24] text-[15px] font-medium leading-relaxed max-w-[200px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>We aim to reply within 24 hours<br/>on business days.</p>
+                        <p className="text-[#0F3D2E] text-[15px] font-medium leading-relaxed max-w-[200px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>We aim to reply within 24 hours<br/>on business days.</p>
                       </div>
                     </div>
 
@@ -142,15 +142,15 @@ export default function ContactPage() {
 
                   {/* Follow Us */}
                   <div className="mt-8 pt-6 flex items-center gap-4">
-                    <span className="font-bold text-[#0F3D2E] text-[15px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>Follow Us</span>
+                    <span className="font-extrabold text-[#0F3D2E] text-[16px] uppercase tracking-wider bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full shadow-sm" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>Follow Us</span>
                     <div className="flex items-center gap-3">
-                      <a href="#" className="w-10 h-10 rounded-full bg-white border border-[#ece8dc] flex items-center justify-center text-[#0F3D2E] hover:text-[#c19236] hover:border-[#c19236] transition-colors shadow-sm">
+                      <a href="#" className="w-10 h-10 rounded-full bg-white border border-[#F8F5EE] flex items-center justify-center text-[#0F3D2E] hover:text-[#D4AF37] hover:border-[#D4AF37] transition-colors shadow-sm">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
                       </a>
-                      <a href="#" className="w-10 h-10 rounded-full bg-white border border-[#ece8dc] flex items-center justify-center text-[#0F3D2E] hover:text-[#c19236] hover:border-[#c19236] transition-colors shadow-sm">
+                      <a href="#" className="w-10 h-10 rounded-full bg-white border border-[#F8F5EE] flex items-center justify-center text-[#0F3D2E] hover:text-[#D4AF37] hover:border-[#D4AF37] transition-colors shadow-sm">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                       </a>
-                      <a href="#" className="w-10 h-10 rounded-full bg-white border border-[#ece8dc] flex items-center justify-center text-[#0F3D2E] hover:text-[#c19236] hover:border-[#c19236] transition-colors shadow-sm">
+                      <a href="#" className="w-10 h-10 rounded-full bg-white border border-[#F8F5EE] flex items-center justify-center text-[#0F3D2E] hover:text-[#D4AF37] hover:border-[#D4AF37] transition-colors shadow-sm">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.951-7.252 4.182 0 7.436 2.981 7.436 6.966 0 4.156-2.618 7.502-6.257 7.502-1.22 0-2.368-.634-2.763-1.385l-.754 2.873c-.272 1.042-1.011 2.342-1.507 3.136 1.157.356 2.373.551 3.633.551 6.621 0 11.988-5.367 11.988-11.987C24.017 5.367 18.638 0 12.017 0z"/></svg>
                       </a>
                     </div>
@@ -162,50 +162,57 @@ export default function ContactPage() {
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="w-full lg:w-[50%] relative"
             >
-              <div className="bg-[#fcfbf9] border border-[#ece8dc] rounded-[32px] p-8 md:p-12 shadow-[0_4px_20px_rgba(0,0,0,0.02)] relative overflow-hidden h-full flex flex-col justify-center">
+              <div className="bg-white border border-[#e0e8d5] rounded-[32px] p-8 md:p-10 shadow-[0_4px_20px_rgba(0,0,0,0.02)] relative overflow-hidden h-full flex flex-col justify-start">
                 
-                <div className="relative z-10">
+                <div className="relative z-10 flex flex-col h-full">
                   <div className="flex items-center gap-3 mb-2">
-                    <h2 className="text-[32px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>Send Us A Message</h2>
-                    <Leaf className="w-5 h-5 text-[#c19236]" fill="currentColor" />
+                    <h2 className="text-[28px] md:text-[32px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>Send Us A Message</h2>
+                    <Leaf className="w-5 h-5 text-[#D4AF37]" fill="currentColor" />
                   </div>
-                  <p className="text-[#6b7b72] text-[15px] mb-10" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>We typically respond within 24 hours.</p>
+                  <p className="text-[#6b7b72] text-[15px] mb-8" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>We typically respond within 24 hours.</p>
 
-                  <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <input 
-                        type="text" 
-                        placeholder="Your Name" 
-                        className="w-full bg-white border border-[#ece8dc] rounded-xl px-5 py-4 text-[15px] text-[#0F3D2E] placeholder:text-[#6b7b72] focus:outline-none focus:border-[#c19236] focus:ring-1 focus:ring-[#c19236] transition-all"
-                        style={{ fontFamily: 'Nunito Sans, sans-serif' }}
-                      />
-                      <input 
-                        type="email" 
-                        placeholder="Email Address" 
-                        className="w-full bg-white border border-[#ece8dc] rounded-xl px-5 py-4 text-[15px] text-[#0F3D2E] placeholder:text-[#6b7b72] focus:outline-none focus:border-[#c19236] focus:ring-1 focus:ring-[#c19236] transition-all"
-                        style={{ fontFamily: 'Nunito Sans, sans-serif' }}
-                      />
-                    </div>
+                  <form className="space-y-6 flex flex-col flex-1" onSubmit={(e) => e.preventDefault()}>
                     <input 
                       type="text" 
-                      placeholder="Subject" 
-                      className="w-full bg-white border border-[#ece8dc] rounded-xl px-5 py-4 text-[15px] text-[#0F3D2E] placeholder:text-[#6b7b72] focus:outline-none focus:border-[#c19236] focus:ring-1 focus:ring-[#c19236] transition-all"
+                      placeholder="Your Name" 
+                      required
+                      className="w-full bg-white border border-[#e0e8d5] rounded-xl px-5 py-4 text-[15px] text-[#0F3D2E] placeholder:text-[#6b7b72]/70 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all"
                       style={{ fontFamily: 'Nunito Sans, sans-serif' }}
                     />
+                    
+                    <input 
+                      type="email" 
+                      placeholder="Email Address" 
+                      required
+                      className="w-full bg-white border border-[#e0e8d5] rounded-xl px-5 py-4 text-[15px] text-[#0F3D2E] placeholder:text-[#6b7b72]/70 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all"
+                      style={{ fontFamily: 'Nunito Sans, sans-serif' }}
+                    />
+                    
+                    <input 
+                      type="tel" 
+                      placeholder="Phone Number" 
+                      required
+                      className="w-full bg-white border border-[#e0e8d5] rounded-xl px-5 py-4 text-[15px] text-[#0F3D2E] placeholder:text-[#6b7b72]/70 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all"
+                      style={{ fontFamily: 'Nunito Sans, sans-serif' }}
+                    />
+
                     <textarea 
                       placeholder="Your Message" 
-                      rows={5}
-                      className="w-full bg-white border border-[#ece8dc] rounded-xl px-5 py-4 text-[15px] text-[#0F3D2E] placeholder:text-[#6b7b72] focus:outline-none focus:border-[#c19236] focus:ring-1 focus:ring-[#c19236] transition-all resize-none"
+                      required
+                      rows={4}
+                      className="w-full bg-white border border-[#e0e8d5] rounded-xl px-5 py-4 text-[15px] text-[#0F3D2E] placeholder:text-[#6b7b72]/70 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all resize-none"
                       style={{ fontFamily: 'Nunito Sans, sans-serif' }}
                     ></textarea>
 
-                    <button className="flex items-center gap-3 bg-[#0F3D2E] hover:bg-[#1a5441] text-white px-8 py-4 rounded-xl font-bold text-[15px] transition-colors shadow-md">
-                      Send Message <ArrowRight className="w-4 h-4" />
-                    </button>
+                    <div className="flex justify-end mt-auto pt-4">
+                      <button className="flex items-center gap-3 bg-[#0F3D2E] hover:bg-[#349337] text-white px-8 py-4 rounded-xl font-bold text-[15px] transition-colors shadow-md w-max">
+                        Send Message <ArrowRight className="w-4 h-4" />
+                      </button>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -215,8 +222,6 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <FAQSection />
 
     </main>
   );

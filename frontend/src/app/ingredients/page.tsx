@@ -21,9 +21,9 @@ const ingredientFAQs = [
 export default function IngredientsPage() {
 
   return (
-    <main className="min-h-screen bg-[#fcfbf9]">
+    <main className="min-h-screen bg-[#F8F5EE]">
       {/* Hero Section */}
-      <section className="relative w-full overflow-hidden bg-[#f5f0e6] border-b border-[#ece8dc] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
+      <section className="relative w-full overflow-hidden bg-[#F8F5EE] border-b border-[#F8F5EE] min-h-[60vh] lg:min-h-[85vh] flex flex-col">
         {/* Right Side Background Image (Desktop) */}
         <div 
           className="absolute inset-0 lg:left-auto lg:right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-[position:60%_center] lg:bg-[90%_center] z-0"
@@ -31,7 +31,7 @@ export default function IngredientsPage() {
         >
            {/* Dark gradient on mobile so the white text at the bottom is highly legible */}
            <div className="lg:hidden absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" style={{ zIndex: 1 }}></div>
-           <div className="hidden lg:block absolute inset-y-0 left-0 w-[150px] bg-gradient-to-r from-[#f5f0e6] via-[#f5f0e6]/60 to-transparent"></div>
+           <div className="hidden lg:block absolute inset-y-0 left-0 w-[150px] bg-gradient-to-r from-[#F8F5EE] via-[#F8F5EE]/60 to-transparent"></div>
         </div>
 
         <div className="flex-1 max-w-[1400px] w-full flex flex-col justify-end pb-10 pt-20 lg:justify-center lg:py-20 mx-auto px-6 sm:px-8 xl:px-12 relative z-10">
@@ -43,17 +43,17 @@ export default function IngredientsPage() {
           >
             {/* Subtitle */}
             <div className="hidden lg:flex items-center gap-4">
-              <div className="w-12 h-[2px] bg-[#c19236]"></div>
-              <span className="text-[#c19236] font-bold text-[13px] tracking-widest uppercase">
+              <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
+              <span className="text-[#D4AF37] font-bold text-[13px] tracking-widest uppercase">
                 Pure Botanicals
               </span>
-              <div className="w-12 h-[2px] bg-[#c19236]"></div>
+              <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
             </div>
 
             {/* Title */}
             <h1 className="text-[38px] md:text-[46px] lg:text-[48px] xl:text-[56px] font-bold text-white lg:text-[#0F3D2E] leading-[1.1] tracking-tight drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Playfair Display, serif' }}>
               Nature's Finest <br className="hidden sm:block" />
-              <span className="text-[#c19236] inline-block mt-2 sm:mt-0">Wellness Ingredients</span>
+              <span className="text-[#D4AF37] inline-block mt-2 sm:mt-0">Wellness Ingredients</span>
             </h1>
             
             {/* Description */}
@@ -66,24 +66,24 @@ export default function IngredientsPage() {
       </section>
 
       {/* Explore Our Botanical Collection */}
-      <section className="py-10 lg:py-12 bg-[#fcfbf9] relative">
+      <section className="pt-10 pb-10 lg:pb-12 bg-[#F8F5EE] relative">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 xl:px-8">
           
           {/* Section Header */}
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             transition={{ duration: 0.6 }}
             className="text-center mb-10"
           >
-            <h2 className="text-[36px] md:text-[44px] font-bold text-[#1c2e24] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <h2 className="text-[36px] md:text-[44px] font-bold text-[#0F3D2E] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
               Explore Our Botanical Collection
             </h2>
             <div className="flex items-center justify-center gap-4">
-              <div className="w-12 h-[2px] bg-[#cda434]"></div>
-              <Leaf className="w-4 h-4 text-[#cda434]" fill="currentColor" />
-              <div className="w-12 h-[2px] bg-[#cda434]"></div>
+              <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
+              <Leaf className="w-4 h-4 text-[#D4AF37]" fill="currentColor" />
+              <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
             </div>
           </motion.div>
 
@@ -91,7 +91,7 @@ export default function IngredientsPage() {
           <motion.div 
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             variants={{
               hidden: {},
               show: { transition: { staggerChildren: 0.15 } }
@@ -110,16 +110,16 @@ export default function IngredientsPage() {
                   hidden: { opacity: 0, y: 30 },
                   show: { opacity: 1, y: 0, transition: { type: "spring", bounce: 0.3 } }
                 }}
-                className="bg-[#fcfbf9] rounded-[24px] overflow-hidden border border-[#ece8dc] shadow-sm hover:shadow-xl transition-all duration-300 group"
+                className="bg-[#F8F5EE] rounded-[24px] overflow-hidden border border-[#F8F5EE] shadow-sm hover:shadow-xl transition-all duration-300 group"
               >
                 <div className="h-[180px] relative overflow-hidden">
                   <img src={col.img} alt={col.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                 </div>
                 <div className="relative pt-10 pb-6 px-4 text-center bg-white">
-                  <div className="absolute -top-7 left-1/2 -translate-x-1/2 w-14 h-14 bg-white rounded-full flex items-center justify-center border border-[#ece8dc] shadow-sm text-[#cda434]">
+                  <div className="absolute -top-7 left-1/2 -translate-x-1/2 w-14 h-14 bg-white rounded-full flex items-center justify-center border border-[#F8F5EE] shadow-sm text-[#D4AF37]">
                     {col.icon}
                   </div>
-                  <h3 className="text-[22px] font-bold text-[#1c2e24] mb-3" style={{ fontFamily: 'Playfair Display, serif' }}>{col.title}</h3>
+                  <h3 className="text-[22px] font-bold text-[#0F3D2E] mb-3" style={{ fontFamily: 'Playfair Display, serif' }}>{col.title}</h3>
                   <p className="text-[14px] text-[#556358] whitespace-pre-line leading-[1.6]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                     {col.desc}
                   </p>
@@ -132,17 +132,17 @@ export default function IngredientsPage() {
       </section>
 
       {/* Signature Ingredients */}
-      <section className="py-10 lg:py-12 bg-white border-t border-[#ece8dc]">
+      <section className="py-10 lg:py-12 bg-white border-t border-[#F8F5EE]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center mb-8 md:mb-10">
-            <h2 className="text-[36px] md:text-[44px] font-bold text-[#1c2e24] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <h2 className="text-[36px] md:text-[44px] font-bold text-[#0F3D2E] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
               Signature Ingredients
             </h2>
             <div className="flex items-center justify-center gap-4">
-              <div className="w-12 h-[2px] bg-[#cda434]"></div>
-              <Leaf className="w-4 h-4 text-[#cda434]" fill="currentColor" />
-              <div className="w-12 h-[2px] bg-[#cda434]"></div>
+              <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
+              <Leaf className="w-4 h-4 text-[#D4AF37]" fill="currentColor" />
+              <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
             </div>
           </div>
 
@@ -216,7 +216,7 @@ export default function IngredientsPage() {
             ].map((ingredient, idx) => (
               <div 
                 key={ingredient.id}
-                className={`sticky bg-white rounded-[32px] overflow-hidden shadow-[0_15px_40px_rgb(0,0,0,0.08)] border border-[#ece8dc] flex ${ingredient.imageLeft ? 'flex-col md:flex-row' : 'flex-col-reverse md:flex-row'} transition-all duration-500`}
+                className={`sticky bg-white rounded-[32px] overflow-hidden shadow-[0_15px_40px_rgb(0,0,0,0.08)] border border-[#F8F5EE] flex ${ingredient.imageLeft ? 'flex-col md:flex-row' : 'flex-col-reverse md:flex-row'} transition-all duration-500`}
                 style={{ top: `${10 + (idx * 3)}vh`, zIndex: (idx + 1) * 10 }}
               >
                 {ingredient.imageLeft && (
@@ -225,16 +225,16 @@ export default function IngredientsPage() {
                   </div>
                 )}
                 <div className="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center bg-[#fdfbf6]">
-                  <span className="text-[#cda434] text-[13px] font-bold uppercase tracking-[0.2em] mb-4">{ingredient.name}</span>
-                  <h3 className="text-[32px] md:text-[40px] font-bold text-[#1c2e24] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>{ingredient.title}</h3>
+                  <span className="text-[#D4AF37] text-[13px] font-bold uppercase tracking-[0.2em] mb-4">{ingredient.name}</span>
+                  <h3 className="text-[32px] md:text-[40px] font-bold text-[#0F3D2E] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>{ingredient.title}</h3>
                   <p className="text-[#556358] text-[16px] leading-[1.8] mb-6" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                     {ingredient.desc}
                   </p>
                   <div className="flex items-center justify-between gap-4 max-w-sm">
                     {ingredient.features.map((f, i) => (
                       <div key={i} className="flex flex-col items-center text-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-white border border-[#ece8dc] flex items-center justify-center text-[#4a6b3d] shadow-sm">{f.icon}</div>
-                        <span className="text-[12px] font-bold text-[#1c2e24] leading-tight">{f.text}</span>
+                        <div className="w-12 h-12 rounded-full bg-white border border-[#F8F5EE] flex items-center justify-center text-[#4a6b3d] shadow-sm">{f.icon}</div>
+                        <span className="text-[12px] font-bold text-[#0F3D2E] leading-tight">{f.text}</span>
                       </div>
                     ))}
                   </div>
@@ -252,22 +252,22 @@ export default function IngredientsPage() {
       </section>
 
       {/* Why These Ingredients Matter */}
-      <section className="py-10 lg:py-12 bg-[#fcfbf9] border-t border-[#ece8dc] relative z-[60]">
+      <section className="py-10 lg:py-12 bg-[#F8F5EE] border-t border-[#F8F5EE] relative z-[60]">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             transition={{ duration: 0.6 }}
             className="text-center mb-10 max-w-3xl mx-auto"
           >
-            <h2 className="text-[36px] md:text-[44px] font-bold text-[#1c2e24] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <h2 className="text-[36px] md:text-[44px] font-bold text-[#0F3D2E] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
               Why These Ingredients Matter
             </h2>
             <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="w-12 h-[2px] bg-[#cda434]"></div>
-              <Leaf className="w-4 h-4 text-[#cda434]" fill="currentColor" />
-              <div className="w-12 h-[2px] bg-[#cda434]"></div>
+              <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
+              <Leaf className="w-4 h-4 text-[#D4AF37]" fill="currentColor" />
+              <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
             </div>
             <p className="text-[16px] md:text-[18px] text-[#556358] leading-[1.8]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
               Every herb, root, and flower in our collection is carefully selected not just for its flavor, but for its profound functional benefits. We believe that true wellness starts from within, which is why our ingredients work synergistically to support your body's natural balance, enhance your daily energy, and provide holistic care.
@@ -277,7 +277,7 @@ export default function IngredientsPage() {
           <motion.div 
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             variants={{
               hidden: {},
               show: { transition: { staggerChildren: 0.15 } }
@@ -302,17 +302,17 @@ export default function IngredientsPage() {
               >
                 {/* Vertical Divider for Desktop */}
                 {i < 5 && (
-                  <div className="hidden lg:block absolute -right-4 top-[10%] bottom-[10%] w-[1px] bg-[#cda434]/30"></div>
+                  <div className="hidden lg:block absolute -right-4 top-[10%] bottom-[10%] w-[1px] bg-[#D4AF37]/30"></div>
                 )}
-                <div className="w-[80px] h-[80px] rounded-full border border-[#ece8dc] bg-[#fcfbf9] flex items-center justify-center text-[#4a6b3d] mb-5 shadow-sm group-hover:-translate-y-2 group-hover:shadow-md transition-all duration-300">
+                <div className="w-[80px] h-[80px] rounded-full border border-[#F8F5EE] bg-[#F8F5EE] flex items-center justify-center text-[#4a6b3d] mb-5 shadow-sm group-hover:-translate-y-2 group-hover:shadow-md transition-all duration-300">
                   {React.cloneElement(item.icon as React.ReactElement<any>, { className: "w-8 h-8" })}
                 </div>
                 <div className="flex items-center justify-center gap-[6px] mb-4">
-                  <div className="w-4 h-[1px] bg-[#cda434]"></div>
-                  <div className="w-[4px] h-[4px] rounded-full bg-[#cda434]"></div>
-                  <div className="w-4 h-[1px] bg-[#cda434]"></div>
+                  <div className="w-4 h-[1px] bg-[#D4AF37]"></div>
+                  <div className="w-[4px] h-[4px] rounded-full bg-[#D4AF37]"></div>
+                  <div className="w-4 h-[1px] bg-[#D4AF37]"></div>
                 </div>
-                <h4 className="text-[16px] font-bold text-[#1c2e24] mb-3 whitespace-pre-line leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>{item.title}</h4>
+                <h4 className="text-[16px] font-bold text-[#0F3D2E] mb-3 whitespace-pre-line leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>{item.title}</h4>
                 <p className="text-[13px] text-[#556358] leading-[1.6]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>{item.desc}</p>
               </motion.div>
             ))}
@@ -321,7 +321,7 @@ export default function IngredientsPage() {
       </section>
 
       {/* FAQ Section */}
-      <div className="relative z-[60] bg-white border-t border-[#ece8dc]">
+      <div className="relative z-[60] bg-white border-t border-[#F8F5EE]">
         <FAQSection 
         title="Frequently Asked Questions" 
         subtitle="Everything you need to know about our herbal ingredients, sourcing, and benefits. Can't find your answer? Reach out to our herbalist team."

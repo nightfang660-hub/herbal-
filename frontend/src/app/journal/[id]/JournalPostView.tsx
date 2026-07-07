@@ -11,7 +11,7 @@ interface JournalPostViewProps {
 
 export default function JournalPostView({ post }: JournalPostViewProps) {
   return (
-    <div className="flex flex-col w-full min-h-screen bg-[#f5f0e6]">
+    <div className="flex flex-col w-full min-h-screen bg-[#F8F5EE]">
       {/* Hero Section */}
       <section className="relative w-full h-[40vh] md:h-[50vh] min-h-[400px]">
         <div className="absolute inset-0">

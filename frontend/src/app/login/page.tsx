@@ -28,7 +28,7 @@ function AuthContent() {
   
   // Form State
   const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(searchParams.get('email') || '');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
@@ -258,7 +258,7 @@ function AuthContent() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value.trim().toLowerCase())}
-                    className="w-full pl-[52px] pr-[20px] h-[52px] rounded-[16px] border border-[#E8E6DE] bg-white text-[16px] text-[#1D2E25] focus:outline-none focus:border-[#0F5132] focus:ring-[4px] focus:ring-[rgba(15,81,50,0.08)] transition-all placeholder:text-[#A0AAB2]"
+                    className="w-full pl-[52px] pr-[20px] h-[52px] rounded-[16px] border border-[#F8F5EE] bg-white text-[16px] text-[#1D2E25] focus:outline-none focus:border-[#0F5132] focus:ring-[4px] focus:ring-[rgba(15,81,50,0.08)] transition-all placeholder:text-[#A0AAB2]"
                     placeholder="Enter your email"
                   />
                 </div>
@@ -274,7 +274,7 @@ function AuthContent() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-[52px] pr-[52px] h-[52px] rounded-[16px] border border-[#E8E6DE] bg-white text-[16px] text-[#1D2E25] focus:outline-none focus:border-[#0F5132] focus:ring-[4px] focus:ring-[rgba(15,81,50,0.08)] transition-all placeholder:text-[#A0AAB2]"
+                    className="w-full pl-[52px] pr-[52px] h-[52px] rounded-[16px] border border-[#F8F5EE] bg-white text-[16px] text-[#1D2E25] focus:outline-none focus:border-[#0F5132] focus:ring-[4px] focus:ring-[rgba(15,81,50,0.08)] transition-all placeholder:text-[#A0AAB2]"
                     placeholder="Enter password"
                   />
                   <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-[20px] flex items-center text-[#A0AAB2] hover:text-[#0F5132] transition-colors">
@@ -285,7 +285,7 @@ function AuthContent() {
 
               <div className="flex items-center justify-between text-[#6E7C70] text-[14px]">
                 <label className="flex items-center gap-2 cursor-pointer group">
-                  <input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} className="w-[16px] h-[16px] rounded-[4px] border-[#E8E6DE] text-[#0F5132] focus:ring-[rgba(15,81,50,0.08)] cursor-pointer" />
+                  <input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} className="w-[16px] h-[16px] rounded-[4px] border-[#F8F5EE] text-[#0F5132] focus:ring-[rgba(15,81,50,0.08)] cursor-pointer" />
                   <span className="group-hover:text-[#1D2E25] transition-colors">Remember Me</span>
                 </label>
                 <button type="button" onClick={() => { setErrorMsg(null); setView('forgot-password'); }} className="font-medium text-[#0F5132] hover:underline">
@@ -350,18 +350,18 @@ function AuthContent() {
             <form onSubmit={handleSignup} className="space-y-[20px]">
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-[20px] flex items-center pointer-events-none"><User className="h-5 w-5 text-[#0F5132]" /></div>
-                <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full pl-[52px] pr-[20px] h-[52px] rounded-[16px] border border-[#E8E6DE] focus:border-[#0F5132] focus:ring-[4px] focus:ring-[rgba(15,81,50,0.08)] transition-all" placeholder="Full Name" />
+                <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full pl-[52px] pr-[20px] h-[52px] rounded-[16px] border border-[#F8F5EE] focus:border-[#0F5132] focus:ring-[4px] focus:ring-[rgba(15,81,50,0.08)] transition-all" placeholder="Full Name" />
               </div>
 
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-[20px] flex items-center pointer-events-none"><Mail className="h-5 w-5 text-[#0F5132]" /></div>
-                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value.trim().toLowerCase())} className="w-full pl-[52px] pr-[20px] h-[52px] rounded-[16px] border border-[#E8E6DE] focus:border-[#0F5132] focus:ring-[4px] focus:ring-[rgba(15,81,50,0.08)] transition-all" placeholder="Email Address" />
+                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value.trim().toLowerCase())} className="w-full pl-[52px] pr-[20px] h-[52px] rounded-[16px] border border-[#F8F5EE] focus:border-[#0F5132] focus:ring-[4px] focus:ring-[rgba(15,81,50,0.08)] transition-all" placeholder="Email Address" />
               </div>
 
               <div>
                 <div className="relative group mb-2">
                   <div className="absolute inset-y-0 left-0 pl-[20px] flex items-center pointer-events-none"><Lock className="h-5 w-5 text-[#0F5132]" /></div>
-                  <input type={showPassword ? 'text' : 'password'} required value={password} onChange={(e) => setPassword(e.target.value)} className="w-full pl-[52px] pr-[52px] h-[52px] rounded-[16px] border border-[#E8E6DE] focus:border-[#0F5132] focus:ring-[4px] focus:ring-[rgba(15,81,50,0.08)] transition-all" placeholder="Create a password" />
+                  <input type={showPassword ? 'text' : 'password'} required value={password} onChange={(e) => setPassword(e.target.value)} className="w-full pl-[52px] pr-[52px] h-[52px] rounded-[16px] border border-[#F8F5EE] focus:border-[#0F5132] focus:ring-[4px] focus:ring-[rgba(15,81,50,0.08)] transition-all" placeholder="Create a password" />
                   <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-[20px] flex items-center text-[#A0AAB2] hover:text-[#0F5132]">
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -378,11 +378,11 @@ function AuthContent() {
 
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-[20px] flex items-center pointer-events-none"><Lock className="h-5 w-5 text-[#0F5132]" /></div>
-                <input type={showPassword ? 'text' : 'password'} required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full pl-[52px] pr-[20px] h-[52px] rounded-[16px] border border-[#E8E6DE] focus:border-[#0F5132] focus:ring-[4px] focus:ring-[rgba(15,81,50,0.08)] transition-all" placeholder="Confirm password" />
+                <input type={showPassword ? 'text' : 'password'} required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full pl-[52px] pr-[20px] h-[52px] rounded-[16px] border border-[#F8F5EE] focus:border-[#0F5132] focus:ring-[4px] focus:ring-[rgba(15,81,50,0.08)] transition-all" placeholder="Confirm password" />
               </div>
 
               <label className="flex items-start gap-3 cursor-pointer group pt-2">
-                <input type="checkbox" required checked={agreeTerms} onChange={(e) => setAgreeTerms(e.target.checked)} className="mt-1 w-[16px] h-[16px] rounded-[4px] border-[#E8E6DE] text-[#0F5132] focus:ring-[rgba(15,81,50,0.08)] cursor-pointer" />
+                <input type="checkbox" required checked={agreeTerms} onChange={(e) => setAgreeTerms(e.target.checked)} className="mt-1 w-[16px] h-[16px] rounded-[4px] border-[#F8F5EE] text-[#0F5132] focus:ring-[rgba(15,81,50,0.08)] cursor-pointer" />
                 <span className="text-[13px] text-[#6E7C70] leading-snug">
                   I agree to the <Link href="/terms" className="text-[#0F5132] font-medium hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-[#0F5132] font-medium hover:underline">Privacy Policy</Link>
                 </span>
@@ -452,7 +452,7 @@ function AuthContent() {
               <form onSubmit={handleForgotPassword} className="space-y-[20px]">
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-[20px] flex items-center pointer-events-none"><Mail className="h-5 w-5 text-[#0F5132]" /></div>
-                  <input type="email" required value={email} onChange={(e) => setEmail(e.target.value.trim().toLowerCase())} className="w-full pl-[52px] pr-[20px] h-[52px] rounded-[16px] border border-[#E8E6DE] focus:border-[#0F5132] focus:ring-[4px] focus:ring-[rgba(15,81,50,0.08)] transition-all" placeholder="Email Address" />
+                  <input type="email" required value={email} onChange={(e) => setEmail(e.target.value.trim().toLowerCase())} className="w-full pl-[52px] pr-[20px] h-[52px] rounded-[16px] border border-[#F8F5EE] focus:border-[#0F5132] focus:ring-[4px] focus:ring-[rgba(15,81,50,0.08)] transition-all" placeholder="Email Address" />
                 </div>
                 <button type="submit" disabled={loading} className="w-full h-[52px] rounded-[16px] bg-[#0F5132] text-white text-[16px] font-[600] hover:bg-[#146B43] transition-all flex items-center justify-center disabled:opacity-70 shadow-[0_8px_16px_rgba(15,81,50,0.15)]">
                   {loading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : 'Send Instructions'}

@@ -38,8 +38,8 @@ function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: 
   return (
     <motion.div 
       variants={{
-        hidden: { opacity: 0, y: 40 },
-        show: { opacity: 1, y: 0, transition: { type: "spring", bounce: 0.3 } }
+        hidden: { opacity: 1, y: 0 },
+        visible: { opacity: 1, y: 0, transition: { type: "spring", bounce: 0.3 } }
       }}
       onClick={() => router.push(`/shop/${product.id}`)}
       className="flex flex-col group cursor-pointer bg-white rounded-[20px] md:rounded-3xl border border-[#e8e5de] p-3 md:p-5 overflow-hidden shadow-sm transition-all duration-300"
@@ -71,7 +71,7 @@ function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: 
         <div className="flex items-center gap-1 md:gap-1.5 mb-2 md:mb-3">
           <div className="flex items-center gap-[1px] md:gap-[2px]">
             {[...Array(5)].map((_, i) => (
-               <Star key={i} className={`w-2.5 h-2.5 md:w-[14px] md:h-[14px] ${i < Math.floor(product.rating) ? 'fill-[#ffc107] text-[#ffc107]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
+               <Star key={i} className={`w-2.5 h-2.5 md:w-[14px] md:h-[14px] ${i < Math.floor(product.rating) ? 'fill-[#D4AF37] text-[#D4AF37]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
             ))}
           </div>
           <span className="text-[10px] md:text-[12px] font-bold text-[#6b7b72] ml-0.5">({product.rating.toFixed(1)})</span>
@@ -93,7 +93,7 @@ function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: 
           <div className="flex items-center gap-2 relative">
             <button 
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(); }}
-              className={`flex items-center justify-center w-7 h-7 md:w-9 md:h-9 rounded-full text-white transition-colors shadow-sm shrink-0 relative z-10 hover:scale-105 active:scale-95 ${isAdded ? 'bg-[#5b8c5a]' : 'bg-[#183a2d] hover:bg-[#0f281e]'}`}
+              className={`flex items-center justify-center w-7 h-7 md:w-9 md:h-9 rounded-full text-white transition-colors shadow-sm shrink-0 relative z-10 hover:scale-105 active:scale-95 ${isAdded ? 'bg-[#5b8c5a]' : 'bg-[#0F3D2E] hover:bg-[#0F3D2E]'}`}
             >
               {isAdded ? (
                 <Check className="w-3.5 h-3.5 md:w-4 md:h-4" strokeWidth={2.5} />
@@ -119,25 +119,25 @@ export default function FeaturedProductsSection() {
   };
 
   return (
-    <section className="bg-[#f4f1e6] py-12 overflow-hidden relative" id="shop">
+    <section className="bg-[#F8F5EE] py-12 overflow-hidden relative" id="shop">
       <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
         {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="flex flex-col md:flex-row items-center justify-center relative mb-14 gap-6"
+          <motion.div 
+            initial={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: false }}
+            className="flex flex-col md:flex-row items-center justify-center relative mb-14 gap-6"
         >
           <div className="text-center max-w-3xl mx-auto flex flex-col items-center gap-3">
-            <h2 className="text-[28px] md:text-[36px] font-bold text-[#2c4a35] capitalize" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <h2 className="text-[28px] md:text-[36px] font-bold text-[#0F3D2E] capitalize" style={{ fontFamily: 'Playfair Display, serif' }}>
               Our Herbal Tea Collection
             </h2>
             <p className="text-[14px] md:text-[15px] text-[#6b7b72] leading-[1.7] max-w-2xl" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
               Discover our carefully crafted herbal tea blends designed to support your daily wellness journey naturally.
             </p>
           </div>
-          <Link href="/shop" className="md:absolute md:right-0 md:bottom-2 text-[13px] font-bold tracking-[0.15em] text-[#e2b755] hover:text-[#f2c765] transition-colors uppercase shrink-0">
+          <Link href="/shop" className="md:absolute md:right-0 md:bottom-2 text-[13px] font-bold tracking-[0.15em] text-[#D4AF37] hover:text-[#D4AF37] transition-colors uppercase shrink-0">
             Shop All &rarr;
           </Link>
         </motion.div>
@@ -145,7 +145,7 @@ export default function FeaturedProductsSection() {
         <motion.div 
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           variants={{
             hidden: {},
             show: { transition: { staggerChildren: 0.15 } }
@@ -162,9 +162,9 @@ export default function FeaturedProductsSection() {
       <AnimatePresence>
         {notification && (
           <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            initial={{ opacity: 1, y: 0, scale: 1 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            exit={{ opacity: 1, y: 0, scale: 1 }}
             className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] bg-[#0F3D2E] text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 font-semibold text-[13px] md:text-[14px]"
             style={{ fontFamily: 'Nunito Sans, sans-serif' }}
           >
