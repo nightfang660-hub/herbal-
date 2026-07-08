@@ -202,16 +202,22 @@ export default function ProductDetailsPage() {
 
   const packSizes = [
     {
-      weight: product.weight || '20 Packets',
+      weight: '20 Packets',
       price: product.price,
       originalPrice: product.originalPrice,
-      discount: product.discount || Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+      discount: 15
     },
     {
-      weight: 'Custom Mix (20 Packets)',
-      price: product.price,
-      originalPrice: product.originalPrice,
-      discount: product.discount || Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+      weight: '60 Packets',
+      originalPrice: product.originalPrice === 270 ? 810 : product.originalPrice * 3,
+      price: Math.round((product.originalPrice === 270 ? 810 : product.originalPrice * 3) * 0.85),
+      discount: 15
+    },
+    {
+      weight: '120 Packets',
+      originalPrice: product.originalPrice === 270 ? 1630 : product.originalPrice * 6,
+      price: Math.round((product.originalPrice === 270 ? 1630 : product.originalPrice * 6) * 0.85),
+      discount: 15
     }
   ];
 
@@ -629,36 +635,35 @@ export default function ProductDetailsPage() {
             </div>
 
             {/* Choose Pack Size */}
-            <div className="mb-6">
+            <div className="mb-4">
               <h4 className="text-[#0F3D2E] font-bold text-[15px] mb-3">Choose Pack Size</h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
-                {/* Size 1 */}
-                <div 
-                  onClick={() => setSelectedPackIndex(0)}
-                  className={`border-[1.5px] rounded-xl p-2 md:p-3 flex flex-col items-center justify-center cursor-pointer transition-colors bg-white ${selectedPackIndex === 0 ? 'border-[#0F3D2E]' : 'border-[#e8e5de] hover:border-[#0F3D2E]'}`}
-                >
-                  <span className={`font-bold text-[12px] md:text-[14px] ${selectedPackIndex === 0 ? 'text-[#0F3D2E]' : 'text-[#6b7b72]'}`}>20 Packets</span>
-                  <div className="flex flex-col xl:flex-row items-center gap-1 xl:gap-1.5 mt-0.5">
-                    <span className="text-[#6b7b72] text-[11px] md:text-[13px]">₹{packSizes[0].price}</span>
-                    <span className="text-[#4caf50] bg-[#edf7ed] text-[9px] md:text-[10px] font-bold px-1 md:px-1.5 py-0 md:py-0.5 rounded whitespace-nowrap">Save 18%</span>
+              <div className="grid grid-cols-3 gap-2 md:gap-4">
+                {packSizes.map((pack, index) => (
+                  <div 
+                    key={index}
+                    onClick={() => setSelectedPackIndex(index)}
+                    className={`border-[1.5px] rounded-xl p-2 md:p-3 flex flex-col items-center justify-center cursor-pointer transition-colors bg-white ${selectedPackIndex === index ? 'border-[#0F3D2E]' : 'border-[#e8e5de] hover:border-[#0F3D2E]'}`}
+                  >
+                    <span className={`font-bold text-[12px] md:text-[14px] ${selectedPackIndex === index ? 'text-[#0F3D2E]' : 'text-[#6b7b72]'} text-center`}>{pack.weight}</span>
+                    <div className="flex flex-col xl:flex-row items-center gap-1 xl:gap-1.5 mt-0.5">
+                      <span className="text-[#6b7b72] text-[11px] md:text-[13px]">₹{pack.price}</span>
+                      <span className="text-[#4caf50] bg-[#edf7ed] text-[9px] md:text-[10px] font-bold px-1 md:px-1.5 py-0 md:py-0.5 rounded whitespace-nowrap">Save {pack.discount}%</span>
+                    </div>
                   </div>
-                </div>
-
-                {/* Customize */}
-                <div 
-                  onClick={() => {
-                    setSelectedPackIndex(1);
-                    setShowCustomModal(true);
-                  }}
-                  className={`border-[1.5px] rounded-xl p-2 md:p-3 flex flex-col items-center justify-center cursor-pointer transition-colors bg-white ${selectedPackIndex === 1 ? 'border-[#0F3D2E]' : 'border-[#e8e5de] hover:border-[#0F3D2E]'}`}
-                >
-                  <span className={`font-bold text-[12px] md:text-[14px] ${selectedPackIndex === 1 ? 'text-[#0F3D2E]' : 'text-[#6b7b72]'}`}>Customize Mix</span>
-                  <div className="flex flex-col xl:flex-row items-center gap-1 xl:gap-1.5 mt-0.5">
-                    <span className="text-[#6b7b72] text-[11px] md:text-[13px]">20 Packets</span>
-                    <span className="text-[#4caf50] bg-[#edf7ed] text-[9px] md:text-[10px] font-bold px-1 md:px-1.5 py-0 md:py-0.5 rounded whitespace-nowrap">Any Tea</span>
-                  </div>
-                </div>
+                ))}
               </div>
+            </div>
+
+            {/* Promotional Offers */}
+            <div className="bg-[#f2f7e9] border border-[#8cb73d]/30 rounded-xl p-3 mb-6 flex flex-col gap-1.5">
+              <p className="text-[#0F3D2E] text-[13px] md:text-[14px] font-bold flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#8cb73d]"></span>
+                But first time buyer - 15% off
+              </p>
+              <p className="text-[#0F3D2E] text-[13px] md:text-[14px] font-bold flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></span>
+                Life time 5%
+              </p>
             </div>
 
             <div className="flex gap-2 md:gap-4 mb-2">

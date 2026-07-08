@@ -90,10 +90,7 @@ export default function HeroSection() {
                 <div className="w-6 h-6 md:w-8 md:h-8 rounded-full border border-[#EFE8D6]/40 flex items-center justify-center"><Leaf className="w-3 h-3 md:w-4 md:h-4" /></div>
                 <span className="leading-tight">Natural<br />Ingredients</span>
               </div>
-              <div className="flex shrink-0 items-center gap-2 md:gap-3 md:border-l border-[#EFE8D6]/20 md:pl-6 lg:pl-8">
-                <div className="w-6 h-6 md:w-8 md:h-8 rounded-full border border-[#EFE8D6]/40 flex items-center justify-center"><ShoppingBag className="w-3 h-3 md:w-4 md:h-4" /></div>
-                <span className="leading-tight">20<br />Teabags</span>
-              </div>
+
             </motion.div>
           </motion.div>
         </div>

@@ -38,15 +38,16 @@ export default function AboutPage() {
     <main className="min-h-screen bg-[#F8F5EE]">
       
       {/* Hero Section */}
-      <section className="relative w-full overflow-hidden bg-white border-b border-white min-h-[50vh] lg:min-h-[70vh] flex flex-col">
-        {/* Right Side Background Image (Desktop) */}
+      <section className="relative w-full overflow-hidden bg-white min-h-[50vh] lg:min-h-[70vh] flex flex-col">
+        {/* Right Side Background Image */}
         <div 
-          className="absolute inset-0 lg:left-auto lg:right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover lg:bg-[length:auto_85%] bg-[position:60%_center] lg:bg-[90%_center] z-0"
-          style={{ backgroundImage: `url('/assets/edited-photo .png')` }}
+          className="absolute inset-0 lg:left-auto lg:right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-[position:60%_center] lg:bg-[90%_center] z-0"
+          style={{ backgroundImage: `url('/assets/abouthero.png')` }}
         >
            {/* Dark gradient on mobile so the white text at the bottom is highly legible */}
            <div className="lg:hidden absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" style={{ zIndex: 1 }}></div>
-           <div className="hidden lg:block absolute inset-y-0 -left-[2px] w-[200px] bg-gradient-to-r from-white via-white/70 to-white/0" style={{ zIndex: 1 }}></div>
+           {/* Gradient for Desktop - Thick white start to cover the hard image boundary */}
+           <div className="hidden lg:block absolute inset-y-0 -left-[2px] w-[250px]" style={{ zIndex: 1, background: 'linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 15%, rgba(255,255,255,0) 100%)' }}></div>
         </div>
 
         <div className="flex-1 max-w-[1400px] w-full flex flex-col justify-end pb-10 pt-20 lg:justify-center lg:py-20 mx-auto px-6 sm:px-8 xl:px-12 relative z-10">
@@ -103,7 +104,7 @@ export default function AboutPage() {
                    Eshwar Chitte
                  </h3>
                  <p className="text-[16px] md:text-[18px] text-[#556358] leading-[1.8] text-justify md:text-center" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                   I'm a wellness researcher from Nellore. I'm not a pharmacist or doctor — I'm someone who cares deeply about natural health. For years, I watched my parents suffer. That frustrated me. So I researched. I studied. I created.
+                   I'm a wellness researcher from Nellore. I am deeply inspired by nature and believe in curing health problems using pure, natural ingredients. Watching my parents struggle with their health motivated me to research and create natural remedies that truly help people heal.
                  </p>
                  <p className="text-[16px] md:text-[18px] font-bold text-[#349337] leading-[1.8] pt-2" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                    Real health comes from nature, patience, and genuine care.

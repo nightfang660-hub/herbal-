@@ -43,7 +43,7 @@ export default function CraftedWithNatureSection() {
       {/* ── Solid dark forest green bottom band (cards sit on this) ── */}
       <div className="absolute bottom-0 left-0 w-full pointer-events-none" style={{ 
         height: '35%', 
-        background: '#349337', 
+        background: '#1c3524', 
         borderTopLeftRadius: '24px', 
         borderTopRightRadius: '24px' 
       }} />

@@ -275,41 +275,59 @@ export default function BlogPage() {
   return (
     <div className="flex flex-col w-full min-h-screen bg-white pb-10">
       
-      {/* Hero Section (Matching About/Contact) */}
-      <section className="relative w-full overflow-hidden bg-white min-h-[50vh] lg:min-h-[70vh] flex flex-col">
-        {/* Right Side Background Image (Desktop) */}
+      {/* Hero Section (Matching Contact) */}
+      <section className="relative w-full overflow-hidden bg-black lg:bg-white h-[440px] md:min-h-[580px] lg:min-h-[70vh] flex flex-col">
+        {/* Background Image Container */}
         <div 
-          className="absolute inset-0 lg:left-auto lg:right-0 w-full lg:w-[50%] xl:w-[55%] bg-no-repeat bg-cover bg-[position:60%_center] lg:bg-[90%_center] z-0"
+          className="absolute inset-y-0 right-0 w-full lg:w-[65%] h-full bg-no-repeat bg-cover bg-center lg:bg-[position:right_bottom] z-0"
           style={{ backgroundImage: `url('/assets/Journalherosection.png')` }}
         >
-           {/* Dark gradient on mobile so the white text at the bottom is highly legible */}
-           <div className="lg:hidden absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" style={{ zIndex: 1 }}></div>
-           <div className="hidden lg:block absolute inset-y-0 -left-[2px] w-[200px] bg-gradient-to-r from-white via-white/70 to-white/0" style={{ zIndex: 1 }}></div>
+           {/* Gradient for Mobile - Dark fade to make white text readable */}
+           <div 
+             className="absolute inset-0 z-10 lg:hidden" 
+             style={{ background: 'linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%)' }}
+           ></div>
+           {/* Gradient for Desktop - Sharp fade blending into white */}
+           <div 
+             className="absolute inset-0 z-10 hidden lg:block" 
+             style={{ background: 'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 30%)' }}
+           ></div>
         </div>
 
-        <div className="flex-1 max-w-[1400px] w-full flex flex-col justify-end pb-10 pt-20 lg:justify-center lg:py-20 mx-auto px-4 sm:px-6 xl:px-8 relative z-10">
+        <div className="flex-1 max-w-[1400px] w-full flex flex-col justify-center pt-[42px] pb-[30px] px-[24px] md:px-8 xl:px-12 mx-auto relative z-20">
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="w-full lg:w-[45%] xl:w-[48%] space-y-8"
+              className="w-full lg:w-[45%] xl:w-[48%] flex flex-col items-start justify-center h-full mt-[-180px] lg:mt-0"
             >
               {/* Subtitle */}
-              <div className="hidden lg:flex items-center gap-4">
-                <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
-                <span className="text-[#D4AF37] font-bold text-[13px] tracking-widest uppercase">
+              <div className="flex items-center gap-3 mb-4 lg:mb-8">
+                <div className="w-6 lg:w-10 h-[2px] bg-[#D4A017]"></div>
+                <span className="text-[#D4A017] font-bold text-[14px] lg:text-[15px] tracking-[3px] uppercase" style={{ fontFamily: 'Inter, sans-serif' }}>
                   OUR JOURNAL
                 </span>
-                <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
+                <div className="w-6 lg:w-10 h-[2px] bg-[#D4A017]"></div>
               </div>
   
-              {/* Title */}
-              <h1 className="text-[26px] sm:text-[30px] md:text-[34px] lg:text-[38px] xl:text-[42px] 2xl:text-[46px] whitespace-nowrap font-bold text-white lg:text-[#0F3D2E] leading-[1.2] tracking-tight drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Playfair Display, serif' }}>
-                Herbal Wisdom & <span className="text-[#D4AF37]">Insights</span>
+              {/* Title Mobile (2 lines - White & Gold) */}
+              <h1 className="lg:hidden text-[32px] sm:text-[44px] font-bold leading-[1.1] max-w-[360px] mb-3" style={{ fontFamily: 'Playfair Display, serif' }}>
+                <span className="text-white block">Herbal Wisdom</span>
+                <span className="text-[#D4A017] block">& Insights</span>
               </h1>
+
+              {/* Title Desktop (2 lines) */}
+              <h1 className="hidden lg:block lg:text-[56px] xl:text-[68px] font-bold text-[#0F3D2E] leading-[1.05] mb-6 lg:mb-8" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Herbal Wisdom <br />
+                <span className="text-[#D4A017]">& Insights</span>
+              </h1>
+
+              {/* Description - Mobile (White) / Desktop (Gray) */}
+              <p className="text-[14px] sm:text-[16px] text-white/90 font-normal leading-[1.6] max-w-[280px] sm:max-w-[380px] lg:hidden italic" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Discover simple tips, natural remedies, and easy ways to stay healthy every day.
+              </p>
               
-              {/* Description */}
-              <p className="text-[16px] md:text-[18px] text-white/95 lg:text-[#4a5d53] font-medium leading-[1.8] max-w-[500px] drop-shadow-md lg:drop-shadow-none" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+              <p className="hidden lg:block text-[16px] lg:text-[18px] text-[#4B5563] font-normal leading-[1.7] max-w-[460px]" style={{ fontFamily: 'Inter, sans-serif' }}>
                 Discover simple tips, natural remedies, and easy ways to stay healthy every day.
               </p>
   
