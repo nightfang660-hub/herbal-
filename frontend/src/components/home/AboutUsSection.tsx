@@ -22,9 +22,6 @@ export default function AboutUsSection() {
             </p>
             
             <div className="pt-6">
-              <p className="text-[18px] text-[#1c3524] font-medium italic mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
-                Curious to read the full story?
-              </p>
               <Link href="/about" className="inline-flex items-center gap-2 bg-[#4a6b3d] hover:bg-[#3b5930] text-white px-8 py-4 rounded-xl font-semibold text-[15px] transition-all shadow-[0_8px_20px_-6px_rgba(74,107,61,0.4)] hover:-translate-y-1">
                 Learn More About Us <ArrowRight className="w-4 h-4" />
               </Link>

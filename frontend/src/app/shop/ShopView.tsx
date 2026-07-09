@@ -298,13 +298,19 @@ export default function ShopPage() {
                     </div>
                     
                     <div className="flex items-end justify-between mt-auto pt-1">
-                      <div className="flex flex-col items-start leading-tight">
-                        <span className="font-black text-[#0F3D2E] text-[18px] md:text-[22px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                          ₹{product.price}
-                        </span>
-                        {product.originalPrice && product.originalPrice > product.price && (
-                          <span className="text-[#ef4444] text-[12px] md:text-[14px] line-through font-bold mt-0.5" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-                            ₹{product.originalPrice}
+                      <div className="flex items-center gap-2 leading-tight flex-wrap">
+                        {product.originalPrice && product.originalPrice > product.price ? (
+                          <>
+                            <span className="text-[#0F3D2E] text-[13px] md:text-[15px] line-through font-medium" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                              MRP ₹{product.originalPrice.toFixed(2)}
+                            </span>
+                            <span className="font-black text-[#ef4444] text-[18px] md:text-[22px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                              ₹{product.price.toFixed(2)}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="font-black text-[#0F3D2E] text-[18px] md:text-[22px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                            ₹{product.price.toFixed(2)}
                           </span>
                         )}
                       </div>

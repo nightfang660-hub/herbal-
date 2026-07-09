@@ -21,6 +21,16 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Herbal Tea | Premium Organic Herbal Tea Blends",
   description: "Experience premium, high-altitude organic herbal tea powders and botanical remedies designed to nurture your body and calm your mind.",
+  icons: {
+    icon: [
+      { url: '/favicon/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/favicon/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  manifest: '/favicon/site.webmanifest',
 };
 
 export default function RootLayout({

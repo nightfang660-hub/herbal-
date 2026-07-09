@@ -85,9 +85,22 @@ function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: 
         </div>
         
         <div className="flex items-center justify-between mt-auto pt-1">
-          <span className="font-bold text-[#0F3D2E] text-[14px] md:text-[18px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
-            ₹{product.price}
-          </span>
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {product.originalPrice && product.originalPrice > product.price ? (
+              <>
+                <span className="text-[#0F3D2E] text-[11px] md:text-[13px] line-through font-medium" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                  MRP ₹{product.originalPrice.toFixed(2)}
+                </span>
+                <span className="font-bold text-[#ef4444] text-[14px] md:text-[18px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                  ₹{product.price.toFixed(2)}
+                </span>
+              </>
+            ) : (
+              <span className="font-bold text-[#0F3D2E] text-[14px] md:text-[18px]" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                ₹{product.price.toFixed(2)}
+              </span>
+            )}
+          </div>
           
           {/* Actions */}
           <div className="flex items-center gap-2 relative">
