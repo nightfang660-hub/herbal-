@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - develop
+    paths:
+      - 'backend/**'
+      - 'terraform/**'
+      - '.github/workflows/deploy.yml'
 
 permissions:
   contents: read
