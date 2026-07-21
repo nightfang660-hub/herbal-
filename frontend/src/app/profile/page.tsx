@@ -9,7 +9,8 @@ import {
   CheckCircle2, AlertCircle, Edit2, Trash2, Plus, Mail
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getUserAddresses, addUserAddress, updateUserAddress, deleteUserAddress, getUserOrders, getUserProfile, updateUserProfile, Address } from '../../lib/userProfile';
+import { getUserAddresses, addUserAddress, updateUserAddress, deleteUserAddress, getUserOrders, getUserProfile, updateUserProfile, Address, subscribeToUserNotifications, AppNotification, markNotificationAsRead } from '../../lib/userProfile';
+import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
 
 type ViewState = 'dashboard' | 'orders' | 'addresses' | 'notifications' | 'settings';
 
@@ -24,7 +25,20 @@ function ProfileContent() {
   const [showSwitchAccount, setShowSwitchAccount] = useState(false);
   const [savedAccounts, setSavedAccounts] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [profileData, setProfileData] = useState({ fullName: '', phoneNumber: '' });
+  
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [saveMessage, setSaveMessage] = useState('');
+  
+  // Password Change State
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [pwdCurrent, setPwdCurrent] = useState('');
+  const [pwdNew, setPwdNew] = useState('');
+  const [pwdConfirm, setPwdConfirm] = useState('');
+  const [pwdError, setPwdError] = useState('');
+  const [pwdSuccess, setPwdSuccess] = useState('');
+  const [pwdLoading, setPwdLoading] = useState(false);
 
   useEffect(() => {
     if (viewParam && ['dashboard', 'orders', 'addresses', 'notifications', 'settings'].includes(viewParam)) {
@@ -97,6 +111,11 @@ function ProfileContent() {
     if (!loading && !user) {
       router.push('/login');
     } else if (user) {
+      // Load notifications
+      const unsubscribe = subscribeToUserNotifications(user.uid, (notifs) => {
+        setNotifications(notifs);
+      });
+
       // Load addresses from Firestore
       getUserAddresses(user.uid).then((fetchedAddresses) => {
         if (fetchedAddresses.length > 0) {
@@ -129,6 +148,8 @@ function ProfileContent() {
         console.error("Failed to load profile data:", err);
         setProfileData({ fullName: user.displayName || '', phoneNumber: '' });
       });
+
+      return () => unsubscribe();
     }
   }, [user, loading, router]);
 
@@ -279,7 +300,7 @@ function ProfileContent() {
             </div>
             <div>
               <label className="block text-[12px] font-bold text-[#878787] uppercase mb-1">Phone Number</label>
-              <input type="tel" value={addressForm.phone} onChange={e => setAddressForm({...addressForm, phone: e.target.value})} className="w-full border border-[#F8F5EE] rounded-lg px-4 py-2.5 text-[14px] focus:outline-none focus:border-[#0F3D2E]" />
+              <input type="tel" maxLength={10} value={addressForm.phone} onChange={e => setAddressForm({...addressForm, phone: e.target.value.replace(/\D/g, '').slice(0, 10)})} className="w-full border border-[#F8F5EE] rounded-lg px-4 py-2.5 text-[14px] focus:outline-none focus:border-[#0F3D2E]" />
             </div>
             <div className="flex items-center mt-6">
               <input type="checkbox" id="isDefault" checked={addressForm.isDefault} onChange={e => setAddressForm({...addressForm, isDefault: e.target.checked})} className="w-4 h-4 text-[#0F3D2E] rounded border-[#F8F5EE] focus:ring-[#0F3D2E]" />
@@ -335,23 +356,45 @@ function ProfileContent() {
   };
 
   const renderNotifications = () => {
-    const notifications = [
-      { id: 1, title: 'Order Shipped!', desc: 'Your order ORD-654123 is out for delivery.', time: '2 hours ago', unread: true },
-      { id: 2, title: 'Exclusive Offer', desc: 'Get 20% off on your next purchase with code HERBAL20.', time: '1 day ago', unread: false },
-      { id: 3, title: 'Welcome to R-HerbalTea', desc: 'Thank you for joining our premium wellness community.', time: '3 days ago', unread: false },
-    ];
+    if (notifications.length === 0) {
+      return (
+        <div className="bg-white border border-[#F8F5EE] rounded-[16px] shadow-sm p-10 text-center">
+          <h4 className="text-[16px] font-bold text-[#1D2E25] mb-2">No notifications yet</h4>
+          <p className="text-[14px] text-[#6E7C70]">When you have notifications, they will show up here.</p>
+        </div>
+      );
+    }
+
+    const formatDate = (isoStr: string) => {
+      try {
+        const d = new Date(isoStr);
+        if (isNaN(d.getTime())) return isoStr;
+        return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) + ' at ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+      } catch (e) {
+        return isoStr;
+      }
+    };
+
     return (
       <div className="bg-white border border-[#F8F5EE] rounded-[16px] shadow-sm overflow-hidden">
         <div className="divide-y divide-[#F0F0F0]">
           {notifications.map(notif => (
-            <div key={notif.id} className={`p-5 flex gap-4 ${notif.unread ? 'bg-[#F9FBFC]' : 'bg-white'}`}>
+            <div 
+              key={notif.id} 
+              onClick={() => {
+                if (notif.unread && user && notif.id) {
+                  markNotificationAsRead(user.uid, notif.id);
+                }
+              }}
+              className={`p-5 flex gap-4 cursor-pointer transition-colors ${notif.unread ? 'bg-[#F9FBFC] hover:bg-[#f1f6f8]' : 'bg-white hover:bg-[#fafafa]'}`}
+            >
               <div className="mt-1">
                 {notif.unread ? <div className="w-2.5 h-2.5 rounded-full bg-[#0F3D2E]" /> : <div className="w-2.5 h-2.5 rounded-full bg-[#F8F5EE]" />}
               </div>
               <div>
                 <h4 className={`text-[15px] ${notif.unread ? 'font-bold text-[#1D2E25]' : 'font-semibold text-[#6E7C70]'}`}>{notif.title}</h4>
                 <p className="text-[14px] text-[#6E7C70] mt-1">{notif.desc}</p>
-                <p className="text-[12px] text-[#A0AAB2] mt-2">{notif.time}</p>
+                <p className="text-[12px] text-[#A0AAB2] mt-2">{formatDate(notif.createdAt)}</p>
               </div>
             </div>
           ))}
@@ -362,8 +405,55 @@ function ProfileContent() {
 
   const handleSaveProfile = async () => {
     if (user) {
-      await updateUserProfile(user.uid, profileData);
-      alert('Profile updated successfully!');
+      setSaveStatus('loading');
+      try {
+        await updateUserProfile(user.uid, profileData);
+        if (profileData.fullName) {
+          await updateProfile(user, { displayName: profileData.fullName });
+        }
+        setSaveStatus('success');
+        setSaveMessage('Profile updated successfully!');
+        setTimeout(() => setSaveStatus('idle'), 3000);
+      } catch (error: any) {
+        setSaveStatus('error');
+        setSaveMessage(error.message || 'Error updating profile');
+        setTimeout(() => setSaveStatus('idle'), 3000);
+      }
+    }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwdError('');
+    setPwdSuccess('');
+    
+    if (pwdNew !== pwdConfirm) {
+      setPwdError('New passwords do not match');
+      return;
+    }
+    
+    if (pwdNew.length < 6) {
+      setPwdError('New password must be at least 6 characters');
+      return;
+    }
+    
+    try {
+      if (user && user.email) {
+        setPwdLoading(true);
+        const credential = EmailAuthProvider.credential(user.email, pwdCurrent);
+        await reauthenticateWithCredential(user, credential);
+        await updatePassword(user, pwdNew);
+        setPwdSuccess('Password changed successfully!');
+        setPwdCurrent('');
+        setPwdNew('');
+        setPwdConfirm('');
+        setTimeout(() => setShowPasswordModal(false), 2000);
+      }
+    } catch (error: any) {
+      console.error(error);
+      setPwdError(error.message || 'Error changing password. Check current password.');
+    } finally {
+      setPwdLoading(false);
     }
   };
 
@@ -371,24 +461,6 @@ function ProfileContent() {
     return (
       <div className="space-y-6">
         
-        {/* Profile Avatar Section */}
-        <div className="bg-white border border-[#F8F5EE] rounded-[24px] shadow-sm p-6 sm:p-8 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <div className="w-[80px] h-[80px] rounded-full bg-[#F5F8F3] border-4 border-white shadow-md flex items-center justify-center shrink-0">
-              <span className="text-[32px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>
-                {(profileData.fullName || user.displayName) ? (profileData.fullName || user.displayName)?.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
-              </span>
-            </div>
-            <div>
-              <h3 className="text-[18px] font-bold text-[#1D2E25] mb-1">Profile Photo</h3>
-              <p className="text-[14px] text-[#6E7C70]">This will be displayed on your profile.</p>
-            </div>
-          </div>
-          <button className="text-[#0F3D2E] bg-[#F5F8F3] text-[14px] font-bold px-5 py-2.5 rounded-full hover:bg-[#e8f2e1] transition-colors">
-            Update
-          </button>
-        </div>
-
         {/* Personal Details Form */}
         <div className="bg-white border border-[#F8F5EE] rounded-[24px] shadow-sm overflow-hidden">
           <div className="p-6 sm:p-8 border-b border-[#F0F0F0] bg-[#FAFAFA]">
@@ -424,7 +496,7 @@ function ProfileContent() {
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <span className="text-[#A0AAB2] font-semibold text-[15px] group-focus-within:text-[#0F3D2E] transition-colors">+91</span>
                   </div>
-                  <input type="tel" value={profileData.phoneNumber} onChange={e => setProfileData({...profileData, phoneNumber: e.target.value})} className="w-full pl-12 pr-4 py-3 bg-[#F8F5EE] border border-transparent rounded-[12px] text-[15px] focus:outline-none focus:bg-white focus:border-[#0F3D2E] focus:ring-[4px] focus:ring-[#0F3D2E]/10 transition-all text-[#1D2E25]" placeholder="Enter mobile number" />
+                  <input type="tel" maxLength={10} value={profileData.phoneNumber} onChange={e => setProfileData({...profileData, phoneNumber: e.target.value.replace(/\D/g, '').slice(0, 10)})} className="w-full pl-12 pr-4 py-3 bg-[#F8F5EE] border border-transparent rounded-[12px] text-[15px] focus:outline-none focus:bg-white focus:border-[#0F3D2E] focus:ring-[4px] focus:ring-[#0F3D2E]/10 transition-all text-[#1D2E25]" placeholder="Enter mobile number" />
                 </div>
               </div>
             </div>
@@ -437,15 +509,27 @@ function ProfileContent() {
             <h3 className="text-[18px] font-bold text-[#1D2E25] mb-1">Account Security</h3>
             <p className="text-[14px] text-[#6E7C70]">Keep your account secure by regularly updating your password.</p>
           </div>
-          <button className="mt-4 md:mt-0 whitespace-nowrap text-[#0F3D2E] text-[15px] font-bold border-2 border-[#0F3D2E] px-6 py-2.5 rounded-full hover:bg-[#F5F8F3] transition-colors">
+          <button onClick={() => setShowPasswordModal(true)} className="mt-4 md:mt-0 whitespace-nowrap text-[#0F3D2E] text-[15px] font-bold border-2 border-[#0F3D2E] px-6 py-2.5 rounded-full hover:bg-[#F5F8F3] transition-colors">
             Change Password
           </button>
         </div>
 
         {/* Action Button */}
-        <div className="flex justify-end pt-2">
-          <button onClick={handleSaveProfile} className="bg-[#0F3D2E] text-white text-[15px] font-bold px-10 py-3.5 rounded-full hover:bg-[#146B43] transition-all shadow-[0_8px_16px_rgba(15,61,46,0.2)] hover:shadow-[0_12px_24px_rgba(15,61,46,0.25)] hover:-translate-y-0.5">
-            Save All Changes
+        <div className="flex flex-col sm:flex-row justify-end items-center gap-4 pt-2">
+          <AnimatePresence>
+            {saveStatus === 'success' && (
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="text-[#0F5132] bg-[#e8f2e1] px-4 py-2 rounded-lg text-[14px] font-bold flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4" /> {saveMessage}
+              </motion.div>
+            )}
+            {saveStatus === 'error' && (
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="text-red-700 bg-red-50 px-4 py-2 rounded-lg text-[14px] font-bold flex items-center gap-2">
+                <AlertCircle className="w-4 h-4" /> {saveMessage}
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <button onClick={handleSaveProfile} disabled={saveStatus === 'loading'} className="bg-[#0F3D2E] text-white text-[15px] font-bold px-10 py-3.5 rounded-full hover:bg-[#146B43] transition-all shadow-[0_8px_16px_rgba(15,61,46,0.2)] hover:shadow-[0_12px_24px_rgba(15,61,46,0.25)] hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:-translate-y-0">
+            {saveStatus === 'loading' ? 'Saving...' : 'Save All Changes'}
           </button>
         </div>
       </div>
@@ -745,6 +829,54 @@ function ProfileContent() {
                   </div>
                 </button>
               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Change Password Modal */}
+      <AnimatePresence>
+        {showPasswordModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} exit={{ opacity: 0 }}
+              onClick={() => setShowPasswordModal(false)} 
+              className="absolute inset-0 bg-black" 
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-[400px] bg-white rounded-[24px] shadow-2xl overflow-hidden z-10 p-6"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-[20px] font-bold text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>Change Password</h3>
+                <button onClick={() => setShowPasswordModal(false)} className="text-[#6E7C70] hover:text-[#0F3D2E] transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <form onSubmit={handleChangePassword} className="space-y-4">
+                <div>
+                  <label className="block text-[12px] font-bold text-[#878787] uppercase mb-1">Current Password</label>
+                  <input type="password" value={pwdCurrent} onChange={e => setPwdCurrent(e.target.value)} required className="w-full border border-[#F8F5EE] rounded-lg px-4 py-2.5 text-[14px] focus:outline-none focus:border-[#0F3D2E]" />
+                </div>
+                <div>
+                  <label className="block text-[12px] font-bold text-[#878787] uppercase mb-1">New Password</label>
+                  <input type="password" value={pwdNew} onChange={e => setPwdNew(e.target.value)} required className="w-full border border-[#F8F5EE] rounded-lg px-4 py-2.5 text-[14px] focus:outline-none focus:border-[#0F3D2E]" />
+                </div>
+                <div>
+                  <label className="block text-[12px] font-bold text-[#878787] uppercase mb-1">Confirm New Password</label>
+                  <input type="password" value={pwdConfirm} onChange={e => setPwdConfirm(e.target.value)} required className="w-full border border-[#F8F5EE] rounded-lg px-4 py-2.5 text-[14px] focus:outline-none focus:border-[#0F3D2E]" />
+                </div>
+                
+                {pwdError && <p className="text-red-500 text-sm font-medium">{pwdError}</p>}
+                {pwdSuccess && <p className="text-green-600 text-sm font-medium">{pwdSuccess}</p>}
+                
+                <button type="submit" disabled={pwdLoading} className="w-full bg-[#0F3D2E] text-white font-bold py-3 rounded-lg hover:bg-[#146B43] transition-colors mt-4 disabled:opacity-70">
+                  {pwdLoading ? 'Updating...' : 'Update Password'}
+                </button>
+              </form>
             </motion.div>
           </div>
         )}

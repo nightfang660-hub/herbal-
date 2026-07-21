@@ -3,11 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '../../features/cart/cartStore';
-import { placeOrder } from '../../lib/api';
 import { ArrowLeft, CreditCard, Lock, ShieldAlert, X, MapPin } from 'lucide-react';
 import { useAuth } from '../../providers/AuthProvider';
 
-import { getUserAddresses, addUserAddress, updateUserAddress, deleteUserAddress, saveUserOrder, Address } from '../../lib/userProfile';
+import { getUserAddresses, addUserAddress, updateUserAddress, deleteUserAddress, saveUserOrder, Address, addNotification } from '../../lib/userProfile';
 
 const PRODUCTS = [
   { id: 1, name: "Ruby Calm Tea", price: 230.00, originalPrice: 270, discount: 15, img: "/assets/product/file_000000008de072079cfe74523df70bde.png", rating: 4.5, reviews: 124, category: "Wellness Blends", type: "Herbal", weight: "20 Packets", soldBy: "R-HerbalTea Organics" },
@@ -153,6 +152,23 @@ export default function CheckoutPage() {
           status: 'Confirmed',
           shippingAddress: addressObject,
           date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+        });
+
+        // Add real-time notifications for booking and payment
+        await addNotification(user.uid, {
+          title: 'Order Confirmed!',
+          desc: `Your order ${mockOrderId} has been successfully placed and is being processed.`,
+          type: 'order',
+          unread: true,
+          createdAt: new Date().toISOString()
+        });
+
+        await addNotification(user.uid, {
+          title: 'Payment Received',
+          desc: `We received your payment of ₹${orderTotal.toFixed(0)} for order ${mockOrderId}.`,
+          type: 'payment',
+          unread: true,
+          createdAt: new Date().toISOString()
         });
       }
 
@@ -334,6 +350,7 @@ export default function CheckoutPage() {
           <div>
             <input
               type="tel"
+              maxLength={10}
               value={mobileNo}
               onChange={handleInputChange(setMobileNo, 'mobileNo')}
               className={`w-full rounded-sm border ${firstErrorField === 'mobileNo' ? 'border-[#D84B5B]' : 'border-[#d5d5d5]'} bg-white px-3 py-2.5 text-[14px] text-[#333] focus:border-[#0F3D2E] outline-none`}

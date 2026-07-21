@@ -12,6 +12,7 @@ import {
   onAuthStateChanged
 } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
+import { addNotification } from '../../lib/userProfile';
 import { Lock, Mail, ShieldAlert, ArrowRight, User, CheckCircle2, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
@@ -153,9 +154,15 @@ function AuthContent() {
       if (userCredential.user) {
         await updateProfile(userCredential.user, { displayName: fullName });
         await sendEmailVerification(userCredential.user);
-        // Instead of forcing them to the 'verify' view, let's just log them in for now
-        // await auth.signOut(); // Do not log them in until verified
-        // setView('verify');
+        
+        await addNotification(userCredential.user.uid, {
+          title: 'Welcome to R-HerbalTea',
+          desc: 'Thank you for joining our premium wellness community. Get ready to explore natural goodness!',
+          type: 'welcome',
+          unread: true,
+          createdAt: new Date().toISOString()
+        });
+
         setSuccessMsg(`Account created successfully! Welcome 🌿`);
         setTimeout(() => {
           router.push(redirectPath);

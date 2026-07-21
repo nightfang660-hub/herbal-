@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { Star, Heart, Share2, ChevronLeft, ChevronRight, ArrowLeft, Check, Leaf, Package, Coffee, ShoppingBasket, ShoppingCart, ShieldCheck, Droplet, Activity, MessageCircle, Link, X } from 'lucide-react';
 import { useCartStore } from '../../../features/cart/cartStore';
 import { useWishlistStore } from '../../../features/wishlist/wishlistStore';
@@ -43,9 +44,11 @@ export default function ProductDetailsPage() {
     setMounted(true);
     async function loadProduct() {
       if (params.id) {
-        const data = await getProductById(params.id as string);
+        const [data, allData] = await Promise.all([
+          getProductById(params.id as string),
+          getProducts()
+        ]);
         setProduct(data);
-        const allData = await getProducts();
         setProducts(allData);
       }
       setLoading(false);
@@ -60,6 +63,7 @@ export default function ProductDetailsPage() {
   const [isAdded, setIsAdded] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showCustomModal, setShowCustomModal] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
   const [customMix, setCustomMix] = useState<{[key: string]: number}>({});
 
   const customTotal = Object.values(customMix).reduce((a, b) => a + b, 0);
@@ -78,7 +82,79 @@ export default function ProductDetailsPage() {
   const [isHoveringImage, setIsHoveringImage] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  const images = product?.images && product.images.length > 0 ? product.images : (product ? [product.img] : []);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const images = (product?.images && product.images.length > 0 ? product.images : (product ? [product.img] : []))
+    .filter(img => img && typeof img === 'string' && img.trim() !== '');
+
+  const minSwipeDistance = 50;
+  const onTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
+    setTouchEnd(null);
+    if ('targetTouches' in e) {
+      setTouchStart(e.targetTouches[0].clientX);
+    } else {
+      setTouchStart((e as React.MouseEvent).clientX);
+    }
+  };
+  const onTouchMove = (e: React.TouchEvent | React.MouseEvent) => {
+    if (touchStart === null) return;
+    if ('targetTouches' in e) {
+      setTouchEnd(e.targetTouches[0].clientX);
+    } else {
+      setTouchEnd((e as React.MouseEvent).clientX);
+    }
+  };
+  const onTouchEndEvent = () => {
+    if (touchStart !== null && touchEnd === null) {
+      // It's a tap without movement
+      setShowImageModal(true);
+      setTouchStart(null);
+      return;
+    }
+    if (!touchStart || !touchEnd) {
+      setTouchStart(null);
+      setTouchEnd(null);
+      return;
+    }
+    const distance = touchStart - touchEnd;
+    if (distance > minSwipeDistance) {
+      setMainImageIndex(prev => prev === images.length - 1 ? 0 : prev + 1);
+    } else if (distance < -minSwipeDistance) {
+      setMainImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1);
+    } else if (Math.abs(distance) < 10) {
+      setShowImageModal(true);
+    }
+    setTouchStart(null);
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
+
+  const lastWheelTime = React.useRef(0);
+  const onWheelEvent = (e: React.WheelEvent) => {
+    const now = Date.now();
+    if (now - lastWheelTime.current < 500) return; // Debounce scroll to avoid rapid jumping
+
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      if (Math.abs(e.deltaY) > 20) {
+        if (e.deltaY > 0) {
+          setMainImageIndex(prev => prev === images.length - 1 ? 0 : prev + 1);
+        } else {
+          setMainImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1);
+        }
+        lastWheelTime.current = now;
+      }
+    } else {
+      if (Math.abs(e.deltaX) > 20) {
+        if (e.deltaX > 0) {
+          setMainImageIndex(prev => prev === images.length - 1 ? 0 : prev + 1);
+        } else {
+          setMainImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1);
+        }
+        lastWheelTime.current = now;
+      }
+    }
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -300,6 +376,68 @@ export default function ProductDetailsPage() {
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-white relative">
+      
+      {/* Full-Screen Image Modal Overlay */}
+      <AnimatePresence>
+        {showImageModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] bg-[#F8F5EE] flex flex-col"
+          >
+            <button onClick={() => setShowImageModal(false)} className="absolute top-4 right-4 z-[210] w-10 h-10 bg-black text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-105">
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div 
+              className="flex-1 w-full h-[60vh] relative bg-white mt-16 md:mt-0 flex items-center justify-center p-4 touch-pan-y"
+              onMouseDown={onTouchStart}
+              onMouseMove={(e) => { if (touchStart) onTouchMove(e); }}
+              onMouseUp={onTouchEndEvent}
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEndEvent}
+              onWheel={onWheelEvent}
+            >
+               <Image src={currentImage} alt={product.name} fill className="object-contain mix-blend-multiply pointer-events-none" />
+               
+               {/* Left/Right Navigation Arrows removed by user request */}
+            </div>
+            
+            <div className="flex gap-4 overflow-x-auto p-4 shrink-0 bg-[#F8F5EE] justify-start md:justify-center scrollbar-hide">
+              {images.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setMainImageIndex(idx)}
+                  className={`relative w-[70px] h-[70px] shrink-0 border-2 rounded-xl overflow-hidden bg-white ${mainImageIndex === idx ? 'border-[#439626]' : 'border-transparent'}`}
+                >
+                  <Image src={img} alt={`thumb ${idx}`} fill className="object-contain mix-blend-multiply p-1" />
+                </button>
+              ))}
+            </div>
+            
+            <div className="bg-white p-4 flex items-center justify-between shadow-[0_-4px_10px_rgba(0,0,0,0.05)] shrink-0 px-4 md:px-12 lg:px-24">
+              <div className="flex flex-col">
+                 <span className="font-bold text-[14px] text-[#333]">{currentPack.weight}</span>
+                 <span className="font-bold text-[18px] text-[#333]">₹{currentPack.price} <span className="text-[12px] text-gray-500 line-through font-normal ml-1">MRP ₹{currentPack.originalPrice}</span></span>
+                 <span className="text-[11px] text-gray-500">Inclusive of all taxes</span>
+              </div>
+              <button 
+                onClick={() => {
+                   handleAddToCart();
+                   setShowImageModal(false);
+                   router.push('/cart');
+                }} 
+                className="bg-[#439626] text-white font-bold px-8 py-3.5 rounded-xl hover:bg-[#327a19] transition-colors"
+              >
+                 Add to cart
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Share Modal Overlay */}
       <AnimatePresence>
         {showShareModal && (
@@ -430,8 +568,8 @@ export default function ProductDetailsPage() {
                     {/* Selected state accent */}
                     {customMix[p.id] > 0 && <div className="absolute top-0 left-0 w-1.5 h-full bg-[#0F3D2E] transition-all" />}
                     
-                    <div className="bg-[#fcfbf9] border border-[#f0eee6] rounded-xl p-2 w-[60px] h-[60px] md:w-[72px] md:h-[72px] flex items-center justify-center shrink-0">
-                      <img src={p.img} alt={p.name} className="w-full h-full object-contain drop-shadow-sm group-hover:scale-110 transition-transform duration-300" />
+                    <div className="bg-[#fcfbf9] border border-[#f0eee6] rounded-xl p-2 w-[60px] h-[60px] md:w-[72px] md:h-[72px] flex items-center justify-center shrink-0 relative">
+                      <Image src={p.img} alt={p.name} fill sizes="72px" className="object-contain drop-shadow-sm group-hover:scale-110 transition-transform duration-300" />
                     </div>
                     
                     <div className="flex-1">
@@ -494,22 +632,30 @@ export default function ProductDetailsPage() {
                    onClick={() => setMainImageIndex(idx)}
                    className={`relative w-[60px] h-[60px] md:w-[85px] md:h-[85px] bg-transparent transition-all shrink-0 p-1 flex items-center justify-center ${mainImageIndex === idx ? 'border-2 border-[#b98e3b]' : 'border border-[#e8e5de] hover:border-[#d1c8ba]'}`}
                  >
-                   <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-contain mix-blend-multiply" />
+                   <Image src={img} alt={`Thumbnail ${idx + 1}`} fill sizes="85px" className="object-contain mix-blend-multiply" />
                  </button>
                ))}
             </div>
 
             {/* Main Large Image */}
             <div 
-              className="relative w-full h-[250px] md:h-auto md:flex-1 md:aspect-square bg-transparent flex items-center justify-center shrink-0 lg:cursor-crosshair group"
+              className="relative w-full h-[250px] md:h-auto md:flex-1 md:aspect-square bg-transparent flex items-center justify-center shrink-0 lg:cursor-crosshair group overflow-hidden select-none touch-pan-y"
               onMouseEnter={() => setIsHoveringImage(true)}
-              onMouseLeave={() => setIsHoveringImage(false)}
-              onMouseMove={handleImageMouseMove}
+              onMouseLeave={() => { setIsHoveringImage(false); onTouchEndEvent(); }}
+              onMouseMove={(e) => { handleImageMouseMove(e); onTouchMove(e); }}
+              onMouseDown={onTouchStart}
+              onMouseUp={onTouchEndEvent}
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEndEvent}
+              onWheel={onWheelEvent}
             >
-               <img src={currentImage} alt={product.name} className="w-full h-full object-contain mix-blend-multiply transition-opacity duration-300" style={{ opacity: isHoveringImage ? 0.9 : 1 }} />
+               <Image src={currentImage} alt={product.name} fill priority sizes="(max-width: 768px) 100vw, 50vw" className="object-contain mix-blend-multiply transition-opacity duration-300 pointer-events-none" style={{ opacity: isHoveringImage && !touchStart ? 0.9 : 1 }} />
                
+               {/* Left/Right Navigation Arrows removed by user request */}
+
                {/* Zoom Portal for Desktop (shows at the right side) */}
-               {isHoveringImage && (
+               {isHoveringImage && touchStart === null && (
                  <div className="hidden lg:block absolute top-0 left-full ml-16 w-full h-full bg-white z-[60] border border-[#e8e5de] shadow-2xl rounded-2xl overflow-hidden pointer-events-none">
                    <div 
                      className="w-full h-full"
@@ -543,8 +689,8 @@ export default function ProductDetailsPage() {
                   exit={{ opacity: 0, y: -20 }}
                   className="absolute -top-16 right-0 bg-white border border-[#8cb73d]/30 text-[#0F3D2E] shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-xl p-4 flex items-center gap-4 z-50 min-w-[300px]"
                 >
-                  <div className="w-12 h-12 rounded bg-[#eaf4d5] flex items-center justify-center shrink-0 overflow-hidden">
-                    <img src={images[0]} alt="cart item" className="w-full h-full object-contain p-1" />
+                  <div className="w-12 h-12 rounded bg-[#eaf4d5] flex items-center justify-center shrink-0 overflow-hidden relative">
+                    <Image src={images[0]} alt="cart item" fill sizes="48px" className="object-contain p-1" />
                   </div>
                   <div className="flex-1">
                     <p className="font-bold text-sm text-[#0F3D2E] flex items-center gap-1"><Check className="w-4 h-4 text-[#8cb73d]" /> Added to cart!</p>
@@ -779,7 +925,7 @@ export default function ProductDetailsPage() {
                 {/* Ingredient 1 */}
                 <div className="rounded-[16px] overflow-hidden border border-[#F8F5EE] flex flex-col bg-white">
                   <div className="w-full h-24 md:h-32 relative overflow-hidden">
-                    <img src="/home/beetroot-v2.png" alt="Beetroot" className="w-full h-full object-cover" />
+                    <Image src="/home/beetroot-v2.png" alt="Beetroot" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />
                   </div>
                   <div className="py-2 md:py-3 px-2 text-center border-t border-[#F8F5EE]">
                     <span className="font-bold text-[#0F3D2E] text-[13px] md:text-[14px]">Beetroot</span>
@@ -789,7 +935,7 @@ export default function ProductDetailsPage() {
                 {/* Ingredient 2 */}
                 <div className="rounded-[16px] overflow-hidden border border-[#F8F5EE] flex flex-col bg-white">
                   <div className="w-full h-24 md:h-32 relative overflow-hidden">
-                    <img src="/shop/petals.png" alt="Hibiscus" className="w-full h-full object-cover" />
+                    <Image src="/shop/petals.png" alt="Hibiscus" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />
                   </div>
                   <div className="py-2 md:py-3 px-2 text-center border-t border-[#F8F5EE]">
                     <span className="font-bold text-[#0F3D2E] text-[13px] md:text-[14px]">Hibiscus</span>
@@ -799,7 +945,7 @@ export default function ProductDetailsPage() {
                 {/* Ingredient 3 */}
                 <div className="rounded-[16px] overflow-hidden border border-[#F8F5EE] flex flex-col bg-white">
                   <div className="w-full h-24 md:h-32 relative overflow-hidden">
-                    <img src="/home/mulethi-v2.png" alt="Licorice" className="w-full h-full object-cover" />
+                    <Image src="/home/mulethi-v2.png" alt="Licorice" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />
                   </div>
                   <div className="py-2 md:py-3 px-2 text-center border-t border-[#F8F5EE]">
                     <span className="font-bold text-[#0F3D2E] text-[13px] md:text-[14px]">Licorice</span>
@@ -809,7 +955,7 @@ export default function ProductDetailsPage() {
                 {/* Ingredient 4 */}
                 <div className="rounded-[16px] overflow-hidden border border-[#F8F5EE] flex flex-col bg-white">
                   <div className="w-full h-24 md:h-32 relative overflow-hidden">
-                    <img src="/home/moringa-v2.png" alt="Moringa" className="w-full h-full object-cover" />
+                    <Image src="/home/moringa-v2.png" alt="Moringa" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />
                   </div>
                   <div className="py-2 md:py-3 px-2 text-center border-t border-[#F8F5EE]">
                     <span className="font-bold text-[#0F3D2E] text-[13px] md:text-[14px]">Moringa</span>
@@ -1007,7 +1153,6 @@ export default function ProductDetailsPage() {
                   onClick={() => router.push(`/shop/${similar.id}`)}
                   className="flex flex-col group cursor-pointer bg-white rounded-2xl md:rounded-3xl border border-[#e8e5de] p-3 md:p-5 overflow-hidden shadow-sm transition-all duration-300"
                 >
-                  {/* Product Image */}
                   <div className="relative w-full h-[160px] md:h-[280px] mb-3 flex items-center justify-center rounded-t-2xl pt-2 px-1">
                     <button 
                       className={`absolute top-0 right-0 p-1 transition-colors z-10 ${mounted && isInWishlist(Number(similar.id)) ? 'text-[#D84B5B]' : 'text-[#8b9992] hover:text-[#D84B5B]'}`} 
@@ -1015,10 +1160,12 @@ export default function ProductDetailsPage() {
                     >
                       <Heart className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} fill={mounted && isInWishlist(Number(similar.id)) ? 'currentColor' : 'none'} />
                     </button>
-                    <img 
+                    <Image 
                       src={similar.img} 
                       alt={similar.name} 
-                      className={`w-full h-full object-contain drop-shadow-sm transition-transform duration-700 ease-in-out ${similar.img.endsWith('/blue.png') ? 'scale-[1.4] translate-y-1' : (similar.img.endsWith('/ruby_detox.png') || similar.img.endsWith('/blue_tea1.png') ? 'scale-[1.3] translate-y-2' : '')}`} 
+                      fill
+                      sizes="(max-width: 768px) 160px, 280px"
+                      className={`object-contain drop-shadow-sm transition-transform duration-700 ease-in-out ${similar.img.endsWith('/blue.png') ? 'scale-[1.4] translate-y-1' : (similar.img.endsWith('/ruby_detox.png') || similar.img.endsWith('/blue_tea1.png') ? 'scale-[1.3] translate-y-2' : '')}`} 
                     />
                   </div>
                   

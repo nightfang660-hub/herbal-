@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useAuth } from '../providers/AuthProvider';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Navbar() {
   const { items, addItem, removeItem, updateQuantity, getTotalCents, getItemCount } = useCartStore();
@@ -125,7 +126,9 @@ export default function Navbar() {
 
           {/* Logo */}
           <div className="flex items-center gap-2.5 cursor-pointer shrink-0" onClick={() => router.push('/')}>
-            <img src="/home/herbal_logo.png" alt="R-HerbalTea Logo" className="h-9 w-9 object-contain" />
+            <div className="relative h-9 w-9">
+              <Image src="/home/herbal_logo.png" alt="R-HerbalTea Logo" fill className="object-contain" sizes="36px" />
+            </div>
             <span
               className="text-[20px] font-bold tracking-tight text-[#0F3D2E]"
               style={{ fontFamily: 'Playfair Display, serif' }}
@@ -289,7 +292,9 @@ export default function Navbar() {
             >
               <div className="flex items-center justify-between border-b border-[#e8e5de] p-5">
                 <div className="flex items-center gap-2">
-                  <img src="/home/herbal_logo.png" alt="Logo" className="h-7 w-7 object-contain" />
+                  <div className="relative h-7 w-7">
+                    <Image src="/home/herbal_logo.png" alt="Logo" fill className="object-contain" sizes="28px" />
+                  </div>
                   <span className="text-lg font-bold tracking-tight text-[#0F3D2E]" style={{ fontFamily: 'Playfair Display, serif' }}>R-HerbalTea</span>
                 </div>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="rounded-full p-1.5 text-[#0F3D2E] hover:bg-[#e8e5de] transition-colors cursor-pointer">

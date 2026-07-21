@@ -17,17 +17,17 @@ export default function TestimonialsSection() {
     },
     {
       id: 2,
-      name: "Neha Verma",
+      name: "Peddinti Suresh",
       role: "IT Professional",
       text: "The quality is exceptional! You can truly taste the purity and freshness in every sip. My go-to tea for wellness.",
-      avatar: "https://i.pravatar.cc/600?img=5",
+      avatar: "/assets/testmoniols/surash.png",
     },
     {
       id: 3,
-      name: "Rahul Mehta",
+      name: "vaddi bhanusankar",
       role: "Entrepreneur",
       text: "I was struggling with bloating and indigestion. Digestive Wellness Tea has been a game changer for me. Highly recommended!",
-      avatar: "https://i.pravatar.cc/600?img=11",
+      avatar: "/assets/testmoniols/bhanu.png",
     },
     {
       id: 4,

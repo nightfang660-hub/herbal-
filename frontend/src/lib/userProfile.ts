@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { doc, getDoc, setDoc, collection, getDocs, addDoc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, getDocs, addDoc, updateDoc, deleteDoc, query, where, onSnapshot, orderBy } from 'firebase/firestore';
 
 export interface UserProfile {
   uid: string;
@@ -77,3 +77,38 @@ export async function getUserOrders(uid: string) {
   const querySnapshot = await getDocs(ordersRef);
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
+
+// Notifications
+export interface AppNotification {
+  id?: string;
+  title: string;
+  desc: string;
+  type: 'welcome' | 'order' | 'payment' | 'promo' | 'system';
+  unread: boolean;
+  createdAt: string;
+}
+
+export async function addNotification(uid: string, notification: Omit<AppNotification, 'id'>) {
+  const notifRef = collection(db, 'users', uid, 'notifications');
+  await addDoc(notifRef, notification);
+}
+
+export async function markNotificationAsRead(uid: string, notificationId: string) {
+  const notifRef = doc(db, 'users', uid, 'notifications', notificationId);
+  await updateDoc(notifRef, { unread: false });
+}
+
+export function subscribeToUserNotifications(uid: string, callback: (notifications: AppNotification[]) => void) {
+  const notifRef = collection(db, 'users', uid, 'notifications');
+  const q = query(notifRef, orderBy('createdAt', 'desc'));
+  
+  return onSnapshot(q, (snapshot) => {
+    const notifications = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as AppNotification[];
+    callback(notifications);
+  });
+}
+
+

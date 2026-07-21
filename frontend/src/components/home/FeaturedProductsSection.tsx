@@ -7,10 +7,10 @@ import { useCartStore } from '../../features/cart/cartStore';
 import { useWishlistStore } from '../../features/wishlist/wishlistStore';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
-const FEATURED_PRODUCTS = [
-  { id: 1, name: "Ruby Calm Tea", desc: "A soothing blend to relax your mind and uplift your mood.", bestSeller: true, price: 450.00, img: "/assets/product/file_000000008de072079cfe74523df70bde.png", rating: 4.5, weight: "15 Packets" },
-];
+import { getProducts, Product } from '../../lib/products';
+
 
 function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: number, onAdd: (name: string) => void }) {
   const router = useRouter();
@@ -47,15 +47,18 @@ function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: 
       {/* Product Image */}
       <div className="relative w-full h-[110px] md:h-[280px] mb-2 md:mb-3 flex items-center justify-center rounded-t-2xl pt-1 md:pt-2 px-1">
         <button 
+          aria-label="Toggle Wishlist"
           className={`absolute top-0 right-0 p-1 transition-colors z-10 ${mounted && isInWishlist(product.id) ? 'text-[#D84B5B]' : 'text-[#8b9992] hover:text-[#D84B5B]'}`} 
           onClick={(e) => { e.stopPropagation(); toggleItem(product.id); }}
         >
           <Heart className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} fill={mounted && isInWishlist(product.id) ? 'currentColor' : 'none'} />
         </button>
-        <img 
+        <Image 
           src={product.img} 
           alt={product.name} 
-          className="w-full h-full object-contain drop-shadow-sm transition-transform duration-700 ease-in-out" 
+          fill
+          sizes="(max-width: 768px) 110px, 280px"
+          className="object-contain drop-shadow-sm transition-transform duration-700 ease-in-out" 
         />
       </div>
       
@@ -63,9 +66,9 @@ function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: 
       <div className="flex flex-col flex-1">
 
 
-        <h4 className="font-bold text-[#0F3D2E] text-[13px] md:text-[17px] leading-tight mb-1 md:mb-2 transition-colors duration-300 line-clamp-2 md:line-clamp-none" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+        <h3 className="font-bold text-[#0F3D2E] text-[13px] md:text-[17px] leading-tight mb-1 md:mb-2 transition-colors duration-300 line-clamp-2 md:line-clamp-none" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
           {product.name}
-        </h4>
+        </h3>
 
         {/* Rating (5 Stars) */}
         <div className="flex items-center gap-1 md:gap-1.5 mb-2 md:mb-3">
@@ -74,12 +77,12 @@ function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: 
                <Star key={i} className={`w-2.5 h-2.5 md:w-[14px] md:h-[14px] ${i < Math.floor(product.rating) ? 'fill-[#D4AF37] text-[#D4AF37]' : 'fill-[#e8e5de] text-[#e8e5de]'}`} />
             ))}
           </div>
-          <span className="text-[10px] md:text-[12px] font-bold text-[#6b7b72] ml-0.5">({product.rating.toFixed(1)})</span>
+          <span className="text-[10px] md:text-[12px] font-bold text-[#4a5d53] ml-0.5">({product.rating.toFixed(1)})</span>
         </div>
 
         {/* Description */}
         <div className="mb-2 md:mb-3">
-          <p className="text-[11px] md:text-[13px] text-[#6b7b72] leading-[1.4] md:leading-[1.5] line-clamp-2">
+          <p className="text-[11px] md:text-[13px] text-[#4a5d53] leading-[1.4] md:leading-[1.5] line-clamp-2">
             {product.desc}
           </p>
         </div>
@@ -105,6 +108,7 @@ function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: 
           {/* Actions */}
           <div className="flex items-center gap-2 relative">
             <button 
+              aria-label="Add to Cart"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(); }}
               className={`flex items-center justify-center w-7 h-7 md:w-9 md:h-9 rounded-full text-white transition-colors shadow-sm shrink-0 relative z-10 hover:scale-105 active:scale-95 ${isAdded ? 'bg-[#5b8c5a]' : 'bg-[#0F3D2E] hover:bg-[#0F3D2E]'}`}
             >
@@ -123,6 +127,22 @@ function FeaturedProductCard({ product, index, onAdd }: { product: any, index?: 
 
 export default function FeaturedProductsSection() {
   const [notification, setNotification] = useState<string | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const fetchedProducts = await getProducts();
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error('Error loading products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const handleProductAdd = (productName: string) => {
     setNotification(`${productName} added to cart!`);
@@ -165,9 +185,24 @@ export default function FeaturedProductsSection() {
           }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 w-full mx-auto"
         >
-          {FEATURED_PRODUCTS.map((product, idx) => (
-            <FeaturedProductCard key={product.id} product={product} index={idx} onAdd={handleProductAdd} />
-          ))}
+          {loading ? (
+            <>
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="flex flex-col bg-white rounded-[20px] md:rounded-3xl border border-[#e8e5de] p-3 md:p-5 shadow-sm animate-pulse">
+                  <div className="w-full h-[110px] md:h-[280px] bg-gray-200/60 rounded-t-2xl mb-2 md:mb-3"></div>
+                  <div className="flex flex-col flex-1">
+                    <div className="h-4 md:h-5 bg-gray-200/60 rounded w-3/4 mb-2 md:mb-3"></div>
+                    <div className="h-3 md:h-3.5 bg-gray-200/60 rounded w-1/3 mb-2 md:mb-3"></div>
+                    <div className="h-8 md:h-10 bg-gray-200/60 rounded w-full mt-auto pt-1"></div>
+                  </div>
+                </div>
+              ))}
+            </>
+          ) : (
+            products.slice(0, 4).map((product, idx) => (
+              <FeaturedProductCard key={product.id} product={product} index={idx} onAdd={handleProductAdd} />
+            ))
+          )}
         </motion.div>
       </div>
       

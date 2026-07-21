@@ -70,18 +70,18 @@ export default function CartPage() {
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() => router.back()}
-            className="w-10 h-10 rounded-full border border-[#d1c8ba] flex items-center justify-center text-[#0F3D2E] hover:bg-[#e8e5de] transition-colors"
+            className="w-10 h-10 rounded-full border border-[#d1c8ba] flex items-center justify-center text-[#0F3D2E] hover:bg-[#e8e5de] transition-colors shrink-0"
             aria-label="Go back"
           >
             <ArrowLeft className="w-5 h-5" strokeWidth={1.5} />
           </button>
           
-          <div className="flex-1 flex justify-center mr-10">
-            <div className="flex items-center gap-2 sm:gap-4 text-[12px] sm:text-[14px] font-bold tracking-widest text-[#03a685]">
+          <div className="flex-1 flex justify-center sm:mr-10 ml-4 sm:ml-0 overflow-hidden">
+            <div className="flex items-center gap-2 sm:gap-4 text-[10px] min-[400px]:text-[12px] sm:text-[14px] font-bold tracking-widest text-[#03a685] whitespace-nowrap">
               <span className="border-b-2 border-[#03a685] pb-1">BAG</span>
-              <span className="w-8 sm:w-16 h-px border-t border-dashed border-[#878787]"></span>
+              <span className="w-4 min-[400px]:w-8 sm:w-16 h-px border-t border-dashed border-[#878787]"></span>
               <span className="text-[#878787]">ADDRESS</span>
-              <span className="w-8 sm:w-16 h-px border-t border-dashed border-[#878787]"></span>
+              <span className="w-4 min-[400px]:w-8 sm:w-16 h-px border-t border-dashed border-[#878787]"></span>
               <span className="text-[#878787]">PAYMENT</span>
             </div>
           </div>
@@ -146,17 +146,24 @@ export default function CartPage() {
                             <span>Size: {item.product.weight}</span>
                             <span className="w-[3px] h-[3px] rounded-full bg-[#878787]"></span>
                             
-                            <div className="flex items-center ml-2 bg-[#f0f0f0] px-2 py-1 rounded">
-                              <span className="text-[#333] font-bold text-[13px]">Qty:</span>
-                              <select 
-                                className="bg-transparent border-none outline-none ml-1 cursor-pointer text-[13px] font-bold text-[#333]"
-                                value={item.quantity}
-                                onChange={(e) => updateQuantity(item.sku, parseInt(e.target.value))}
+                            <div className="flex items-center ml-2 border border-[#e5e7eb] rounded overflow-hidden bg-white">
+                              <button 
+                                onClick={() => updateQuantity(item.sku, Math.max(1, item.quantity - 1))}
+                                disabled={item.quantity <= 1}
+                                className="px-2 py-1 bg-[#f9f9f9] text-[#555] hover:bg-[#f0f0f0] transition-colors disabled:opacity-50 flex items-center justify-center"
                               >
-                                {[1,2,3,4,5,6,7,8,9,10].map(n => (
-                                  <option key={n} value={n}>{n}</option>
-                                ))}
-                              </select>
+                                <Minus className="w-3 h-3" />
+                              </button>
+                              <span className="text-[#333] font-bold text-[13px] w-8 text-center bg-white flex items-center justify-center">
+                                {item.quantity}
+                              </span>
+                              <button 
+                                onClick={() => updateQuantity(item.sku, Math.min(10, item.quantity + 1))}
+                                disabled={item.quantity >= 10}
+                                className="px-2 py-1 bg-[#f9f9f9] text-[#555] hover:bg-[#f0f0f0] transition-colors disabled:opacity-50 flex items-center justify-center"
+                              >
+                                <Plus className="w-3 h-3" />
+                              </button>
                             </div>
                           </div>
                           
