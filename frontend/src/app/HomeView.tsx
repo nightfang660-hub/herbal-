@@ -571,30 +571,6 @@ function TestimonialsSection() {
       text: "I was struggling with bloating and indigestion. Digestive Wellness Tea has been a game changer for me. Highly recommended!",
       avatar: "https://i.pravatar.cc/150?img=11",
       productImage: "/home/digestive_herbal_img.png"
-    },
-    {
-      id: 4,
-      name: "Amit Desai",
-      role: "Fitness Coach",
-      text: "The Immunity Support blend has kept me feeling 100% all year round. The natural ingredients and rich aroma are simply unbeatable.",
-      avatar: "https://i.pravatar.cc/150?img=60",
-      productImage: "/home/detox_tea.png"
-    },
-    {
-      id: 5,
-      name: "Kavita Reddy",
-      role: "Wellness Blogger",
-      text: "I have tried many herbal brands, but this one stands out. The respiratory blend really helped soothe my throat during the cold season.",
-      avatar: "https://i.pravatar.cc/150?img=44",
-      productImage: "/home/hero.png"
-    },
-    {
-      id: 6,
-      name: "Sneha Kapoor",
-      role: "Nutritionist",
-      text: "I recommend these blends to all my clients. The natural herbs offer fantastic digestive benefits without any artificial additives.",
-      avatar: "https://i.pravatar.cc/150?img=47",
-      productImage: "/home/ruby_calm_hero.png"
     }
   ];
 

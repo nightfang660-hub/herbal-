@@ -278,21 +278,21 @@ export default function ProductDetailsPage() {
 
   const packSizes = [
     {
-      weight: '20 Packets',
+      weight: '20 sachets',
       price: product.price,
       originalPrice: product.originalPrice,
       discount: 15
     },
     {
-      weight: '60 Packets',
-      originalPrice: product.originalPrice === 270 ? 810 : product.originalPrice * 3,
-      price: Math.round((product.originalPrice === 270 ? 810 : product.originalPrice * 3) * 0.85),
+      weight: '60 sachets',
+      originalPrice: product.originalPrice === 269 || product.originalPrice === 270 ? 807 : product.originalPrice * 3,
+      price: Math.round((product.originalPrice === 269 || product.originalPrice === 270 ? 807 : product.originalPrice * 3) * 0.85),
       discount: 15
     },
     {
-      weight: '120 Packets',
-      originalPrice: product.originalPrice === 270 ? 1630 : product.originalPrice * 6,
-      price: Math.round((product.originalPrice === 270 ? 1630 : product.originalPrice * 6) * 0.85),
+      weight: '120 sachets',
+      originalPrice: product.originalPrice === 269 || product.originalPrice === 270 ? 1614 : product.originalPrice * 6,
+      price: Math.round((product.originalPrice === 269 || product.originalPrice === 270 ? 1614 : product.originalPrice * 6) * 0.85),
       discount: 15
     }
   ];
@@ -555,7 +555,7 @@ export default function ProductDetailsPage() {
               </button>
               
               <h3 className="text-[24px] font-bold text-[#0F3D2E] mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Customize Your Box</h3>
-              <p className="text-[#6b7b72] text-[15px] mb-4 font-medium">Mix and match different teas. Total: {customTotal}/20 Packets (Select 5 for each)</p>
+              <p className="text-[#6b7b72] text-[15px] mb-4 font-medium">Mix and match different teas. Total: {customTotal}/20 sachets (Select 5 for each)</p>
               
               {/* Progress bar */}
               <div className="w-full bg-gray-200 h-2 rounded-full mb-6 overflow-hidden">
@@ -597,7 +597,7 @@ export default function ProductDetailsPage() {
               <div className="mt-6 pt-4 border-t border-[#e8e5de] flex justify-between items-center">
                 <div className="flex flex-col">
                   <span className="font-bold text-[#0F3D2E] text-[20px]">₹{product.price}</span>
-                  <span className="text-[#6b7b72] text-[13px]">for 20 Packets</span>
+                  <span className="text-[#6b7b72] text-[13px]">for 20 sachets</span>
                 </div>
                 <button 
                   onClick={() => setShowCustomModal(false)}
@@ -710,7 +710,7 @@ export default function ProductDetailsPage() {
             <div className="mb-3 relative">
               <div className="flex justify-between items-start gap-4 mb-1">
                 <div className="flex flex-col">
-                  <span className="text-[#D4AF37] text-[12px] font-bold uppercase tracking-widest mb-1">{product.category} BLEND</span>
+                  <span className="text-[#D4AF37] text-[12px] font-bold uppercase tracking-widest mb-1">{product.category || 'Wellness'} BLEND</span>
                   <h1 className="text-[28px] md:text-[42px] font-bold text-[#0F3D2E] leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
                     {product.name}
                   </h1>
@@ -725,7 +725,7 @@ export default function ProductDetailsPage() {
                 </div>
               </div>
               <p className="text-[#4a5d53] text-[15px] leading-[1.6] max-w-[90%] mb-3">
-                {product.description || `A premium ${product.category.toLowerCase()} blend to support ${product.benefit.toLowerCase()} and rejuvenate your body.`}
+                {product.description || `A premium ${(product.category || 'herbal').toLowerCase()} blend to support ${(product.benefit || 'wellness').toLowerCase()} and rejuvenate your body.`}
               </p>
             </div>
 
@@ -733,7 +733,8 @@ export default function ProductDetailsPage() {
             <div className="flex items-center gap-2 mb-4">
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map(star => {
-                  const fillPercentage = Math.max(0, Math.min(100, (product.rating - star + 1) * 100));
+                  const rating = product.rating || 5;
+                  const fillPercentage = Math.max(0, Math.min(100, (rating - star + 1) * 100));
                   return (
                     <div key={star} className="relative w-4 h-4">
                       <Star className="absolute top-0 left-0 w-4 h-4 text-[#d1c8ba] fill-transparent" />
@@ -745,7 +746,7 @@ export default function ProductDetailsPage() {
                 })}
               </div>
               <span className="text-[#6b7b72] text-[14px] font-medium ml-1">
-                {product.rating} ({product.reviews} Reviews)
+                {product.rating || 5} ({product.reviews || 0} Reviews)
               </span>
             </div>
 

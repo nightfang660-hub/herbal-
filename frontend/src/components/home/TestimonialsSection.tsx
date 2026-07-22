@@ -28,41 +28,6 @@ export default function TestimonialsSection() {
       role: "Entrepreneur",
       text: "I was struggling with bloating and indigestion. Digestive Wellness Tea has been a game changer for me. Highly recommended!",
       avatar: "/assets/testmoniols/bhanu.png",
-    },
-    {
-      id: 4,
-      name: "Amit Desai",
-      role: "Fitness Coach",
-      text: "The Immunity Support blend has kept me feeling 100% all year round. The natural ingredients and rich aroma are simply unbeatable.",
-      avatar: "https://i.pravatar.cc/600?img=60",
-    },
-    {
-      id: 5,
-      name: "Kavita Reddy",
-      role: "Wellness Blogger",
-      text: "I have tried many herbal brands, but this one stands out. The respiratory blend really helped soothe my throat during the cold season.",
-      avatar: "https://i.pravatar.cc/600?img=44",
-    },
-    {
-      id: 6,
-      name: "Sneha Kapoor",
-      role: "Nutritionist",
-      text: "I recommend these blends to all my clients. The natural herbs offer fantastic digestive benefits without any artificial additives.",
-      avatar: "https://i.pravatar.cc/600?img=47",
-    },
-    {
-      id: 7,
-      name: "Siddharth Jain",
-      role: "Software Engineer",
-      text: "The energy blend is fantastic for long coding sessions. No jitters, just clean, focused energy all day.",
-      avatar: "https://i.pravatar.cc/600?img=12",
-    },
-    {
-      id: 8,
-      name: "Anjali Gupta",
-      role: "Life Coach",
-      text: "I start every morning with the detox blend. It feels incredibly cleansing and sets a positive tone for my entire day.",
-      avatar: "https://i.pravatar.cc/600?img=43",
     }
   ];
 
