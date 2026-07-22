@@ -12,21 +12,21 @@ export default function TestimonialsSection() {
       id: 1,
       name: "Dr.Manisha",
       role: "Medical and health",
-      text: "These herbal teas have become a part of my daily routine. I feel more energetic, calm and healthy. Absolutely love the taste!",
+      text: "Real Herbal Tea – Ruby Calm Tea is a high-quality herbal tea with a refreshing taste and excellent packaging. Our patients have shared positive feedback after trying it. The product is consistent, natural, and easy to include in a daily routine. We appreciate the team's professionalism and are happy with our experience",
       avatar: "/assets/testmoniols/theperfecthealthclineckoti.png",
     },
     {
       id: 2,
       name: "Peddinti Suresh",
       role: "IT Professional",
-      text: "The quality is exceptional! You can truly taste the purity and freshness in every sip. My go-to tea for wellness.",
+      text: "Real Herbal Tea has been a fantastic addition to my busy schedule. The quality is exceptional, and you can truly taste the purity and freshness in every sip. It offers a reliable and natural way to de-stress after long hours of work. I highly recommend it for anyone looking to boost their daily wellness routine.",
       avatar: "/assets/testmoniols/surash.png",
     },
     {
       id: 3,
       name: "vaddi bhanusankar",
       role: "Entrepreneur",
-      text: "I was struggling with bloating and indigestion. Digestive Wellness Tea has been a game changer for me. Highly recommended!",
+      text: "The Digestive Wellness Tea from Real Herbal Tea has been an absolute game changer for me. It effectively helped manage my bloating and indigestion with its consistent, natural ingredients. The soothing flavor makes it a delight to drink every day. It's a high-quality product that I now consider an essential part of my health journey.",
       avatar: "/assets/testmoniols/bhanu.png",
     }
   ];
@@ -137,7 +137,7 @@ export default function TestimonialsSection() {
                 {/* Right side text: 55% */}
                 <div className="w-full md:w-[55%] flex flex-col justify-center p-5 sm:p-6 md:px-12 lg:px-16 md:py-16">
                   {/* Quote text */}
-                  <p className="text-[16px] sm:text-[18px] md:text-[22px] lg:text-[24px] text-[#4a5d53] leading-relaxed mb-4 md:mb-10" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                  <p className="text-[16px] sm:text-[18px] md:text-[22px] lg:text-[24px] text-[#4a5d53] leading-relaxed mb-4 md:mb-10 text-justify text-left" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                     {t.text}
                   </p>
 

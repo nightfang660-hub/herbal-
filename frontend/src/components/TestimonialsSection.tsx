@@ -12,21 +12,21 @@ export function TestimonialsSection({ title = "What Our Customers Say", subtitle
       id: 1,
       name: "Priya Sharma",
       role: "Yoga Instructor",
-      text: "These herbal teas have become a part of my daily routine. I feel more energetic, calm and healthy. Absolutely love the taste!",
+      text: "Real Herbal Tea – Ruby Calm Tea is a high-quality herbal tea with a refreshing taste and excellent packaging. Our patients have shared positive feedback after trying it. The product is consistent, natural, and easy to include in a daily routine. We appreciate the team's professionalism and are happy with our experience",
       avatar: "https://i.pravatar.cc/150?img=32",
     },
     {
       id: 2,
       name: "Neha Verma",
       role: "IT Professional",
-      text: "The quality is exceptional! You can truly taste the purity and freshness in every sip. My go-to tea for wellness.",
+      text: "Real Herbal Tea has been a fantastic addition to my busy schedule. The quality is exceptional, and you can truly taste the purity and freshness in every sip. It offers a reliable and natural way to de-stress after long hours of work. I highly recommend it for anyone looking to boost their daily wellness routine.",
       avatar: "https://i.pravatar.cc/150?img=5",
     },
     {
       id: 3,
       name: "Rahul Mehta",
       role: "Entrepreneur",
-      text: "I was struggling with bloating and indigestion. Digestive Wellness Tea has been a game changer for me. Highly recommended!",
+      text: "The Digestive Wellness Tea from Real Herbal Tea has been an absolute game changer for me. It effectively helped manage my bloating and indigestion with its consistent, natural ingredients. The soothing flavor makes it a delight to drink every day. It's a high-quality product that I now consider an essential part of my health journey.",
       avatar: "https://i.pravatar.cc/150?img=11",
     }
   ];
@@ -104,7 +104,7 @@ export function TestimonialsSection({ title = "What Our Customers Say", subtitle
                  className="w-full md:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 snap-center bg-white rounded-[16px] p-8 text-left border border-[#F8F5EE] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col h-auto min-h-[320px] hover:-translate-y-2 hover:shadow-lg transition-all duration-300 group"
               >
                 {/* Quote Text */}
-                <p className="text-[#556358] text-[14px] leading-relaxed mb-8 flex-grow" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
+                <p className="text-[#556358] text-[14px] leading-relaxed mb-8 flex-grow text-justify text-left" style={{ fontFamily: 'Nunito Sans, sans-serif' }}>
                   "{t.text}"
                 </p>
 
